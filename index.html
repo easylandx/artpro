@@ -153,9 +153,13 @@
   #arttl:empty{visibility:hidden}
   .arb{margin:0;min-width:52px;min-height:48px;padding:10px 16px;font-size:15px;pointer-events:auto;background:rgba(14,13,12,.78);color:var(--fg);border:1px solid var(--gold)}
   #arexit{background:var(--gold);color:#1b1610}
-  #arhint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));width:max-content;max-width:calc(100vw - 32px);text-align:center;font-size:14px;line-height:1.4;padding:9px 14px;background:rgba(14,13,12,.78);border:1px solid #5c4d30;pointer-events:none}
-  #arbot{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:10px;pointer-events:none}
-  #ardrow{align-items:center;gap:8px;padding:0}
+  #arhint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));width:max-content;max-width:calc(100vw - 32px);text-align:center;font-size:13px;line-height:1.35;padding:6px 12px;background:rgba(14,13,12,.78);border:1px solid #5c4d30;pointer-events:none;transition:opacity .5s}
+  #arov.hh #arhint{opacity:0}
+  #arov.m-fb.s-placed #arhint{bottom:calc(142px + env(safe-area-inset-bottom,0px))}
+  #artip{display:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(86vw,340px);padding:18px 20px;box-sizing:border-box;text-align:center;font-size:15px;line-height:1.45;background:rgba(14,13,12,.92);border:1px solid var(--gold);flex-direction:column;align-items:center;gap:14px;z-index:4}
+  #artip p{margin:0}
+  #arbot{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;pointer-events:none}
+  #ardrow{align-items:center;justify-content:center;flex-basis:100%;gap:8px;padding:0}
   #ardist{min-width:58px;text-align:center;font-size:14px;text-shadow:0 1px 3px #000}
   #arov .c{display:none}
   #arov.s-base #arset,#arov.s-placed #armove,#arov.s-placed #arclean{display:block}
@@ -1151,16 +1155,16 @@
   var AR={busy:false,xr:false}, MET_API='https://collectionapi.metmuseum.org/public/collection/v1';
   try{ if (navigator.xr && navigator.xr.isSessionSupported) navigator.xr.isSessionSupported('immersive-ar').then(function(v){ AR.xr=!!v; },function(){}); }catch(e){}   // cheap capability probe only
   var ARS={
-    en:{btn:'🖼 Hang on my wall',exit:'✕ Exit',move:'↻ Move',set:'📍 Set wall here',prep:'Starting camera…',na:'AR Preview not available for this painting',
+    en:{btn:'🖼 Hang on my wall',exit:'✕ Exit',move:'↻ Reposition',set:'📍 Set wall here',prep:'Starting camera…',na:'AR Preview not available for this painting',
       nocam:'Camera not available. Allow camera access and try again.',nomot:'AR needs camera and motion access on a phone or tablet.',
       scan:'Move the phone slowly to scan the wall and floor',wall:'Wall found · tap to hang here',floor:'Floor found · tap at the base of the wall',
       done:'Hung · tap Move to change the spot',base:'Stand 1–3 m from the wall. Aim at the line where the wall meets the floor, then tap.',
-      fbdone:'Stay in place and turn the phone · − / + matches the wall distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls'},
-    es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
+      fbdone:'Stay put and turn the phone · − / + adjusts distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',tip:'Aim at where the wall meets the floor and use − / + to adjust the distance.',tipx:'Aim at a wall, or at the floor where the wall begins, and tap to hang the painting.',ok:'Got it',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls'},
+    es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover de sitio',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
       nocam:'Cámara no disponible. Permite el acceso a la cámara e inténtalo de nuevo.',nomot:'La RA necesita cámara y sensores de movimiento en un móvil o tableta.',
       scan:'Mueve el móvil despacio para escanear la pared y el suelo',wall:'Pared detectada · toca para colgar aquí',floor:'Suelo detectado · toca en la base de la pared',
       done:'Colgado · toca Mover para cambiar el sitio',base:'Colócate a 1–3 m de la pared. Apunta a la línea donde la pared toca el suelo y toca.',
-      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia a la pared',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles'}};
+      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',tip:'Apunta a la unión de la pared con el suelo y usa – / + para ajustar la distancia.',tipx:'Apunta a una pared, o al suelo donde empieza, y toca para colgar el cuadro.',ok:'Entendido',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles'}};
   function at(k){ return ARS[LANG][k]; }
 
   // ---- real sizes (cm) of well-known works: key = normalised title | artist surname. Only the LONG side is used; the other side follows the image ----
@@ -1215,14 +1219,16 @@
 
   // ---- the framed painting (metres; origin = centre of the picture; faces +Z; back of the frame at z=0 = the wall) ----
   function arBuild(a){
-    var g=new THREE.Group(), w=a.w, h=a.h, f=0.035, tex=new THREE.Texture(a.img);
+    var g=new THREE.Group(), w=a.w, h=a.h, f=Math.max(.02,Math.min(.045,.012+Math.min(w,h)*.03)), tex=new THREE.Texture(a.img);
     tex.encoding=THREE.sRGBEncoding; tex.minFilter=THREE.LinearFilter; tex.generateMipmaps=false; tex.anisotropy=4; tex.needsUpdate=true;
     var art=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex})); art.position.z=0.02; g.add(art);
-    var fm=new THREE.MeshStandardMaterial({color:0x5a3d17,roughness:.5,metalness:.3});
+    var fm=new THREE.MeshStandardMaterial({color:0xa07f3a,roughness:.4,metalness:.45}), lm=new THREE.MeshBasicMaterial({color:0x2b1d0b}), l=Math.max(.006,f*.28);
     [[w+2*f,f,0,(h+f)/2],[w+2*f,f,0,-(h+f)/2],[f,h,(w+f)/2,0],[f,h,-(w+f)/2,0]].forEach(function(s){ var m=new THREE.Mesh(new THREE.BoxGeometry(s[0],s[1],0.04),fm); m.position.set(s[2],s[3],0.02); g.add(m); });
+    [[w,l,0,(h-l)/2],[w,l,0,-(h-l)/2],[l,h,(w-l)/2,0],[l,h,-(w-l)/2,0]].forEach(function(s){ var m=new THREE.Mesh(new THREE.PlaneGeometry(s[0],s[1]),lm); m.position.set(s[2],s[3],0.0215); g.add(m); });   // thin dark liner = depth
     // soft contact shadow on the wall (canvas-blurred rectangle; shadowOffset trick because ctx.filter is missing on Safari)
-    var pad=Math.max(0.25,Math.min(w,h)*0.15), cw=256, ch=Math.max(32,Math.min(1024,Math.round(256*(h+2*pad)/(w+2*pad)))), sx=cw/(w+2*pad), c=document.createElement('canvas'); c.width=cw; c.height=ch;
-    var x=c.getContext('2d'); x.shadowColor='rgba(0,0,0,.6)'; x.shadowBlur=pad*0.45*sx; x.shadowOffsetX=cw*3; x.shadowOffsetY=pad*0.12*sx; x.fillRect(pad*sx-cw*3,pad*sx,w*sx,h*sx);
+    var pad=Math.max(0.3,Math.min(w,h)*0.22), cw=256, ch=Math.max(32,Math.min(1024,Math.round(256*(h+2*pad)/(w+2*pad)))), sx=cw/(w+2*pad), c=document.createElement('canvas'); c.width=cw; c.height=ch;
+    var x=c.getContext('2d'); x.shadowOffsetX=cw*3;
+    [[.5,.14,.3],[.16,.03,.6]].forEach(function(L){ x.shadowColor='rgba(0,0,0,'+L[2]+')'; x.shadowBlur=pad*L[0]*sx; x.shadowOffsetY=pad*L[1]*sx; x.fillRect((pad-f)*sx-cw*3,(pad-f)*sx,(w+2*f)*sx,(h+2*f)*sx); });   // [blur, drop, opacity]: soft ambient + tight contact
     var sh=new THREE.Mesh(new THREE.PlaneGeometry(w+2*pad,h+2*pad),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false})); sh.position.z=0.003; sh.userData.t=true; g.add(sh);
     g.userData.fade=function(o){ g.traverse(function(m){ if (m.material){ m.material.transparent=o<1||!!m.userData.t; m.material.opacity=o; m.material.needsUpdate=true; } }); };
     return g;
@@ -1240,10 +1246,10 @@
         '<div id="arbot"><div id="ardrow" class="c"><button class="arb" id="arminus">−</button><span id="ardist"></span><button class="arb" id="arplus">+</button></div>'+
         '<button class="arb c" id="armove"></button><button class="arb c" id="arclean">👁</button><button class="arb c" id="arset"></button></div>'+
         '<div id="arcam"><button id="artimer"></button><button id="arshutter" aria-label="Photo"></button></div><div id="arcount"></div><div id="arflash"></div>'+
-        '<div id="arshot"><img alt=""><div><button class="arb" id="arsave"></button><button class="arb" id="arclose"></button></div></div>';
+        '<div id="arshot"><img alt=""><div><button class="arb" id="arsave"></button><button class="arb" id="arclose"></button></div></div><div id="artip"><p></p><button class="arb" id="artipok"></button></div>';
       document.body.appendChild(o);
       var q=function(s){ return o.querySelector(s); };
-      ['#artop','#arbot','#arhint'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
+      ['#artop','#arbot','#arhint','#artip'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
       q('#arexit').onclick=function(){ if (AR.sess) AR.sess.end(); else arCleanup(); };
       q('#armove').onclick=function(){ if (AR.sess){ AR.state='aim'; AR.anc=null; AR.P.userData.fade(.55); } else { AR.state='base'; AR.P.visible=false; } arState(); };
       q('#arset').onclick=arSetWall;
@@ -1252,18 +1258,20 @@
       o.addEventListener('click',function(){ if (o.classList.contains('clean') && !(AR.cd||AR.shot) && !(arguments[0].target.closest&&arguments[0].target.closest('#arcam,#arshot'))) o.classList.remove('clean'); });
       q('#arshutter').onclick=function(e){ e.stopPropagation(); AR.snap=true; };
       q('#artimer').onclick=function(e){ e.stopPropagation(); arTimer(); };
+      q('#artipok').onclick=function(e){ e.stopPropagation(); q('#artip').style.display='none'; try{ localStorage.setItem('artpro-ar-tip','1'); }catch(x){} };
       q('#arsave').onclick=arSave; q('#arclose').onclick=function(){ arShotClose(); };
       q('#arminus').onclick=function(){ arNudge(-.1); }; q('#arplus').onclick=function(){ arNudge(.1); };
     }
-    o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set'); o.querySelector('#artimer').textContent=at('timer'); o.querySelector('#arsave').textContent=at('save'); o.querySelector('#arclose').textContent=at('close'); o.querySelector('#arclean').title=at('clean');
+    o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set'); o.querySelector('#artimer').textContent=at('timer'); o.querySelector('#arsave').textContent=at('save'); o.querySelector('#arclose').textContent=at('close'); o.querySelector('#arclean').title=at('clean'); o.querySelector('#artipok').textContent=at('ok'); o.querySelector('#artip').style.display='none';
     o.querySelector('#arttl').textContent=''; o.className='m-'+mode+' s-pre'; o.style.display='block'; arHint(at('prep'));
     return o;
   }
   function arHint(t){ if (AR.ov && AR.hintTxt!==t){ AR.hintTxt=t; AR.ov.querySelector('#arhint').textContent=t; } }
-  function arState(){ var s=AR.state; if (s!=='placed') AR.ov.classList.remove('clean'); AR.ov.className=AR.ov.className.replace(/\bs-\w+/,'s-'+s); arHint(at(s==='placed'?(AR.sess?'done':'fbdone'):s==='base'?'base':'scan')); }
+  function arState(){ var s=AR.state; if (s!=='placed') AR.ov.classList.remove('clean'); clearTimeout(AR.ht); AR.ov.classList.remove('hh'); if (s==='placed') AR.ht=setTimeout(function(){ if (AR.ov) AR.ov.classList.add('hh'); },4500); AR.ov.className=AR.ov.className.replace(/\bs-\w+/,'s-'+s); arHint(at(s==='placed'?(AR.sess?'done':'fbdone'):s==='base'?'base':'scan')); }
+  function arTip(k){ try{ if (localStorage.getItem('artpro-ar-tip')) return; }catch(e){} var t=AR.ov.querySelector('#artip'); t.querySelector('p').textContent=at(k); t.style.display='flex'; }   // first run only
   function arToast(m){ var t=AR.toast; if (!t){ t=AR.toast=document.createElement('div'); t.className='artoast'; document.body.appendChild(t); } t.textContent=m; t.style.display='block'; clearTimeout(AR.tt); AR.tt=setTimeout(function(){ t.style.display='none'; },4500); }
   function arFail(e){ var s=(e==='cam')?at('nocam'):(e==='motion')?at('nomot'):(typeof e==='string'?e:at('na')); arCleanup(); arToast(s); }
-  function arTitle(it,a){ var s=Math.round(a.w*100)+' × '+Math.round(a.h*100)+' cm ('+at(a.real?'real':'est')+')'+(Math.max(a.w,a.h)>2.4?at('big'):'');
+  function arTitle(it,a){ var s=(a.real?'':'≈ ')+Math.round(a.w*100)+' × '+Math.round(a.h*100)+' cm';
     AR.ov.querySelector('#arttl').textContent=it.title.replace(/\s*\(.*\)/,'')+' · '+s; }
 
   // composite = camera video (cropped like object-fit:cover) + the painting canvas, then preview with Save / Share
@@ -1294,7 +1302,7 @@
     if (AR.stream) AR.stream.getTracks().forEach(function(t){ t.stop(); });
     if (AR.onOri) removeEventListener('deviceorientation',AR.onOri); if (AR.onRes) removeEventListener('resize',AR.onRes);
     if (AR.ov){ AR.ov.style.display='none'; var v=AR.ov.querySelector('#arvid'); v.srcObject=null; AR.ov.querySelector('#arshot').style.display='none'; AR.ov.querySelector('#arcount').style.display='none'; if (AR.shot) URL.revokeObjectURL(AR.shot.url); }
-    if (AR.cd) clearInterval(AR.cd);
+    if (AR.cd) clearInterval(AR.cd); clearTimeout(AR.ht);
     AR={busy:false,xr:AR.xr,ov:AR.ov,toast:AR.toast}; lastAct=Date.now();
   }
 
@@ -1315,7 +1323,7 @@
     R.xr.setSession(sess).then(function(){
       sess.requestReferenceSpace('viewer').then(function(vs){ return sess.requestHitTestSource({space:vs}); }).then(function(s){ AR.hit=s; });
       sess.addEventListener('select',function(){ if (AR.state==='aim') AR.tap=true; });
-      AR.ov.classList.add('live'); AR.state='aim'; arState(); R.setAnimationLoop(arXRFrame);
+      AR.ov.classList.add('live'); AR.state='aim'; arState(); arTip('tipx'); R.setAnimationLoop(arXRFrame);
     }).catch(function(){ sess.end(); arFail(); });
   }
   var _M=new THREE.Matrix4(), _p=new THREE.Vector3(), _n=new THREE.Vector3(), _c=new THREE.Vector3(), _x=new THREE.Vector3(), _y=new THREE.Vector3(), _up=new THREE.Vector3(0,1,0);
@@ -1367,9 +1375,9 @@
     AR.ori={ok:false,a:0,b:0,g:0};
     AR.onOri=function(e){ if (e.beta==null) return; var d=AR.ori; d.a=e.alpha||0; d.b=e.beta; d.g=e.gamma||0; if (!d.ok){ d.ok=true; AR.first=true; } }; addEventListener('deviceorientation',AR.onOri);
     var ori0=AR.ori; setTimeout(function(){ if (AR.busy && AR.ori===ori0 && !ori0.ok) arFail('motion'); },2500);   // desktop browsers never deliver real sensor data
-    AR.ov.classList.add('live'); AR.state='base'; arState();
+    AR.ov.classList.add('live'); AR.state='base'; arState(); arTip('tip');
     (function loop(){ AR.raf=requestAnimationFrame(loop); var d=AR.ori;
-      if (d.ok){ var k=Math.PI/180; arQ(AR.q,d.a*k,d.b*k,d.g*k,((screen.orientation&&screen.orientation.angle)||window.orientation||0)*k); if (AR.first){ C.quaternion.copy(AR.q); AR.first=false; } else C.quaternion.slerp(AR.q,.6); }
+      if (d.ok){ var k=Math.PI/180; arQ(AR.q,d.a*k,d.b*k,d.g*k,((screen.orientation&&screen.orientation.angle)||window.orientation||0)*k); if (AR.first){ C.quaternion.copy(AR.q); AR.first=false; } else { var ang=C.quaternion.angleTo(AR.q); if (ang>.0012) C.quaternion.slerp(AR.q,Math.min(.7,Math.max(.12,ang*14))); } }
       R.render(S,C); if (AR.snap){ AR.snap=false; arCompose(); } })();
   }
   function arLay(){ var f=AR.fb, P=AR.P; P.position.set(f.hx*f.dist,Math.max(1.45,AR.h/2+.1),f.hz*f.dist); P.rotation.y=Math.atan2(-f.hx,-f.hz); P.visible=true;
