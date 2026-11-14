@@ -173,6 +173,7 @@
   #arpick{display:none;position:absolute;left:0;top:0;width:100%;height:100%;z-index:6;background:rgba(14,13,12,.97);box-sizing:border-box;flex-direction:column;touch-action:pan-y;padding:calc(12px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px))}
   #arpick .pt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:10px}
   #arpick .pt b{font-weight:400;color:var(--gold);font-size:17px}
+  #arpm{margin:0 0 8px 0;width:100%;min-height:48px;background:var(--gold);color:#1b1610}
   #arpr{width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0 0 8px 0;background:#1d1a16;color:var(--fg);border:1px solid #5c4d30}
   #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
   #arpl button{display:block;width:100%;text-align:left;margin:0;padding:12px 8px;border:0;border-bottom:1px solid #3a3226;background:transparent;color:var(--fg);letter-spacing:0;font-size:15px}
@@ -1174,12 +1175,12 @@
       nocam:'Camera not available. Allow camera access and try again.',nomot:'AR needs camera and motion access on a phone or tablet.',
       scan:'Move the phone slowly to scan the wall and floor',wall:'Wall found · tap to hang here',floor:'Floor found · tap at the base of the wall',
       done:'Hung · tap Move to change the spot',base:'Stand 1–3 m from the wall. Aim at the line where the wall meets the floor, then tap.',
-      fbdone:'Stay put and turn the phone · − / + adjusts distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls',add:'＋ Add another',rem:'🗑 Remove',clr:'Clear all',cancel:'✕ Cancel',pick:'Choose a painting',nopick:'No paintings ready yet. Open a room in the gallery first.',max:'Maximum of 5 paintings on the wall',many:'Tap a painting to select it · Move, Remove or add another',baseN:'Aim where the painting’s centre should hang, then tap'},
+      fbdone:'Stay put and turn the phone · − / + adjusts distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls',add:'＋ Add another',rem:'🗑 Remove',clr:'Clear all',cancel:'✕ Cancel',pick:'Choose a painting',nopick:'No paintings ready yet. Open a room in the gallery first.',max:'Maximum of 5 paintings on the wall',many:'Tap a painting to select it · Move, Remove or add another',baseN:'Aim where the painting’s centre should hang, then tap',mine:'📷 My photo (from library)',photo:'My photo'},
     es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover de sitio',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
       nocam:'Cámara no disponible. Permite el acceso a la cámara e inténtalo de nuevo.',nomot:'La RA necesita cámara y sensores de movimiento en un móvil o tableta.',
       scan:'Mueve el móvil despacio para escanear la pared y el suelo',wall:'Pared detectada · toca para colgar aquí',floor:'Suelo detectado · toca en la base de la pared',
       done:'Colgado · toca Mover para cambiar el sitio',base:'Colócate a 1–3 m de la pared. Apunta a la línea donde la pared toca el suelo y toca.',
-      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles',add:'＋ Añadir otro',rem:'🗑 Quitar',clr:'Quitar todos',cancel:'✕ Cancelar',pick:'Elige un cuadro',nopick:'Aún no hay cuadros listos. Abre antes una sala de la galería.',max:'Máximo 5 cuadros en la pared',many:'Toca un cuadro para seleccionarlo · Mover, Quitar o añadir otro',baseN:'Apunta a donde debe colgar el centro del cuadro y toca'}};
+      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles',add:'＋ Añadir otro',rem:'🗑 Quitar',clr:'Quitar todos',cancel:'✕ Cancelar',pick:'Elige un cuadro',nopick:'Aún no hay cuadros listos. Abre antes una sala de la galería.',max:'Máximo 5 cuadros en la pared',many:'Toca un cuadro para seleccionarlo · Mover, Quitar o añadir otro',baseN:'Apunta a donde debe colgar el centro del cuadro y toca',mine:'📷 Mi foto (de la galería)',photo:'Mi foto'}};
   function at(k){ return ARS[LANG][k]; }
 
   // ---- real sizes (cm) of well-known works: key = normalised title | artist surname. Only the LONG side is used; the other side follows the image ----
@@ -1264,7 +1265,7 @@
         '<button class="arb c" id="armove"></button><button class="arb c" id="arrem"></button><button class="arb c" id="aradd"></button><button class="arb c" id="arclr"></button><button class="arb c" id="arcancel"></button><button class="arb c" id="arclean">👁</button><button class="arb c" id="arset"></button></div>'+
         '<div id="arcam"><button id="artimer"></button><button id="arshutter" aria-label="Photo"></button></div><div id="arcount"></div><div id="arflash"></div>'+
         '<div id="arshot"><img alt=""><div><button class="arb" id="arsave"></button><button class="arb" id="arclose"></button></div></div>'+
-        '<div id="arpick"><div class="pt"><b id="arpt"></b><button class="arb" id="arpx">✕</button></div><select id="arpr"></select><div id="arpl"></div></div>';
+        '<div id="arpick"><div class="pt"><b id="arpt"></b><button class="arb" id="arpx">✕</button></div><button class="arb" id="arpm"></button><input type="file" id="arpf" accept="image/*" style="display:none"><select id="arpr"></select><div id="arpl"></div></div>';
       document.body.appendChild(o);
       var q=function(s){ return o.querySelector(s); };
       ['#artop','#arbot','#arhint','#arpick'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
@@ -1273,6 +1274,8 @@
       q('#aradd').onclick=function(e){ e.stopPropagation(); if (AR.adding||AR.E) return; if (AR.list.length>=AR_MAX){ arToast(at('max')); return; } arPickerOpen(false); };
       q('#arrem').onclick=function(e){ e.stopPropagation(); arRemove(); };
       q('#arclr').onclick=function(e){ e.stopPropagation(); arClear(); };
+      q('#arpm').onclick=function(e){ e.stopPropagation(); q('#arpf').click(); };
+      q('#arpf').onchange=function(){ var f=this.files&&this.files[0]; this.value=''; if (f) arAddFile(f); };
       q('#arcancel').onclick=function(e){ e.stopPropagation(); arCancel(); };
       q('#arpx').onclick=function(e){ e.stopPropagation(); if (AR.pickReq && !AR.list.length && !AR.E) arExit(); else q('#arpick').style.display='none'; };
       q('#arset').onclick=arSetWall;
@@ -1290,7 +1293,7 @@
       q('#arminus').onclick=function(){ arNudge(-.1); }; q('#arplus').onclick=function(){ arNudge(.1); };
     }
     o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set'); o.querySelector('#artimer').textContent=at('timer'); o.querySelector('#arsave').textContent=at('save'); o.querySelector('#arclose').textContent=at('close'); o.querySelector('#arclean').title=at('clean');
-    o.querySelector('#aradd').textContent=at('add'); o.querySelector('#arrem').textContent=at('rem'); o.querySelector('#arclr').textContent=at('clr'); o.querySelector('#arcancel').textContent=at('cancel'); o.querySelector('#arpt').textContent=at('pick'); o.querySelector('#arpick').style.display='none';
+    o.querySelector('#aradd').textContent=at('add'); o.querySelector('#arrem').textContent=at('rem'); o.querySelector('#arclr').textContent=at('clr'); o.querySelector('#arcancel').textContent=at('cancel'); o.querySelector('#arpt').textContent=at('pick'); o.querySelector('#arpm').textContent=at('mine'); o.querySelector('#arpick').style.display='none';
     o.querySelector('#arttl').textContent=''; o.className='m-'+mode+' s-pre'; o.style.display='block'; arHint(at('prep'));
     return o;
   }
@@ -1400,9 +1403,16 @@
     if (!items.length){ var n=document.createElement('div'); n.className='none'; n.textContent=at('nopick'); l.appendChild(n); return; }
     items.forEach(function(it){ var b=document.createElement('button'); b.textContent=it.title.replace(/\s*\(.*\)/,''); var sm=document.createElement('small'); sm.textContent=it.artist; b.appendChild(sm); b.onclick=function(e){ e.stopPropagation(); arAdd(it); }; l.appendChild(b); });
   }
-  function arAdd(it){
+  // own photo from the phone library (iPhone: Photo Library / Take Photo / Files) hung as a framed piece; real size unknown → 50 cm long side
+  function arPrepareFile(file){ return new Promise(function(res,rej){ var u=URL.createObjectURL(file), im=new Image();
+    im.onload=function(){ URL.revokeObjectURL(u); var W=im.naturalWidth, H=im.naturalHeight; if (!W||!H) return rej(0); var k=Math.min(1,2048/Math.max(W,H)), c=document.createElement('canvas'); c.width=Math.max(1,Math.round(W*k)); c.height=Math.max(1,Math.round(H*k));
+      try{ c.getContext('2d').drawImage(im,0,0,c.width,c.height); }catch(e){ return rej(0); }   // downscaled copy keeps iOS memory low
+      var L=.5, a=c.width/c.height; res({img:c,w:a>=1?L:L*a,h:a>=1?L/a:L,real:false}); };
+    im.onerror=function(){ URL.revokeObjectURL(u); rej(0); }; im.src=u; }); }
+  function arAddFile(file){ arAdd({title:at('photo'),artist:'',mine:true},function(){ return arPrepareFile(file); }); }
+  function arAdd(it,prep){
     AR.ov.querySelector('#arpick').style.display='none'; if (AR.adding||AR.E) return; AR.adding=true; var sc=AR.scene;
-    arPrepare(it).then(function(a){
+    (prep?prep():arPrepare(it)).then(function(a){
       AR.adding=false; if (!AR.busy||AR.scene!==sc||AR.E) return;
       var E=arEntry(it,a); AR.it=it; AR.E=E; sc.add(E.P); E.P.visible=false; if (AR.sess) E.P.userData.fade(.55);
       if (AR.ret) AR.ret.visible=false; AR.state=AR.sess?'aim':'base'; arSelect(null); arState();
