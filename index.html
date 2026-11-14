@@ -618,7 +618,7 @@
   function pump(){ while(active<6 && queue.length){ (function(it){ active++; it.state='loading';
     resolve(it,function(){ active--; it.state='done'; if (it.failed){ promote(it); relayout(); } setStatus(); pump(); }); })(queue.shift()); } }
   function promote(it){ var R=it.room; if (R && R.reserve && R.reserve.length) R.list.push(R.reserve.shift()); }
-  function relayout(){ clearTimeout(rlTimer); rlTimer=setTimeout(function(){ if (roomIdx>=0) enterRoom(roomIdx,true); },500); }
+  function relayout(){ clearTimeout(rlTimer); rlTimer=setTimeout(function(){ if (roomIdx<0) return; var p=camera.position, keep=linkItem && lp && Math.hypot(p.x-lp.x,p.z-lp.z)<0.05 && Math.abs(yaw-lp.yaw)<0.05; enterRoom(roomIdx,true); if (keep) placeAt(linkItem); },500); }
   function enqueue(it){ if (it.state||it.emb) return; it.state='queued'; queue.push(it); }
 
   window.copyPins=function(){
@@ -991,7 +991,7 @@
       if (+numBuf*10>ROOMS.length || numBuf.length===2) go(); else numT=setTimeout(go,650); } });
   addEventListener('keyup', function(e){ keys[e.code]=false; });
   // ---------- Idle: start the walk tour after 8 s without input once inside the gallery ----------
-  var lastAct=Date.now(), linked=false, readIt=null, gest=false, idleT=0, pX=0, pZ=0, pYaw=0;
+  var lastAct=Date.now(), linkItem=null, lp=null, linked=false, readIt=null, gest=false, idleT=0, pX=0, pZ=0, pYaw=0;
   ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
   setInterval(function(){
@@ -1017,6 +1017,12 @@
     var r=cvs.getBoundingClientRect();
     ray.setFromCamera({x:((e.clientX-r.left)/r.width)*2-1, y:-((e.clientY-r.top)/r.height)*2+1}, camera);
     return roomGroup ? ray.intersectObjects(roomGroup.children,true)[0] : null;
+  }
+  // stand directly in front of a painting, facing it (used for shared links, and again after the room is re-laid out)
+  function placeAt(it){
+    var st=stations.filter(function(q){ return q.it===it; })[0]; if (!st) return false;
+    var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); nav=null;
+    lp={x:camera.position.x, z:camera.position.z, yaw:yaw}; return true;
   }
   function goArt(it){
     var st=stations.filter(function(q){ return q.it===it; })[0]; if (!st) return false;
@@ -1084,7 +1090,7 @@
     camera.rotation.set(pitch,yaw,0);
     var best=null, bd=Math.max(5.5,tourDist()+1.2), fx=-Math.sin(yaw), fz=-Math.cos(yaw);
     stations.forEach(function(st){ var dx=st.pos.x-p.x, dz=st.pos.z-p.z, d=Math.hypot(dx,dz); if (d<bd && (dx*fx+dz*fz)/d>.45){ bd=d; best=st; } });
-    if (best!==cur){ cur=best; if (!tour) hush();
+    if (best!==cur){ cur=best; if (!tour && readIt && (!best || best.it!==readIt)) hush();
       if (cur){ var it=cur.it; cap.style.display='block';
         cap.innerHTML='<b></b><div class="inf"></div><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
         cap.querySelector('b').textContent=it.t; fetchInfo(it); showInfo(it); var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
@@ -1145,7 +1151,7 @@
     enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
-      fetchInfo(item); if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); nav=null; linked=true; if (tour) stopTour(); }
+      fetchInfo(item); if (st){ linkItem=item; placeAt(item); linked=true; if (tour) stopTour(); }
     }
     return true;
   }
