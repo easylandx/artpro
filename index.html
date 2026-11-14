@@ -6,6 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ArtPro">
+<meta name="application-name" content="ArtPro">
+<meta name="theme-color" content="#f5ba06">
+<meta name="description" content="Step inside a living museum. Walk through golden-lit halls filled with the world’s greatest masterpieces.">
+<link rel="manifest" href="artpro.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>ArtPro</title>
 <style>
   :root{--bg:#0e0d0c;--fg:#f3ece0;--gold:#c9a45c;}
@@ -86,6 +93,13 @@
   @media (max-width:600px){#tourbar{gap:6px 6px} #tourbar .room{padding:6px 9px 6px 9px;font-size:12px} #roomsel{max-width:56vw} #menu .wrap{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))} #tourbar{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))}}
   .wa{display:inline-flex;align-items:center;gap:6px;background:#25D366 !important;color:#06351a !important;border-color:#25D366 !important;font-weight:700}
   .wa:hover{filter:brightness(1.08)}
+  .inst{display:none;margin:12px auto 0 auto;padding:7px 14px;font-size:12px;letter-spacing:.05em;background:transparent;color:var(--gold);border:1px solid #5c4d30}
+  .inst:hover{border-color:var(--gold)}
+  #intro .inst.show{display:inline-block}
+  #minst{display:none}
+  #minst.show{display:inline-block}
+  #iosHint{display:none;font-size:12px !important;color:#a99f8e !important;margin-top:12px !important}
+  #iosHint.show{display:block}
   #listen{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(210px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;padding:12px 18px;max-width:calc(100vw - 28px);box-shadow:0 2px 14px rgba(0,0,0,.35)}
 
   /* ---- phone layout: compact top bar, compact info card, thumb row above the card ---- */
@@ -118,7 +132,9 @@
   <p class="how" data-i="voice">🔊 Tap ENTER to switch on the voice.</p>
   <p class="how kb" data-i="kb">Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev</p>
   <div class="langhost"></div>
-  <button id="enter" data-i="enter">ENTER GALLERY</button>
+  <button id="enter" data-i="enter">ENTER GALLERY</button><br>
+  <button id="install" class="inst" type="button" data-i="install">Install app</button>
+  <p id="iosHint" data-i="ios">On iPhone and iPad: tap Share, then “Add to Home Screen”.</p>
 </div></div>
 <div id="menu"><div class="wrap">
   <div id="rooms"><span class="brand"><a class="bn" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><a class="bl" href="https://easylandx.github.io" target="_blank" rel="noopener" title="EasyLandX" aria-label="EasyLandX"><svg viewBox="0 0 400 400" aria-hidden="true"><rect width="400" height="400" rx="80" fill="#0a58c8"/><circle cx="235" cy="170" r="116" fill="#ffd500"/><polygon points="162,236 190,320 197,286" fill="#2fbf4f"/><polygon points="318,88 172,226 190,322" fill="#e8291f"/><polygon points="318,88 75,196 168,230" fill="#fff"/><circle cx="93" cy="313" r="8" fill="#fff"/><circle cx="128" cy="292" r="6.5" fill="#fff"/><circle cx="157" cy="277" r="5" fill="#fff"/></svg></a></span></div>
@@ -393,11 +409,11 @@
   // ---------- Language (EN / ES) ----------
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
-    en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
+    en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
       tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
-    es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
+    es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
       tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
@@ -1168,6 +1184,19 @@ var IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==='
   }
   if (!openFromHash()) enterRoom(Math.floor(Math.random()*ROOMS.length));
   addEventListener('hashchange', openFromHash);
+  // ---------- PWA: install button (only when the browser offers it), iOS hint, service worker ----------
+  (function(){
+    var dp=null, standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+    var b1=document.getElementById('install'), hint=document.getElementById('iosHint');
+    var b2=document.createElement('button'); b2.id='minst'; b2.type='button'; b2.className='room inst fold'; b2.setAttribute('data-i','install'); b2.innerHTML=tx('install'); roomsEl.insertBefore(b2, document.getElementById('tour'));
+    function show(on){ [b1,b2].forEach(function(b){ b.classList.toggle('show',on); }); }
+    function ask(){ if (!dp) return; var p=dp; dp=null; show(false); try{ p.prompt(); }catch(e){} }
+    b1.onclick=ask; b2.onclick=ask;
+    addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); if (standalone) return; dp=e; show(true); });
+    addEventListener('appinstalled', function(){ dp=null; show(false); hint.classList.remove('show'); });
+    if (IOS && !standalone) hint.classList.add('show');
+    if ('serviceWorker' in navigator){ navigator.serviceWorker.register('./artpro-sw.js'); }
+  })();
   tick();
 })();
 </script>
