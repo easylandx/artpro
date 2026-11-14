@@ -961,7 +961,7 @@
   var keys={}, yaw=0, pitch=0, nav=null, numBuf='', numT=null;
   var intro=document.getElementById('intro');
   document.getElementById('enter').onclick=function(){ unlockSpeech(); intro.style.display='none'; };
-  ['touchend','pointerup','click','keydown'].forEach(function(n){ addEventListener(n, unlockSpeech, {passive:true, capture:true}); });
+  ['touchend','pointerup','click','keydown'].forEach(function(n){ addEventListener(n, function(e){ if (e.target && e.target.id==='listen') return; unlockSpeech(); }, {passive:true, capture:true}); });
   addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (!tour){ if (e.code==='KeyN') artStep(1); if (e.code==='KeyP') artStep(-1); } if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
     if (tour){ if (e.code==='Space'){ e.preventDefault(); tourPause(); } if (e.code==='KeyN') tourNext(); if (e.code==='KeyP') tourPrev(); if (e.code==='Equal'||e.code==='NumpadAdd') tourSpeed(1); if (e.code==='Minus'||e.code==='NumpadSubtract') tourSpeed(-1); }
     var m=/^(?:Digit|Numpad)([0-9])$/.exec(e.code); if (m){ clearTimeout(numT); numBuf+=m[1]; if (numBuf.length>2) numBuf=m[1];
@@ -1071,7 +1071,7 @@
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     var mv=Math.hypot(p.x-pX,p.z-pZ)>0.003 || Math.abs(yaw-pYaw)>0.003 || !!nav; pX=p.x; pZ=p.z; pYaw=yaw; idleT=mv?0:idleT+dt;
     if (!cur) readIt=null;
-    if (gest && lbEl.style.display!=='none') lbEl.style.display='none';
+    if (readIt && lbEl.style.display!=='none') lbEl.style.display='none';
     if (!tour && cur && rd.on && SS && gest && intro.style.display==='none' && srch.style.display!=='block' && idleT>0.8 && readIt!==cur.it){
       var it0=cur.it, wait0=infoOn && !it0.emb && it0.inf===undefined;
       if (wait0) fetchInfo(it0);
@@ -1080,7 +1080,17 @@
     renderer.render(scene,camera); requestAnimationFrame(tick);
   }
 var lbEl=document.createElement('button'); lbEl.id='listen'; lbEl.setAttribute('data-i','listen'); lbEl.innerHTML=tx('listen'); document.body.appendChild(lbEl);
-  lbEl.onclick=function(){ unlockSpeech(); gest=true; readIt=null; lbEl.style.display='none'; };
+  // Speech must start inside the tap itself (iPhone and Chrome block it otherwise): title + artist now, the info card text queued right after
+  function utter(text){ var u=new SpeechSynthesisUtterance(text); u.lang=tx('speech'); rd.cur=u; rd.busy=true; u.onend=u.onerror=function(){ if (rd.cur===u) rd.busy=false; }; SS.speak(u); }
+  lbEl.onclick=function(){
+    gest=true; lbEl.style.display='none'; var it=waItem(); if (!it || !SS || !rd.on) return;
+    unlocked=true; readIt=it; lastArtist='';
+    try{ if (SS.speaking||SS.pending||SS.paused) SS.cancel(); SS.resume(); utter(spoken(it)); }catch(e){ return; }
+    var n=0; (function wait(){
+      if (infoOn && !it.emb && it.inf===undefined && n++<40){ fetchInfo(it); return setTimeout(wait,150); }
+      var t=infoSpeech(it).replace(/^\.\s*/,''); if (t && rd.on && readIt===it) try{ utter(t); }catch(e){}
+    })();
+  };
   function openFromHash(){
     var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
     var ri=-1, item=null;
