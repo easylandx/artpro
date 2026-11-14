@@ -84,6 +84,27 @@
   .wa{display:inline-flex;align-items:center;gap:6px;background:#25D366 !important;color:#06351a !important;border-color:#25D366 !important;font-weight:700}
   .wa:hover{filter:brightness(1.08)}
   #listen{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(210px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;padding:12px 18px;max-width:calc(100vw - 28px);box-shadow:0 2px 14px rgba(0,0,0,.35)}
+
+  /* ---- phone layout: compact top bar, compact info card, thumb row above the card ---- */
+  .mtog{display:none;margin:0;padding:8px 12px}
+  #hud #pad{position:static;pointer-events:none}
+  #hud #pad .wrap{flex-direction:row;justify-content:flex-end;gap:8px;padding:0 0 8px 0}
+  #hud #pad button{pointer-events:auto;padding:10px 0;width:52px;min-height:46px;font-size:18px;opacity:.92}
+  @media (max-width:700px),(max-height:520px){
+    .mtog{display:inline-block}
+    #rooms:not(.open) .fold,#tourbar:not(.open) .fold{display:none}
+    #rooms:not(.open){flex-wrap:nowrap}
+    #status{display:none}
+    #menu .wrap{padding-bottom:2px}
+    #roomsel{max-width:46vw}
+    #tourbar{justify-content:flex-end}
+  }
+  @media (pointer:coarse),(max-width:700px){
+    #cap{padding:10px 14px;max-height:30vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+    #cap b{font-size:16px}
+    .inf{font-size:13px;margin:4px 0 0 0}
+    #cap a,#cap small{display:none}
+  }
 </style>
 </head>
 <body>
@@ -100,7 +121,7 @@
   <div id="rooms"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a></div>
   <div id="status">Loading…</div>
 </div></div>
-<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><button id="tcard" class="room" title="Painting info card (I)">ℹ Info</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
+<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀︎ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶︎</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀︎◀︎ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶︎▶︎</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><button id="tcard" class="room" title="Painting info card (I)">ℹ︎ Info</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸︎ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><div id="sl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
@@ -370,11 +391,11 @@
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
-      tourGo:'▶ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀ Prev', next:'Next ▶', slower:'◀◀ Slower', faster:'Faster ▶▶', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸ Pause', resume:'▶ Resume', stop:'■ Stop',
+      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
-      tourGo:'▶ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀ Anterior', next:'Siguiente ▶', slower:'◀◀ Más lento', faster:'Más rápido ▶▶', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸ Pausa', resume:'▶ Reanudar', stop:'■ Detener',
+      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
@@ -904,7 +925,7 @@
     if (b.text) el.appendChild(document.createTextNode(b.text));
   }
   function infoSpeech(it){ var b=infoBits(it); return b ? '. '+[b.head,b.text].filter(Boolean).join('. ') : ''; }
-  function infoLabel(){ var l='ℹ Info: '+(infoOn?tx('on'):tx('off')); ['tcard','mcard'].forEach(function(id){ var e=document.getElementById(id); if (e){ e.textContent=l; e.classList.toggle('on',infoOn); } }); document.body.classList.toggle('info-on',infoOn); }
+  function infoLabel(){ var l='ℹ︎ Info: '+(infoOn?tx('on'):tx('off')); ['tcard','mcard'].forEach(function(id){ var e=document.getElementById(id); if (e){ e.textContent=l; e.classList.toggle('on',infoOn); } }); document.body.classList.toggle('info-on',infoOn); }
   function toggleInfo(){ infoOn=!infoOn; try{ localStorage.setItem('artpro-info',infoOn?'1':'0'); }catch(e){} infoLabel(); if (cur){ fetchInfo(cur.it); showInfo(cur.it); } if (!infoOn) hush(); }
   var ib=document.createElement('button'); ib.className='room'; ib.id='mcard'; ib.onclick=toggleInfo; roomsEl.insertBefore(ib, tb);
   document.getElementById('tcard').onclick=toggleInfo;
@@ -1079,7 +1100,20 @@
     }
     renderer.render(scene,camera); requestAnimationFrame(tick);
   }
-var lbEl=document.createElement('button'); lbEl.id='listen'; lbEl.setAttribute('data-i','listen'); lbEl.innerHTML=tx('listen'); document.body.appendChild(lbEl);
+// phone layout: fold the secondary buttons behind a menu button, and put walking + previous/next in one row above the card
+  (function(){
+    var hud=document.getElementById('hud'), pad=document.getElementById('pad'), pw=pad.querySelector('.wrap');
+    hud.insertBefore(pad, cap);
+    [['pnext','▶︎','next painting (N)',1],['pprev','◀︎','previous painting (P)',-1]].forEach(function(a){ var b=document.createElement('button'); b.id=a[0]; b.textContent=a[1]; b.title=a[2]; b.onclick=function(){ artStep(a[3]); }; pw.insertBefore(b,pw.firstChild); });
+    function fold(bar,keep,before){ [].forEach.call(bar.children,function(c){ if (keep.indexOf(c)<0) c.classList.add('fold'); });
+      var b=document.createElement('button'); b.className='room mtog'; b.textContent='☰'; b.setAttribute('aria-label','Menu'); b.onclick=function(){ bar.classList.toggle('open'); };
+      bar.insertBefore(b,before||null); }
+    fold(roomsEl,[roomsEl.querySelector('.brand'),rsel],rsel.nextSibling);
+    var tbar=document.getElementById('tourbar'); fold(tbar,[tbar.querySelector('.brand'),document.getElementById('tpause'),document.getElementById('tstop')],null);
+    roomsEl.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('button'); if (b && b.classList.contains('fold') && !b.closest('.langsw')) roomsEl.classList.remove('open'); });
+    rsel.addEventListener('change',function(){ roomsEl.classList.remove('open'); });
+  })();
+  var lbEl=document.createElement('button'); lbEl.id='listen'; lbEl.setAttribute('data-i','listen'); lbEl.innerHTML=tx('listen'); document.body.appendChild(lbEl);
   // Speech must start inside the tap itself (iPhone and Chrome block it otherwise): title + artist now, the info card text queued right after
   function utter(text){ var u=new SpeechSynthesisUtterance(text); u.lang=tx('speech'); rd.cur=u; rd.busy=true; u.onend=u.onerror=function(){ if (rd.cur===u) rd.busy=false; }; SS.speak(u); }
   lbEl.onclick=function(){
