@@ -176,8 +176,9 @@
   #arpm{margin:0 0 8px 0;width:100%;min-height:48px;background:var(--gold);color:#1b1610}
   #arpr{width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0 0 8px 0;background:#1d1a16;color:var(--fg);border:1px solid #5c4d30}
   #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
-  #arpl button{display:block;width:100%;text-align:left;margin:0;padding:12px 8px;border:0;border-bottom:1px solid #3a3226;background:transparent;color:var(--fg);letter-spacing:0;font-size:15px}
+  #arpl button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0;padding:8px;border:0;border-bottom:1px solid #3a3226;background:transparent;color:var(--fg);letter-spacing:0;font-size:15px}
   #arpl button small{display:block;color:#a99f8e;font-size:12px}
+  #arpl .th{flex:0 0 64px;width:64px;height:64px;object-fit:cover;background:#2a241c;border:1px solid #5c4d30}
   #arpl .none{padding:20px 6px;color:#a99f8e}
   #arov.m-fb.s-placed #ardrow{display:flex}
   #arx{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
@@ -1397,11 +1398,18 @@
     var base=ROOMS.indexOf((AR.sel&&AR.sel.it.room)||ROOMS[roomIdx]); if (rooms.indexOf(ROOMS[base])>=0) sel.value=base;
     sel.style.display=rooms.length?'block':'none'; sel.onchange=arPickFill; arPickFill(); pk.style.display='flex';
   }
+  // small preview: drawn from the image the gallery already loaded, otherwise the cached (smaller) image URL
+  function arThumb(it){
+    var im=it.tex&&it.tex.image&&it.tex.image.width?it.tex.image:null, el;
+    if (im){ el=document.createElement('canvas'); el.width=el.height=128; try{ var x=el.getContext('2d'), k=Math.max(128/im.width,128/im.height), w=im.width*k, h=im.height*k; x.drawImage(im,(128-w)/2,(128-h)/2,w,h); }catch(e){} }
+    else { var c=pinCand(PINNED[it.t]||cache[it.t]); el=document.createElement('img'); el.alt=''; el.loading='lazy'; el.src=(c&&(c.alt||c.url))||''; }
+    el.className='th'; return el;
+  }
   function arPickFill(){
     var pk=AR.ov.querySelector('#arpick'), l=pk.querySelector('#arpl'), R=ROOMS[+pk.querySelector('#arpr').value], items=R?R.list.filter(arEligible):[];
     l.innerHTML='';
     if (!items.length){ var n=document.createElement('div'); n.className='none'; n.textContent=at('nopick'); l.appendChild(n); return; }
-    items.forEach(function(it){ var b=document.createElement('button'); b.textContent=it.title.replace(/\s*\(.*\)/,''); var sm=document.createElement('small'); sm.textContent=it.artist; b.appendChild(sm); b.onclick=function(e){ e.stopPropagation(); arAdd(it); }; l.appendChild(b); });
+    items.forEach(function(it){ var b=document.createElement('button'), lab=document.createElement('span'); lab.textContent=it.title.replace(/\s*\(.*\)/,''); var sm=document.createElement('small'); sm.textContent=it.artist; lab.appendChild(sm); b.appendChild(arThumb(it)); b.appendChild(lab); b.onclick=function(e){ e.stopPropagation(); arAdd(it); }; l.appendChild(b); });
   }
   // own photo from the phone library (iPhone: Photo Library / Take Photo / Files) hung as a framed piece; real size unknown → 50 cm long side
   function arPrepareFile(file){ return new Promise(function(res,rej){ var u=URL.createObjectURL(file), im=new Image();
