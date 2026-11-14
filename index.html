@@ -175,11 +175,11 @@
   #arpick .pt b{font-weight:400;color:var(--gold);font-size:17px}
   #arpm{margin:0 0 8px 0;width:100%;min-height:48px;background:var(--gold);color:#1b1610}
   #arpr{width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0 0 8px 0;background:#1d1a16;color:var(--fg);border:1px solid #5c4d30}
-  #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;padding-bottom:8px}
+  #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;grid-auto-rows:max-content;padding-bottom:8px}
   #arpl button{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%;text-align:left;margin:0;padding:0;border:0;background:transparent;color:var(--fg);letter-spacing:0;font-size:12px;line-height:1.25;min-height:0}
   #arpl button span{display:block;overflow:hidden;max-height:3.9em;word-break:break-word}
   #arpl button small{display:block;color:#a99f8e;font-size:11px;overflow:hidden;max-height:2.5em}
-  #arpl .th{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:#2a241c;border:1px solid #5c4d30}
+  #arpl .th{display:block;width:100%;height:auto;aspect-ratio:1/1;flex:none;object-fit:contain;background:#2a241c;border:1px solid #5c4d30}
   #arpl .none{grid-column:1/-1;padding:20px 6px;color:#a99f8e}
   #arov.m-fb.s-placed #ardrow{display:flex}
   #arx{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
@@ -1402,7 +1402,7 @@
   // small preview: drawn from the image the gallery already loaded, otherwise the cached (smaller) image URL
   function arThumb(it){
     var el=document.createElement('img'), im=it.tex&&it.tex.image&&it.tex.image.width?it.tex.image:null, done=false; el.alt=''; el.className='th';
-    if (im){ try{ var c=document.createElement('canvas'), x, k, w, h; c.width=c.height=192; x=c.getContext('2d'); k=Math.max(192/im.width,192/im.height); w=im.width*k; h=im.height*k;
+    if (im){ try{ var c=document.createElement('canvas'), x, k, w, h; c.width=c.height=192; x=c.getContext('2d'); k=Math.min(192/im.width,192/im.height); w=im.width*k; h=im.height*k; x.fillStyle='#2a241c'; x.fillRect(0,0,192,192);   // whole painting, never cropped
         x.drawImage(im,(192-w)/2,(192-h)/2,w,h); el.src=c.toDataURL('image/jpeg',.72); done=true; }catch(e){} }
     if (!done){ var u=pinCand(PINNED[it.t]||cache[it.t]); el.loading='lazy'; el.src=(u&&(u.alt||u.url))||''; }
     return el;
