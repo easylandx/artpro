@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+  AR PREVIEW ("Hang on my wall") — notes on mobile AR in 2026 and on image CORS
+
+  BROWSER SUPPORT
+  • Android Chrome (and Chromium browsers on ARCore phones): WebXR immersive-ar with hit-test, DOM-overlay UI and anchors. A real plane-detected
+    wall is preferred; ARCore often fails on a plain white wall, so the floor line is accepted as "base of the wall" and the painting is hung at 1.45 m.
+  • iOS Safari / iPadOS: no WebXR immersive-ar on iPhone or iPad, so a camera fallback is used: live video + Three.js overlay + DeviceOrientation (iOS asks for
+    motion permission inside the tap). There is NO depth or position tracking: the wall distance is measured from the phone pitch toward the wall/floor
+    line (phone height assumed 1.4 m) and can be adjusted with − / +. The phone must be rotated, not walked around. Camera needs HTTPS.
+  • Desktop: the button is hidden (no camera + motion sensors).
+  • Scale: real size from a built-in table of famous works, else the museum API (Art Institute of Chicago / The Met), else a size written in a Commons file name,
+    else a default (80 cm long side; 38 cm for ukiyo-e prints; 24 cm for miniatures). The label states "real size" or "estimated size".
+
+  CORS
+  • Every texture is loaded with crossOrigin="anonymous" (THREE.TextureLoader().setCrossOrigin). The picture the gallery already loaded this way is reused for AR
+    (no second request). Art Institute of Chicago (IIIF), The Met and Wikimedia Commons send CORS headers; Internet Archive downloads sometimes do not.
+  • If a picture is not CORS-clean the load fails (or the canvas test reports a tainted image) and a friendly "AR Preview not available for this painting" appears.
+  • Camera and AR resources are created only when the AR button is tapped and are released on exit.
+-->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -122,6 +141,28 @@
     .inf{font-size:13px;margin:4px 0 0 0}
     #cap a,#cap small{display:none}
   }
+  /* ---- AR Preview ---- */
+  .arbtn{display:block;margin:0 auto 8px auto;min-height:48px;padding:10px 20px;font-size:14px;background:var(--gold);color:#1b1610;border-color:var(--gold)}
+  .arbtn:disabled{opacity:.45}
+  #arov{display:none;position:fixed;left:0;top:0;width:100%;height:100%;z-index:30;background:#0e0d0c;color:var(--fg);font-family:Georgia,'Times New Roman',serif;touch-action:none}
+  #arov.live{background:transparent}
+  #arov video,#arov canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:none}
+  #arov.m-fb video{display:block;object-fit:cover} #arov.m-fb canvas{display:block}
+  #artop{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) 0 calc(14px + env(safe-area-inset-left,0px));pointer-events:none}
+  #arttl{pointer-events:none;font-size:13px;line-height:1.35;padding:7px 12px;background:rgba(14,13,12,.72);border:1px solid #5c4d30;max-width:calc(100vw - 130px)}
+  #arttl:empty{visibility:hidden}
+  .arb{margin:0;min-width:52px;min-height:48px;padding:10px 16px;font-size:15px;pointer-events:auto;background:rgba(14,13,12,.78);color:var(--fg);border:1px solid var(--gold)}
+  #arexit{background:var(--gold);color:#1b1610}
+  #arhint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));width:max-content;max-width:calc(100vw - 32px);text-align:center;font-size:14px;line-height:1.4;padding:9px 14px;background:rgba(14,13,12,.78);border:1px solid #5c4d30;pointer-events:none}
+  #arbot{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;align-items:center;gap:10px;pointer-events:none}
+  #ardrow{align-items:center;gap:8px;padding:0}
+  #ardist{min-width:58px;text-align:center;font-size:14px;text-shadow:0 1px 3px #000}
+  #arov .c{display:none}
+  #arov.s-base #arset,#arov.s-placed #armove{display:block}
+  #arov.m-fb.s-placed #ardrow{display:flex}
+  #arx{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+  #arov.m-fb.s-base #arx{display:block}
+  .artoast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(120px + env(safe-area-inset-bottom,0px));z-index:40;max-width:calc(100vw - 32px);padding:12px 18px;text-align:center;font-size:14px;background:#161412;color:var(--fg);border:1px solid var(--gold);box-shadow:0 2px 14px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
@@ -1018,7 +1059,7 @@
   ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
   setInterval(function(){
-    if (tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
+    if (AR.busy || tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
     if (Date.now()-lastAct>=8000){ lastAct=Date.now(); startTour(); }
   }, 500);
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
@@ -1092,7 +1133,223 @@
 
   // ---------- Loop ----------
   var clock=new THREE.Clock();
+  // =====================================================================
+  // AR PREVIEW — "Hang on my wall"
+  // Everything below runs only after the visitor taps the button: no camera, no AR renderer, no extra textures before that.
+  // Three.js (r128) is already loaded by the gallery, so nothing extra is downloaded.
+  // =====================================================================
+  var AR={busy:false,xr:false}, MET_API='https://collectionapi.metmuseum.org/public/collection/v1';
+  try{ if (navigator.xr && navigator.xr.isSessionSupported) navigator.xr.isSessionSupported('immersive-ar').then(function(v){ AR.xr=!!v; },function(){}); }catch(e){}   // cheap capability probe only
+  var ARS={
+    en:{btn:'🖼 Hang on my wall',exit:'✕ Exit',move:'↻ Move',set:'📍 Set wall here',prep:'Starting camera…',na:'AR Preview not available for this painting',
+      nocam:'Camera not available. Allow camera access and try again.',nomot:'AR needs camera and motion access on a phone or tablet.',
+      scan:'Move the phone slowly to scan the wall and floor',wall:'Wall found · tap to hang here',floor:'Floor found · tap at the base of the wall',
+      done:'Hung · tap Move to change the spot',base:'Stand 1–3 m from the wall. Aim at the line where the wall meets the floor, then tap.',
+      fbdone:'Stay in place and turn the phone · − / + matches the wall distance',est:'estimated size',real:'real size',big:' · larger than most walls'},
+    es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
+      nocam:'Cámara no disponible. Permite el acceso a la cámara e inténtalo de nuevo.',nomot:'La RA necesita cámara y sensores de movimiento en un móvil o tableta.',
+      scan:'Mueve el móvil despacio para escanear la pared y el suelo',wall:'Pared detectada · toca para colgar aquí',floor:'Suelo detectado · toca en la base de la pared',
+      done:'Colgado · toca Mover para cambiar el sitio',base:'Colócate a 1–3 m de la pared. Apunta a la línea donde la pared toca el suelo y toca.',
+      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia a la pared',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes'}};
+  function at(k){ return ARS[LANG][k]; }
+
+  // ---- real sizes (cm) of well-known works: key = normalised title | artist surname. Only the LONG side is used; the other side follows the image ----
+  var AR_DIMS={'mona lisa|vinci':[53,77],'starry night|gogh':[92,74],'sunflowers|gogh':[73,92],'cafe terrace at night|gogh':[65.5,81],'scream|munch':[91,73.5],'kiss|klimt':[180,180],
+    'las meninas|velazquez':[276,318],'surrender of breda|velazquez':[370.5,307.5],'rokeby venus|velazquez':[177,122.5],'guernica|picasso':[776,349],'demoiselles d avignon|picasso':[233.7,243.9],
+    'great wave off kanagawa|hokusai':[37.9,25.7],'girl with a pearl earring|vermeer':[39,44.5],'view of delft|vermeer':[117.5,96.5],'milkmaid|vermeer':[41,45.5],'night watch|rembrandt':[437,363],
+    'birth of venus|botticelli':[278.9,172.5],'primavera|botticelli':[314,203],'last supper|vinci':[880,460],'lady with an ermine|vinci':[39,54],'creation of adam|michelangelo':[570,280],
+    'persistence of memory|dali':[33,24],'american gothic|wood':[65.3,78],'nighthawks|hopper':[152.4,84.1],'early sunday morning|hopper':[153,89.4],'liberty leading the people|delacroix':[325,260],
+    'raft of the medusa|gericault':[716,491],'wanderer above the sea of fog|friedrich':[74.8,94.8],'third of may 1808|goya':[347,268],'saturn devouring his son|goya':[81,143.5],
+    'grande jatte|seurat':[308,207.6],'impression sunrise|monet':[63,48],'luncheon of the boating party|renoir':[173,129.5],'olympia|manet':[190,130.5],'dejeuner sur l herbe|manet':[264.5,208],
+    'arrangement in grey and black|whistler':[162.5,144.3],'hay wain|constable':[185.4,130.2],'venus of urbino|titian':[165,119],'arnolfini portrait|eyck':[60,82.2],'garden of earthly delights|bosch':[386,220],
+    'ophelia|millais':[111.8,76.2],'lady of shalott|waterhouse':[200,153],'christina s world|wyeth':[121.3,81.9],'sleeping gypsy|rousseau':[200.7,129.5],'dance|matisse':[391,260],'two fridas|kahlo':[173,173],
+    'burial of the count of orgaz|greco':[360,480],'laughing cavalier|hals':[67.3,83],'swing|fragonard':[64.2,81],'judith beheading holofernes|caravaggio':[195,145],'calling of saint matthew|caravaggio':[340,322],
+    'pilgrimage to cythera|watteau':[194,129],'death of marat|david':[128,165],'oath of the horatii|david':[425,330],'grande odalisque|ingres':[162,91],'fighting temeraire|turner':[121.6,90.7],
+    'gleaners|millet':[111,83.8],'burial at ornans|courbet':[668,315],'self portrait at twenty eight|durer':[48.9,67.1],'ambassadors|holbein':[209.5,207],'hunters in the snow|bruegel':[162,117],
+    'sistine madonna|raphael':[196,265],'wedding at cana|veronese':[994,677],'marilyn diptych|warhol':[289,205],'composition with red blue and yellow|mondrian':[69,72.5],'school of athens|raphael':[770,500],
+    'birth of venus|cabanel':[225,130]};
+  var AR_ROOM_LONG={'Ukiyo-e':38,'Persian & Mughal Miniatures':24};          // typical long side (cm) when nothing better is known
+  function arTO(ms){ return new Promise(function(_,rej){ setTimeout(function(){ rej(0); },ms); }); }
+  function arCmFrom(txt){ var m=(txt||'').match(/([\d]+(?:[.,]\d+)?)\s*[×x]\s*([\d]+(?:[.,]\d+)?)\s*cm/i); return m? Math.max(parseFloat(m[1].replace(',','.')),parseFloat(m[2].replace(',','.'))) : 0; }
+  // → Promise<{L: long side in metres, real: bool}>   order: table → museum API (AIC / Met) → size written in the Commons file name → default
+  function arSize(it){
+    var k=norm(it.qt).replace(/^(the|la|le|les|el) /,'')+'|'+norm(surname(it.artist)), t=AR_DIMS[k], l=it.link||'', m, u=null, c=PINNED[it.t]||cache[it.t]||{};
+    if (t) return Promise.resolve({L:Math.max(t[0],t[1])/100,real:true});
+    var dflt={L:(AR_ROOM_LONG[it.room.name]||80)/100,real:false};
+    var nm=arCmFrom(decodeURIComponent(l+' '+(c.url||'')));
+    if (nm) return Promise.resolve({L:nm/100,real:true});
+    if ((m=l.match(/artic\.edu\/artworks\/(\d+)/))) u='https://api.artic.edu/api/v1/artworks/'+m[1]+'?fields=dimensions_detail,dimensions';
+    else if ((m=l.match(/metmuseum\.org\/art\/collection\/search\/(\d+)/))) u=MET_API+'/objects/'+m[1];
+    if (!u) return Promise.resolve(dflt);
+    return Promise.race([fetch(u).then(function(r){ return r.json(); }),arTO(3000)]).then(function(d){
+      var L=0, x;
+      if (d.data){ x=(d.data.dimensions_detail||[]).filter(function(q){ return q.width&&q.height; })[0]; L=x?Math.max(x.width,x.height):arCmFrom(d.data.dimensions); }
+      else { x=(d.measurements||[]).filter(function(q){ return q.elementMeasurements&&q.elementMeasurements.Height&&q.elementMeasurements.Width; }).sort(function(a,b){ return (b.elementName==='Overall')-(a.elementName==='Overall'); })[0];
+        L=x?Math.max(x.elementMeasurements.Height,x.elementMeasurements.Width):arCmFrom(d.dimensions); }
+      return L>2&&L<2000 ? {L:L/100,real:true} : dflt;
+    }).catch(function(){ return dflt; });
+  }
+
+  // ---- image: reuse the picture the gallery already loaded (crossOrigin='anonymous' → CORS already proven); otherwise load it the same way ----
+  function arLoad(url){ return new Promise(function(res,rej){ new THREE.TextureLoader().setCrossOrigin('anonymous').load(url,function(t){ res(t.image); },undefined,function(){ rej(0); }); }); }
+  function arTainted(img){ try{ var c=document.createElement('canvas'); c.width=c.height=1; var x=c.getContext('2d'); x.drawImage(img,0,0,1,1); x.getImageData(0,0,1,1); return false; }catch(e){ return true; } }
+  // Resolves {img,w,h,real} (metres) or rejects → friendly "AR Preview not available" message (typical for an Internet Archive host without CORS headers)
+  function arPrepare(it){
+    var src=it.tex&&it.tex.image&&it.tex.image.width ? Promise.resolve(it.tex.image) : (function(){ var c=pinCand(PINNED[it.t]||cache[it.t]); if (!c) return Promise.reject(0);
+      return arLoad(c.url).catch(function(){ return c.alt? arLoad(c.alt) : Promise.reject(0); }); })();
+    return src.then(function(img){
+      if (arTainted(img)) throw 0;
+      return arSize(it).then(function(s){ var a=img.width/img.height, w=a>=1?s.L:s.L*a, h=a>=1?s.L/a:s.L; return {img:img,w:w,h:h,real:s.real}; });
+    });
+  }
+
+  // ---- the framed painting (metres; origin = centre of the picture; faces +Z; back of the frame at z=0 = the wall) ----
+  function arBuild(a){
+    var g=new THREE.Group(), w=a.w, h=a.h, f=0.035, tex=new THREE.Texture(a.img);
+    tex.encoding=THREE.sRGBEncoding; tex.minFilter=THREE.LinearFilter; tex.generateMipmaps=false; tex.anisotropy=4; tex.needsUpdate=true;
+    var art=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex})); art.position.z=0.02; g.add(art);
+    var fm=new THREE.MeshStandardMaterial({color:0x5a3d17,roughness:.5,metalness:.3});
+    [[w+2*f,f,0,(h+f)/2],[w+2*f,f,0,-(h+f)/2],[f,h,(w+f)/2,0],[f,h,-(w+f)/2,0]].forEach(function(s){ var m=new THREE.Mesh(new THREE.BoxGeometry(s[0],s[1],0.04),fm); m.position.set(s[2],s[3],0.02); g.add(m); });
+    // soft contact shadow on the wall (canvas-blurred rectangle; shadowOffset trick because ctx.filter is missing on Safari)
+    var pad=Math.max(0.25,Math.min(w,h)*0.15), cw=256, ch=Math.max(32,Math.min(1024,Math.round(256*(h+2*pad)/(w+2*pad)))), sx=cw/(w+2*pad), c=document.createElement('canvas'); c.width=cw; c.height=ch;
+    var x=c.getContext('2d'); x.shadowColor='rgba(0,0,0,.6)'; x.shadowBlur=pad*0.45*sx; x.shadowOffsetX=cw*3; x.shadowOffsetY=pad*0.12*sx; x.fillRect(pad*sx-cw*3,pad*sx,w*sx,h*sx);
+    var sh=new THREE.Mesh(new THREE.PlaneGeometry(w+2*pad,h+2*pad),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false})); sh.position.z=0.003; sh.userData.t=true; g.add(sh);
+    g.userData.fade=function(o){ g.traverse(function(m){ if (m.material){ m.material.transparent=o<1||!!m.userData.t; m.material.opacity=o; m.material.needsUpdate=true; } }); };
+    return g;
+  }
+  function arLights(s){ s.add(new THREE.HemisphereLight(0xffffff,0x887766,1.1)); var d=new THREE.DirectionalLight(0xffffff,.6); d.position.set(.5,2,1.5); s.add(d); }
+  function arFreeScene(s){ if (!s) return; s.traverse(function(o){ if (o.geometry) o.geometry.dispose(); if (o.material){ if (o.material.map) o.material.map.dispose(); o.material.dispose(); } }); }
+
+  // ---- overlay UI (created on first use; works as the WebXR DOM-overlay root and as the camera-fallback screen) ----
+  function arUI(mode){
+    var o=AR.ov;
+    if (!o){
+      o=AR.ov=document.createElement('div'); o.id='arov';
+      o.innerHTML='<video id="arvid" playsinline muted autoplay></video><canvas id="arcv"></canvas><div id="arx"></div>'+
+        '<div id="artop"><div id="arttl"></div><button class="arb" id="arexit"></button></div><div id="arhint"></div>'+
+        '<div id="arbot"><div id="ardrow" class="c"><button class="arb" id="arminus">−</button><span id="ardist"></span><button class="arb" id="arplus">+</button></div>'+
+        '<button class="arb c" id="armove"></button><button class="arb c" id="arset"></button></div>';
+      document.body.appendChild(o);
+      var q=function(s){ return o.querySelector(s); };
+      ['#artop','#arbot','#arhint'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
+      q('#arexit').onclick=function(){ if (AR.sess) AR.sess.end(); else arCleanup(); };
+      q('#armove').onclick=function(){ if (AR.sess){ AR.state='aim'; AR.anc=null; AR.P.userData.fade(.55); } else { AR.state='base'; AR.P.visible=false; } arState(); };
+      q('#arset').onclick=arSetWall;
+      q('#arminus').onclick=function(){ arNudge(-.1); }; q('#arplus').onclick=function(){ arNudge(.1); };
+    }
+    o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set');
+    o.querySelector('#arttl').textContent=''; o.className='m-'+mode+' s-pre'; o.style.display='block'; arHint(at('prep'));
+    return o;
+  }
+  function arHint(t){ if (AR.ov && AR.hintTxt!==t){ AR.hintTxt=t; AR.ov.querySelector('#arhint').textContent=t; } }
+  function arState(){ var s=AR.state; AR.ov.className=AR.ov.className.replace(/\bs-\w+/,'s-'+s); arHint(at(s==='placed'?(AR.sess?'done':'fbdone'):s==='base'?'base':'scan')); }
+  function arToast(m){ var t=AR.toast; if (!t){ t=AR.toast=document.createElement('div'); t.className='artoast'; document.body.appendChild(t); } t.textContent=m; t.style.display='block'; clearTimeout(AR.tt); AR.tt=setTimeout(function(){ t.style.display='none'; },4500); }
+  function arFail(e){ var s=(e==='cam')?at('nocam'):(e==='motion')?at('nomot'):(typeof e==='string'?e:at('na')); arCleanup(); arToast(s); }
+  function arTitle(it,a){ var s=Math.round(a.w*100)+' × '+Math.round(a.h*100)+' cm ('+at(a.real?'real':'est')+')'+(Math.max(a.w,a.h)>2.4?at('big'):'');
+    AR.ov.querySelector('#arttl').textContent=it.title.replace(/\s*\(.*\)/,'')+' · '+s; }
+
+  function arOpen(it){ if (AR.busy) return; AR.busy=true; AR.it=it; hush(); if (AR.xr) arStartXR(it); else arStartCam(it); }
+  function arCleanup(){
+    if (AR.raf) cancelAnimationFrame(AR.raf);
+    if (AR.r){ try{ AR.r.setAnimationLoop(null); }catch(e){} arFreeScene(AR.scene); try{ AR.r.dispose(); AR.r.forceContextLoss(); }catch(e){} }
+    if (AR.stream) AR.stream.getTracks().forEach(function(t){ t.stop(); });
+    if (AR.onOri) removeEventListener('deviceorientation',AR.onOri); if (AR.onRes) removeEventListener('resize',AR.onRes);
+    if (AR.ov){ AR.ov.style.display='none'; var v=AR.ov.querySelector('#arvid'); v.srcObject=null; }
+    AR={busy:false,xr:AR.xr,ov:AR.ov,toast:AR.toast}; lastAct=Date.now();
+  }
+
+  // ======================= Path A: WebXR immersive-ar (Android Chrome and other WebXR browsers) =======================
+  function arStartXR(it){
+    var ov=arUI('xr'), art=arPrepare(it); art.catch(function(){});
+    navigator.xr.requestSession('immersive-ar',{requiredFeatures:['hit-test'],optionalFeatures:['dom-overlay','anchors'],domOverlay:{root:ov}}).then(function(sess){
+      AR.sess=sess; sess.addEventListener('end',arCleanup);
+      art.then(function(a){ arRunXR(sess,a); },function(){ sess.end(); arFail(); });
+    },function(e){ console.warn('[AR] WebXR refused, using camera fallback',e); AR.busy=true; arStartCam(it); });
+  }
+  function arRunXR(sess,a){
+    var R=AR.r=new THREE.WebGLRenderer({alpha:true,antialias:true}), S=AR.scene=new THREE.Scene(), P=AR.P=arBuild(a);
+    R.outputEncoding=THREE.sRGBEncoding; R.xr.enabled=true; R.xr.setReferenceSpaceType('local'); arLights(S);
+    P.matrixAutoUpdate=false; P.visible=false; P.userData.fade(.55); S.add(P);
+    var ret=AR.ret=new THREE.Mesh(new THREE.RingGeometry(.06,.08,32).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0xf5ba06})); ret.matrixAutoUpdate=false; ret.visible=false; S.add(ret);
+    AR.h=a.h; arTitle(AR.it,a);
+    R.xr.setSession(sess).then(function(){
+      sess.requestReferenceSpace('viewer').then(function(vs){ return sess.requestHitTestSource({space:vs}); }).then(function(s){ AR.hit=s; });
+      sess.addEventListener('select',function(){ if (AR.state==='aim') AR.tap=true; });
+      AR.ov.classList.add('live'); AR.state='aim'; arState(); R.setAnimationLoop(arXRFrame);
+    }).catch(function(){ sess.end(); arFail(); });
+  }
+  var _M=new THREE.Matrix4(), _p=new THREE.Vector3(), _n=new THREE.Vector3(), _c=new THREE.Vector3(), _x=new THREE.Vector3(), _y=new THREE.Vector3(), _up=new THREE.Vector3(0,1,0);
+  function arXRFrame(t,frame){
+    if (!frame) return;
+    var R=AR.r, P=AR.P, ref=R.xr.getReferenceSpace(), i;
+    if (AR.state==='placed'){ if (AR.anc){ var pp=frame.getPose(AR.anc.anchorSpace,ref); if (pp){ P.matrix.fromArray(pp.transform.matrix).multiply(AR.rel); P.matrixWorldNeedsUpdate=true; } } return; }
+    if (!AR.hit) return;
+    var hs=frame.getHitTestResults(AR.hit), best=null, kind=null, vp=frame.getViewerPose(ref), cam=vp?vp.transform.position:{x:0,y:0,z:0}, bm=null;
+    for (i=0;i<hs.length;i++){                                      // prefer a detected vertical plane (wall); otherwise use the floor as "base of the wall"
+      var po=hs[i].getPose(ref); if (!po) continue; _M.fromArray(po.transform.matrix); var ny=_M.elements[5], k=Math.abs(ny)<.35?'wall':(ny>.7?'floor':null);
+      if (k==='wall'){ best=hs[i]; kind=k; bm=_M.clone(); break; } if (k==='floor' && !best){ best=hs[i]; kind=k; bm=_M.clone(); }
+    }
+    if (!best){ P.visible=false; AR.ret.visible=false; AR.kind=null; arHint(at('scan')); return; }
+    _p.setFromMatrixPosition(bm); _c.set(cam.x-_p.x,cam.y-_p.y,cam.z-_p.z);
+    if (kind==='wall'){ _n.set(bm.elements[4],bm.elements[5],bm.elements[6]); _n.y=0; _n.normalize(); if (_n.dot(_c)<0) _n.negate(); }   // wall normal (hit-pose Y axis), facing the viewer
+    else { _n.copy(_c); _n.y=0; _n.normalize(); }
+    var ctr=_p.clone(); if (kind==='floor') ctr.y+=Math.max(1.45,AR.h/2+.1);                          // gallery hanging height: centre ≈ 1.45 m
+    ctr.addScaledVector(_n,.003); _x.crossVectors(_up,_n).normalize(); _y.crossVectors(_n,_x);
+    P.matrix.makeBasis(_x,_y,_n).setPosition(ctr); P.matrixWorldNeedsUpdate=true; P.visible=true;
+    AR.ret.matrix.copy(bm); AR.ret.matrixWorldNeedsUpdate=true; AR.ret.visible=true; AR.kind=kind; arHint(at(kind));
+    if (AR.tap){ AR.tap=false; AR.state='placed'; P.userData.fade(1); AR.ret.visible=false; arState();
+      if (best.createAnchor){ var rel=bm.clone().invert().multiply(P.matrix); best.createAnchor().then(function(an){ AR.anc=an; AR.rel=rel; }).catch(function(){}); } }   // anchor keeps it glued as tracking improves
+    AR.tap=false;
+  }
+
+  // ======================= Path B: camera fallback (iOS Safari, or any browser without WebXR) =======================
+  // Live camera video + Three.js canvas on top, camera rotation from DeviceOrientation (iOS asks permission here, inside the tap).
+  // No depth sensing: the wall distance is measured from the phone pitch while aiming at the wall/floor line (assumed phone height 1.4 m).
+  function arQ(q,al,be,ga,or){ var e=new THREE.Euler(be,al,-ga,'YXZ'); q.setFromEuler(e); q.multiply(new THREE.Quaternion(-Math.sqrt(.5),0,0,Math.sqrt(.5))); q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-or)); }
+  function arFov(){ var w=innerWidth,h=innerHeight,r=Math.PI/180,L=63,S=49,a=w/h;    // typical phone main camera: 63° long side, 49° short side
+    if (h>=w) return a<.75 ? L : 2/r*Math.atan(Math.tan(S/2*r)/a); return a>4/3 ? 2/r*Math.atan(Math.tan(L/2*r)/a) : S; }
+  function arStartCam(it){
+    var perm=(typeof DeviceOrientationEvent!=='undefined' && DeviceOrientationEvent.requestPermission) ? DeviceOrientationEvent.requestPermission().catch(function(){ return 'denied'; }) : Promise.resolve('granted');
+    var ov=arUI('fb'), art=arPrepare(it);
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.isSecureContext){ arFail('cam'); return; }
+    Promise.all([
+      perm.then(function(p){ if (p!=='granted') throw 'motion'; }),
+      navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(s){ AR.stream=s; return s; },function(){ throw 'cam'; }),
+      art.catch(function(){ throw 'art'; })
+    ]).then(function(r){ arRunCam(r[1],r[2]); },function(e){ arFail(e); });
+  }
+  function arRunCam(stream,a){
+    var o=AR.ov, v=o.querySelector('#arvid'); v.srcObject=stream; v.play().catch(function(){});
+    var R=AR.r=new THREE.WebGLRenderer({canvas:o.querySelector('#arcv'),alpha:true,antialias:true}), S=AR.scene=new THREE.Scene(), P=AR.P=arBuild(a), C=AR.c3=new THREE.PerspectiveCamera(60,1,.05,50);
+    R.outputEncoding=THREE.sRGBEncoding; R.setClearColor(0,0); arLights(S); P.visible=false; S.add(P); C.position.set(0,1.4,0); AR.h=a.h; AR.q=new THREE.Quaternion(); arTitle(AR.it,a);
+    AR.onRes=function(){ R.setPixelRatio(Math.min(devicePixelRatio,2)); R.setSize(innerWidth,innerHeight,false); C.aspect=innerWidth/innerHeight; C.fov=arFov(); C.updateProjectionMatrix(); }; AR.onRes(); addEventListener('resize',AR.onRes);
+    AR.ori={ok:false,a:0,b:0,g:0};
+    AR.onOri=function(e){ if (e.beta==null) return; var d=AR.ori; d.a=e.alpha||0; d.b=e.beta; d.g=e.gamma||0; if (!d.ok){ d.ok=true; AR.first=true; } }; addEventListener('deviceorientation',AR.onOri);
+    setTimeout(function(){ if (AR.busy && AR.ori && !AR.ori.ok) arFail('motion'); },2500);   // desktop browsers never deliver real sensor data
+    AR.ov.classList.add('live'); AR.state='base'; arState();
+    (function loop(){ AR.raf=requestAnimationFrame(loop); var d=AR.ori;
+      if (d.ok){ var k=Math.PI/180; arQ(AR.q,d.a*k,d.b*k,d.g*k,((screen.orientation&&screen.orientation.angle)||window.orientation||0)*k); if (AR.first){ C.quaternion.copy(AR.q); AR.first=false; } else C.quaternion.slerp(AR.q,.6); }
+      R.render(S,C); })();
+  }
+  function arLay(){ var f=AR.fb, P=AR.P; P.position.set(f.hx*f.dist,Math.max(1.45,AR.h/2+.1),f.hz*f.dist); P.rotation.y=Math.atan2(-f.hx,-f.hz); P.visible=true;
+    AR.ov.querySelector('#ardist').textContent=f.dist.toFixed(1)+' m'; }
+  function arSetWall(){
+    var d=new THREE.Vector3(0,0,-1).applyQuaternion(AR.c3.quaternion), dist=2, hl=Math.hypot(d.x,d.z);
+    if (d.y<-.1) dist=1.4/Math.tan(Math.asin(-d.y));                  // aimed at the floor line: distance = phone height / tan(downward pitch)
+    dist=Math.max(.6,Math.min(6,dist));
+    AR.fb={hx:hl>.01?d.x/hl:0,hz:hl>.01?d.z/hl:-1,dist:dist}; AR.state='placed'; arLay(); arState();
+  }
+  function arNudge(dd){ var f=AR.fb; if (f){ f.dist=Math.max(.4,Math.min(8,f.dist+dd)); arLay(); } }
+
+  // ---- the button on the painting's info plate ----
+  function arAddBtn(it){
+    if (it.emb || it.anon || /Sculpture/.test(it.room.name) || !(AR.xr || (window.isSecureContext && matchMedia('(pointer:coarse)').matches))) return;
+    var b=document.createElement('button'); b.className='room arbtn'; b.textContent=at('btn'); b.onclick=function(e){ e.stopPropagation(); arOpen(it); };
+    cap.insertBefore(b,cap.querySelector('.inf')); arSync();
+  }
+  function arSync(){ var b=cap.querySelector('.arbtn'); if (b && cur && b.disabled!==!(cur.it.tex&&cur.it.tex.image)){ b.disabled=!(cur.it.tex&&cur.it.tex.image); } }   // enabled once the image has loaded
   function tick(){
+    if (AR.busy){ clock.getDelta(); requestAnimationFrame(tick); return; }   // gallery is paused while AR is open
     var dt=Math.min(clock.getDelta(),.05), sp=(keys.ShiftLeft?6:3.4)*dt;
     var f=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0), s=(keys.KeyD?1:0)-(keys.KeyA?1:0);
     if (tour && (f||s||keys.ArrowLeft||keys.ArrowRight)) stopTour();
@@ -1117,9 +1374,9 @@
     if (best!==cur){ cur=best; if (!tour && readIt && (!best || best.it!==readIt)) hush();
       if (cur){ var it=cur.it; cap.style.display='block';
         cap.innerHTML='<b></b><div class="inf"></div><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
-        cap.querySelector('b').textContent=it.t; fetchInfo(it); showInfo(it); var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
+        cap.querySelector('b').textContent=it.t; fetchInfo(it); showInfo(it); var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); arAddBtn(it); }
       else cap.style.display='none'; }
-    else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
+    else if (cur){ arSync(); var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     var mv=Math.hypot(p.x-pX,p.z-pZ)>0.003 || Math.abs(yaw-pYaw)>0.003 || !!nav; pX=p.x; pZ=p.z; pYaw=yaw; idleT=mv?0:idleT+dt;
     if (!cur) readIt=null;
     if (readIt && lbEl.style.display!=='none') lbEl.style.display='none';
