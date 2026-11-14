@@ -144,7 +144,7 @@
   /* ---- AR Preview ---- */
   .arbtn{display:block;margin:0 auto 8px auto;min-height:48px;padding:10px 20px;font-size:14px;background:var(--gold);color:#1b1610;border-color:var(--gold)}
   .arbtn:disabled{opacity:.45}
-  #arov{display:none;position:fixed;left:0;top:0;width:100%;height:100%;z-index:30;background:#0e0d0c;color:var(--fg);font-family:Georgia,'Times New Roman',serif;touch-action:none}
+  #arov{display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;z-index:30;background:#0e0d0c;color:var(--fg);font-family:Georgia,'Times New Roman',serif;touch-action:none}
   #arov.live{background:transparent}
   #arov video,#arov canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:none}
   #arov.m-fb video{display:block;object-fit:cover} #arov.m-fb canvas{display:block}
@@ -158,10 +158,20 @@
   #ardrow{align-items:center;gap:8px;padding:0}
   #ardist{min-width:58px;text-align:center;font-size:14px;text-shadow:0 1px 3px #000}
   #arov .c{display:none}
-  #arov.s-base #arset,#arov.s-placed #armove{display:block}
+  #arov.s-base #arset,#arov.s-placed #armove,#arov.s-placed #arclean{display:block}
   #arov.m-fb.s-placed #ardrow{display:flex}
   #arx{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
   #arov.m-fb.s-base #arx{display:block}
+  #arov.clean #artop,#arov.clean #arhint,#arov.clean #arbot{display:none}
+  #arcam{display:none;position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));justify-content:center;align-items:center;gap:26px;pointer-events:none}
+  #arov.clean.m-fb #arcam{display:flex}
+  #arshutter{margin:0;width:74px;height:74px;padding:0;border-radius:50%;background:rgba(255,255,255,.92);border:5px solid rgba(255,255,255,.45);background-clip:padding-box;pointer-events:auto}
+  #artimer{margin:0;padding:10px 14px;min-height:48px;font-size:13px;background:rgba(14,13,12,.55);color:var(--fg);border:1px solid rgba(255,255,255,.35);pointer-events:auto}
+  #arcount{display:none;position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-size:96px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6);pointer-events:none}
+  #arflash{position:absolute;left:0;top:0;width:100%;height:100%;background:#fff;opacity:0;transition:opacity .25s;pointer-events:none}
+  #arshot{display:none;position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;background:rgba(14,13,12,.96);flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px)) 16px;box-sizing:border-box}
+  #arshot img{max-width:100%;max-height:calc(100% - 90px);object-fit:contain;border:1px solid #5c4d30}
+  #arshot div{display:flex;gap:12px}
   .artoast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(120px + env(safe-area-inset-bottom,0px));z-index:40;max-width:calc(100vw - 32px);padding:12px 18px;text-align:center;font-size:14px;background:#161412;color:var(--fg);border:1px solid var(--gold);box-shadow:0 2px 14px rgba(0,0,0,.4)}
 </style>
 </head>
@@ -1145,12 +1155,12 @@
       nocam:'Camera not available. Allow camera access and try again.',nomot:'AR needs camera and motion access on a phone or tablet.',
       scan:'Move the phone slowly to scan the wall and floor',wall:'Wall found · tap to hang here',floor:'Floor found · tap at the base of the wall',
       done:'Hung · tap Move to change the spot',base:'Stand 1–3 m from the wall. Aim at the line where the wall meets the floor, then tap.',
-      fbdone:'Stay in place and turn the phone · − / + matches the wall distance',est:'estimated size',real:'real size',big:' · larger than most walls'},
+      fbdone:'Stay in place and turn the phone · − / + matches the wall distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls'},
     es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
       nocam:'Cámara no disponible. Permite el acceso a la cámara e inténtalo de nuevo.',nomot:'La RA necesita cámara y sensores de movimiento en un móvil o tableta.',
       scan:'Mueve el móvil despacio para escanear la pared y el suelo',wall:'Pared detectada · toca para colgar aquí',floor:'Suelo detectado · toca en la base de la pared',
       done:'Colgado · toca Mover para cambiar el sitio',base:'Colócate a 1–3 m de la pared. Apunta a la línea donde la pared toca el suelo y toca.',
-      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia a la pared',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes'}};
+      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia a la pared',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles'}};
   function at(k){ return ARS[LANG][k]; }
 
   // ---- real sizes (cm) of well-known works: key = normalised title | artist surname. Only the LONG side is used; the other side follows the image ----
@@ -1228,33 +1238,63 @@
       o.innerHTML='<video id="arvid" playsinline muted autoplay></video><canvas id="arcv"></canvas><div id="arx"></div>'+
         '<div id="artop"><div id="arttl"></div><button class="arb" id="arexit"></button></div><div id="arhint"></div>'+
         '<div id="arbot"><div id="ardrow" class="c"><button class="arb" id="arminus">−</button><span id="ardist"></span><button class="arb" id="arplus">+</button></div>'+
-        '<button class="arb c" id="armove"></button><button class="arb c" id="arset"></button></div>';
+        '<button class="arb c" id="armove"></button><button class="arb c" id="arclean">👁</button><button class="arb c" id="arset"></button></div>'+
+        '<div id="arcam"><button id="artimer"></button><button id="arshutter" aria-label="Photo"></button></div><div id="arcount"></div><div id="arflash"></div>'+
+        '<div id="arshot"><img alt=""><div><button class="arb" id="arsave"></button><button class="arb" id="arclose"></button></div></div>';
       document.body.appendChild(o);
       var q=function(s){ return o.querySelector(s); };
       ['#artop','#arbot','#arhint'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
       q('#arexit').onclick=function(){ if (AR.sess) AR.sess.end(); else arCleanup(); };
       q('#armove').onclick=function(){ if (AR.sess){ AR.state='aim'; AR.anc=null; AR.P.userData.fade(.55); } else { AR.state='base'; AR.P.visible=false; } arState(); };
       q('#arset').onclick=arSetWall;
+      // clean view: hide every button (camera + painting only); a tap anywhere brings the controls back
+      q('#arclean').onclick=function(e){ e.stopPropagation(); o.classList.add('clean'); arToast(at('tapshow')); };
+      o.addEventListener('click',function(){ if (o.classList.contains('clean') && !(AR.cd||AR.shot) && !(arguments[0].target.closest&&arguments[0].target.closest('#arcam,#arshot'))) o.classList.remove('clean'); });
+      q('#arshutter').onclick=function(e){ e.stopPropagation(); AR.snap=true; };
+      q('#artimer').onclick=function(e){ e.stopPropagation(); arTimer(); };
+      q('#arsave').onclick=arSave; q('#arclose').onclick=function(){ arShotClose(); };
       q('#arminus').onclick=function(){ arNudge(-.1); }; q('#arplus').onclick=function(){ arNudge(.1); };
     }
-    o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set');
+    o.querySelector('#arexit').textContent=at('exit'); o.querySelector('#armove').textContent=at('move'); o.querySelector('#arset').textContent=at('set'); o.querySelector('#artimer').textContent=at('timer'); o.querySelector('#arsave').textContent=at('save'); o.querySelector('#arclose').textContent=at('close'); o.querySelector('#arclean').title=at('clean');
     o.querySelector('#arttl').textContent=''; o.className='m-'+mode+' s-pre'; o.style.display='block'; arHint(at('prep'));
     return o;
   }
   function arHint(t){ if (AR.ov && AR.hintTxt!==t){ AR.hintTxt=t; AR.ov.querySelector('#arhint').textContent=t; } }
-  function arState(){ var s=AR.state; AR.ov.className=AR.ov.className.replace(/\bs-\w+/,'s-'+s); arHint(at(s==='placed'?(AR.sess?'done':'fbdone'):s==='base'?'base':'scan')); }
+  function arState(){ var s=AR.state; if (s!=='placed') AR.ov.classList.remove('clean'); AR.ov.className=AR.ov.className.replace(/\bs-\w+/,'s-'+s); arHint(at(s==='placed'?(AR.sess?'done':'fbdone'):s==='base'?'base':'scan')); }
   function arToast(m){ var t=AR.toast; if (!t){ t=AR.toast=document.createElement('div'); t.className='artoast'; document.body.appendChild(t); } t.textContent=m; t.style.display='block'; clearTimeout(AR.tt); AR.tt=setTimeout(function(){ t.style.display='none'; },4500); }
   function arFail(e){ var s=(e==='cam')?at('nocam'):(e==='motion')?at('nomot'):(typeof e==='string'?e:at('na')); arCleanup(); arToast(s); }
   function arTitle(it,a){ var s=Math.round(a.w*100)+' × '+Math.round(a.h*100)+' cm ('+at(a.real?'real':'est')+')'+(Math.max(a.w,a.h)>2.4?at('big'):'');
     AR.ov.querySelector('#arttl').textContent=it.title.replace(/\s*\(.*\)/,'')+' · '+s; }
 
+  // composite = camera video (cropped like object-fit:cover) + the painting canvas, then preview with Save / Share
+  function arCompose(){
+    var cv=AR.r.domElement, v=AR.ov.querySelector('#arvid'), w=cv.width, h=cv.height, c=document.createElement('canvas'), x, vw=v.videoWidth, vh=v.videoHeight;
+    c.width=w; c.height=h; x=c.getContext('2d');
+    if (vw){ var k=Math.max(w/vw,h/vh); x.drawImage(v,(w-vw*k)/2,(h-vh*k)/2,vw*k,vh*k); }
+    x.drawImage(cv,0,0);
+    var f=AR.ov.querySelector('#arflash'); f.style.opacity=1; setTimeout(function(){ f.style.opacity=0; },120);
+    c.toBlob(function(b){ if (!b){ arToast(at('na')); return; } var u=URL.createObjectURL(b), s=AR.ov.querySelector('#arshot'); AR.shot={blob:b,url:u}; s.querySelector('img').src=u; s.style.display='flex'; },'image/jpeg',.92);
+  }
+  function arTimer(){      // selfie / group photo: prop the phone up, press, step in front of the painting
+    var cnt=AR.ov.querySelector('#arcount'), n=10;
+    if (AR.cd){ clearInterval(AR.cd); AR.cd=0; cnt.style.display='none'; return; }
+    cnt.textContent=n; cnt.style.display='block';
+    AR.cd=setInterval(function(){ n--; if (n<=0){ clearInterval(AR.cd); AR.cd=0; cnt.style.display='none'; AR.snap=true; } else cnt.textContent=n; },1000);
+  }
+  function arSave(){
+    var b=AR.shot&&AR.shot.blob; if (!b) return; var f=new File([b],'artpro.jpg',{type:'image/jpeg'});
+    if (navigator.canShare && navigator.canShare({files:[f]})) navigator.share({files:[f]}).catch(function(){});   // share sheet → Save Image, WhatsApp…
+    else { var a=document.createElement('a'); a.href=AR.shot.url; a.download='artpro.jpg'; document.body.appendChild(a); a.click(); a.remove(); }
+  }
+  function arShotClose(){ if (AR.shot){ URL.revokeObjectURL(AR.shot.url); AR.shot=null; } AR.ov.querySelector('#arshot').style.display='none'; }
   function arOpen(it){ if (AR.busy) return; AR.busy=true; AR.it=it; hush(); if (AR.xr) arStartXR(it); else arStartCam(it); }
   function arCleanup(){
     if (AR.raf) cancelAnimationFrame(AR.raf);
     if (AR.r){ try{ AR.r.setAnimationLoop(null); }catch(e){} arFreeScene(AR.scene); try{ AR.r.dispose(); AR.r.forceContextLoss(); }catch(e){} }
     if (AR.stream) AR.stream.getTracks().forEach(function(t){ t.stop(); });
     if (AR.onOri) removeEventListener('deviceorientation',AR.onOri); if (AR.onRes) removeEventListener('resize',AR.onRes);
-    if (AR.ov){ AR.ov.style.display='none'; var v=AR.ov.querySelector('#arvid'); v.srcObject=null; }
+    if (AR.ov){ AR.ov.style.display='none'; var v=AR.ov.querySelector('#arvid'); v.srcObject=null; AR.ov.querySelector('#arshot').style.display='none'; AR.ov.querySelector('#arcount').style.display='none'; if (AR.shot) URL.revokeObjectURL(AR.shot.url); }
+    if (AR.cd) clearInterval(AR.cd);
     AR={busy:false,xr:AR.xr,ov:AR.ov,toast:AR.toast}; lastAct=Date.now();
   }
 
@@ -1306,7 +1346,7 @@
   // Live camera video + Three.js canvas on top, camera rotation from DeviceOrientation (iOS asks permission here, inside the tap).
   // No depth sensing: the wall distance is measured from the phone pitch while aiming at the wall/floor line (assumed phone height 1.4 m).
   function arQ(q,al,be,ga,or){ var e=new THREE.Euler(be,al,-ga,'YXZ'); q.setFromEuler(e); q.multiply(new THREE.Quaternion(-Math.sqrt(.5),0,0,Math.sqrt(.5))); q.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-or)); }
-  function arFov(){ var w=innerWidth,h=innerHeight,r=Math.PI/180,L=63,S=49,a=w/h;    // typical phone main camera: 63° long side, 49° short side
+  function arFov(){ var w=AR.ov&&AR.ov.clientWidth||innerWidth,h=AR.ov&&AR.ov.clientHeight||innerHeight,r=Math.PI/180,L=63,S=49,a=w/h;    // typical phone main camera: 63° long side, 49° short side
     if (h>=w) return a<.75 ? L : 2/r*Math.atan(Math.tan(S/2*r)/a); return a>4/3 ? 2/r*Math.atan(Math.tan(L/2*r)/a) : S; }
   function arStartCam(it){
     var perm=(typeof DeviceOrientationEvent!=='undefined' && DeviceOrientationEvent.requestPermission) ? DeviceOrientationEvent.requestPermission().catch(function(){ return 'denied'; }) : Promise.resolve('granted');
@@ -1316,20 +1356,21 @@
       perm.then(function(p){ if (p!=='granted') throw 'motion'; }),
       navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(s){ AR.stream=s; return s; },function(){ throw 'cam'; }),
       art.catch(function(){ throw 'art'; })
-    ]).then(function(r){ arRunCam(r[1],r[2]); },function(e){ arFail(e); });
+    ]).then(function(r){ try{ arRunCam(r[1],r[2]); }catch(err){ console.warn('[AR]',err); arFail(); } },function(e){ arFail(e); });
   }
   function arRunCam(stream,a){
     var o=AR.ov, v=o.querySelector('#arvid'); v.srcObject=stream; v.play().catch(function(){});
-    var R=AR.r=new THREE.WebGLRenderer({canvas:o.querySelector('#arcv'),alpha:true,antialias:true}), S=AR.scene=new THREE.Scene(), P=AR.P=arBuild(a), C=AR.c3=new THREE.PerspectiveCamera(60,1,.05,50);
+    var oc=o.querySelector('#arcv'), nc=document.createElement('canvas'); nc.id='arcv'; oc.parentNode.replaceChild(nc,oc);   // fresh canvas = fresh GL context
+    var R=AR.r=new THREE.WebGLRenderer({canvas:nc,alpha:true,antialias:true}), S=AR.scene=new THREE.Scene(), P=AR.P=arBuild(a), C=AR.c3=new THREE.PerspectiveCamera(60,1,.05,50);
     R.outputEncoding=THREE.sRGBEncoding; R.setClearColor(0,0); arLights(S); P.visible=false; S.add(P); C.position.set(0,1.4,0); AR.h=a.h; AR.q=new THREE.Quaternion(); arTitle(AR.it,a);
-    AR.onRes=function(){ R.setPixelRatio(Math.min(devicePixelRatio,2)); R.setSize(innerWidth,innerHeight,false); C.aspect=innerWidth/innerHeight; C.fov=arFov(); C.updateProjectionMatrix(); }; AR.onRes(); addEventListener('resize',AR.onRes);
+    AR.onRes=function(){ var W=o.clientWidth||innerWidth, H=o.clientHeight||innerHeight; R.setPixelRatio(Math.min(devicePixelRatio,2)); R.setSize(W,H,false); C.aspect=W/H; C.fov=arFov(); C.updateProjectionMatrix(); }; AR.onRes(); addEventListener('resize',AR.onRes);
     AR.ori={ok:false,a:0,b:0,g:0};
     AR.onOri=function(e){ if (e.beta==null) return; var d=AR.ori; d.a=e.alpha||0; d.b=e.beta; d.g=e.gamma||0; if (!d.ok){ d.ok=true; AR.first=true; } }; addEventListener('deviceorientation',AR.onOri);
-    setTimeout(function(){ if (AR.busy && AR.ori && !AR.ori.ok) arFail('motion'); },2500);   // desktop browsers never deliver real sensor data
+    var ori0=AR.ori; setTimeout(function(){ if (AR.busy && AR.ori===ori0 && !ori0.ok) arFail('motion'); },2500);   // desktop browsers never deliver real sensor data
     AR.ov.classList.add('live'); AR.state='base'; arState();
     (function loop(){ AR.raf=requestAnimationFrame(loop); var d=AR.ori;
       if (d.ok){ var k=Math.PI/180; arQ(AR.q,d.a*k,d.b*k,d.g*k,((screen.orientation&&screen.orientation.angle)||window.orientation||0)*k); if (AR.first){ C.quaternion.copy(AR.q); AR.first=false; } else C.quaternion.slerp(AR.q,.6); }
-      R.render(S,C); })();
+      R.render(S,C); if (AR.snap){ AR.snap=false; arCompose(); } })();
   }
   function arLay(){ var f=AR.fb, P=AR.P; P.position.set(f.hx*f.dist,Math.max(1.45,AR.h/2+.1),f.hz*f.dist); P.rotation.y=Math.atan2(-f.hx,-f.hz); P.visible=true;
     AR.ov.querySelector('#ardist').textContent=f.dist.toFixed(1)+' m'; }
