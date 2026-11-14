@@ -76,6 +76,8 @@
   #pad button{margin:0;padding:16px 20px 16px 20px;font-size:20px;opacity:.8}
   @media (pointer:coarse){#pad{display:block}}
   @media (max-width:600px){#tourbar{gap:6px 6px} #tourbar .room{padding:6px 9px 6px 9px;font-size:12px} #roomsel{max-width:56vw} #menu .wrap{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))} #tourbar{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))}}
+  .wa{display:inline-flex;align-items:center;gap:6px;background:#25D366 !important;color:#06351a !important;border-color:#25D366 !important;font-weight:700}
+  .wa:hover{filter:brightness(1.08)}
 </style>
 </head>
 <body>
@@ -92,7 +94,7 @@
   <div id="rooms"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a></div>
   <div id="status">Loading…</div>
 </div></div>
-<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
+<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><div id="sl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
@@ -364,11 +366,11 @@
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
       tourGo:'▶ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀ Prev', next:'Next ▶', slower:'◀◀ Slower', faster:'Faster ▶▶', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸ Pause', resume:'▶ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
-      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', speech:'en-US'},
+      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
       tourGo:'▶ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀ Anterior', next:'Siguiente ▶', slower:'◀◀ Más lento', faster:'Más rápido ▶▶', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸ Pausa', resume:'▶ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
-      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', speech:'es-ES'}
+      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
   function tx(k){ return STR[LANG][k]; }
   var ES_ROOMS={'Renaissance':['Renacimiento','Renacimiento temprano y pleno'],'Baroque & Rococo':['Barroco y Rococó','Siglos XVII–XVIII'],'Modern & 20th Century':['Moderno y siglo XX','1890–1960'],
@@ -812,6 +814,31 @@
     goArt(it);
   }
   var sb=document.createElement('button'); sb.className='room'; sb.textContent=tx('artists'); sb.setAttribute('data-i','artists'); sb.onclick=openSearch; roomsEl.insertBefore(sb, tb);
+
+  // ---------- WhatsApp share: a message with a link that opens ArtPro at this exact painting ----------
+  var SHARE_BASE='https://easylandx.github.io/artpro/';
+  function slug(s){ return norm(s).replace(/ /g,'-'); }
+  function artURL(it){ return SHARE_BASE+'#r='+slug(it.room.name)+'&a='+slug(it.qt); }
+  function waItem(){
+    if (tour && tour.st) return tour.st.it;
+    if (cur) return cur.it;
+    var p=camera.position, best=null, bd=1e9;
+    stations.forEach(function(q){ var d=Math.hypot(q.pos.x-p.x,q.pos.z-p.z); if (d<bd){ bd=d; best=q; } });
+    return best&&best.it;
+  }
+  function shareWA(){
+    var it=waItem(); if (!it) return;
+    var q=encodeURIComponent(tx('waMsg')+'\n'+it.t+'\n'+artURL(it)), ua=navigator.userAgent||'';
+    var ios=/iPhone|iPad|iPod/i.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+    var android=/Android/i.test(ua);
+    if (ios){ location.href='https://wa.me/?text='+q; }                       // universal link: opens the WhatsApp app directly
+    else if (android){ location.href='whatsapp://send?text='+q;                // app opens directly; fall back to the web link if it is not installed
+      setTimeout(function(){ if (!document.hidden) location.href='https://wa.me/?text='+q; },1800); }
+    else { var u='https://web.whatsapp.com/send?text='+q, w=window.open(u,'_blank');   // desktop: straight to WhatsApp Web
+      if (w){ try{ w.opener=null; }catch(e){} } else location.href=u; }
+  }
+  var wb=document.createElement('button'); wb.className='room wa'; wb.id='mwa'; wb.title='WhatsApp'; wb.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+'<span>WhatsApp</span>'; wb.onclick=shareWA; roomsEl.insertBefore(wb, tb);
+  document.getElementById('twa').onclick=shareWA;
   sq.addEventListener('input', function(){ openArtist=''; renderSearch(); });
   document.getElementById('sx').onclick=closeSearch;
 
@@ -860,15 +887,16 @@
       if (+numBuf*10>ROOMS.length || numBuf.length===2) go(); else numT=setTimeout(go,650); } });
   addEventListener('keyup', function(e){ keys[e.code]=false; });
   // ---------- Idle: start the walk tour after 8 s without input once inside the gallery ----------
-  var lastAct=Date.now();
+  var lastAct=Date.now(), linked=false;
   ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
   setInterval(function(){
-    if (tour || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
+    if (tour || linked || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
     if (Date.now()-lastAct>=8000){ lastAct=Date.now(); startTour(); }
   }, 500);
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
     ['touchend','mouseup','mouseleave'].forEach(function(ev){ b.addEventListener(ev,function(){ keys[k]=false; }); }); }
+  ['keydown','pointerdown','wheel','touchstart'].forEach(function(n){ addEventListener(n, function(){ if (intro.style.display==='none') linked=false; }, {passive:true, capture:true}); });
   hold('fw','KeyW'); hold('bk','KeyS');
   var ray=new THREE.Raycaster();
   function openLink(){
@@ -959,7 +987,18 @@
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     renderer.render(scene,camera); requestAnimationFrame(tick);
   }
-  enterRoom(Math.floor(Math.random()*ROOMS.length)); tick();
+  (function(){
+    var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
+    var ri=-1, item=null;
+    if (m.r) ROOMS.forEach(function(R,i){ if (ri<0 && slug(R.name)===m.r) ri=i; });
+    if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && slug(it.qt)===m.a; })[0];
+    enterRoom(ri>=0 ? ri : Math.floor(Math.random()*ROOMS.length));
+    if (item){
+      var st=stations.filter(function(q){ return q.it===item; })[0];
+      if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); linked=true; }
+    }
+  })();
+  tick();
 })();
 </script>
 </body>
