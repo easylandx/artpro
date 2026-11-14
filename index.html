@@ -98,6 +98,8 @@
   #srch .top{display:flex;gap:8px;align-items:center;padding-bottom:10px}
   #sq{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 12px;background:#1d1a16;color:var(--fg);border:1px solid var(--gold);border-radius:0;outline:none;-webkit-appearance:none}
   #sx{margin:0;min-height:44px}
+  #srnd{display:block;width:100%;margin:0 0 10px 0;min-height:44px;font-size:15px;letter-spacing:.04em;background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  #srnd:hover{background:var(--gold);color:#1b1610}
   #sl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #sl .ar{display:flex;justify-content:space-between;gap:10px;padding:13px 6px;border-bottom:1px solid #3a3226;cursor:pointer;color:var(--fg);font-size:16px}
   #sl .ar span{color:#a99f8e;font-size:13px;white-space:nowrap}
@@ -146,6 +148,22 @@
     .inf{font-size:13px;margin:4px 0 0 0}
     #cap a,#cap small{display:none}
   }
+  /* ---- About popup ---- */
+  .abt{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;min-height:0;margin:0 0 0 2px;padding:0 0 0 0;border-radius:50%;background:rgba(14,13,12,.72);color:var(--gold);border:1px solid var(--gold);font:italic 700 17px/1 Georgia,'Times New Roman',serif;letter-spacing:0;cursor:pointer;pointer-events:auto}
+  .abt:hover{background:var(--gold);color:#1b1610}
+  #about{display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;z-index:8;background:rgba(10,9,8,.9);overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;
+    padding:calc(16px + env(safe-area-inset-top,0px)) calc(20px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(20px + env(safe-area-inset-left,0px))}
+  #about.show{display:flex}
+  #about .card{position:relative;max-width:460px;margin:auto;padding:28px 26px 22px 26px;border:1px solid var(--gold);background:#161412;text-align:center;box-sizing:border-box;width:100%}
+  #about h2{margin:0 0 12px 0;font-weight:400;letter-spacing:.08em;color:var(--gold);font-size:22px}
+  #about p{margin:10px 0;line-height:1.55;color:#d8cfbf;font-size:15px}
+  #about p.q{font-style:italic;color:#e9dfcb}
+  #about h3{margin:18px 0 4px 0;font-weight:400;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  #about p.src{font-size:13px;color:#a99f8e;margin:4px 0 0 0}
+  #about p.cr{margin:18px 0 0 0;padding:12px 0 0 0;border-top:1px solid #3a3226;font-size:13px;color:#a99f8e}
+  #about a{color:var(--gold)}
+  #aboutx{position:absolute;right:8px;top:8px;margin:0;padding:6px 10px 6px 10px;min-height:0;background:transparent;color:var(--fg);border:0;font-size:18px;line-height:1;letter-spacing:0}
+
   /* ---- AR Preview ---- */
   .arbtn{display:block;margin:0 auto 8px auto;min-height:48px;padding:10px 20px;font-size:14px;background:var(--gold);color:#1b1610;border-color:var(--gold)}
   .arbtn:disabled{opacity:.45}
@@ -216,11 +234,19 @@
   <p id="iosHint" data-i="ios">On iPhone and iPad: tap Share, then “Add to Home Screen”.</p>
 </div></div>
 <div id="menu"><div class="wrap">
-  <div id="rooms"><span class="brand"><a class="bn" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><a class="bl" href="https://easylandx.github.io" target="_blank" rel="noopener" title="EasyLandX" aria-label="EasyLandX"><svg viewBox="0 0 400 400" aria-hidden="true"><rect width="400" height="400" rx="80" fill="#0a58c8"/><circle cx="235" cy="170" r="116" fill="#ffd500"/><polygon points="162,236 190,320 197,286" fill="#2fbf4f"/><polygon points="318,88 172,226 190,322" fill="#e8291f"/><polygon points="318,88 75,196 168,230" fill="#fff"/><circle cx="93" cy="313" r="8" fill="#fff"/><circle cx="128" cy="292" r="6.5" fill="#fff"/><circle cx="157" cy="277" r="5" fill="#fff"/></svg></a></span></div>
+  <div id="rooms"><span class="brand"><a class="bn" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><a class="bl" href="https://easylandx.github.io" target="_blank" rel="noopener" title="EasyLandX" aria-label="EasyLandX"><svg viewBox="0 0 400 400" aria-hidden="true"><rect width="400" height="400" rx="80" fill="#0a58c8"/><circle cx="235" cy="170" r="116" fill="#ffd500"/><polygon points="162,236 190,320 197,286" fill="#2fbf4f"/><polygon points="318,88 172,226 190,322" fill="#e8291f"/><polygon points="318,88 75,196 168,230" fill="#fff"/><circle cx="93" cy="313" r="8" fill="#fff"/><circle cx="128" cy="292" r="6.5" fill="#fff"/><circle cx="157" cy="277" r="5" fill="#fff"/></svg></a><button type="button" class="abt" title="About ArtPro" aria-label="About ArtPro">i</button></span></div>
   <div id="status">Loading…</div>
 </div></div>
-<div id="tourbar"><span class="brand"><a class="bn" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><a class="bl" href="https://easylandx.github.io" target="_blank" rel="noopener" title="EasyLandX" aria-label="EasyLandX"><svg viewBox="0 0 400 400" aria-hidden="true"><rect width="400" height="400" rx="80" fill="#0a58c8"/><circle cx="235" cy="170" r="116" fill="#ffd500"/><polygon points="162,236 190,320 197,286" fill="#2fbf4f"/><polygon points="318,88 172,226 190,322" fill="#e8291f"/><polygon points="318,88 75,196 168,230" fill="#fff"/><circle cx="93" cy="313" r="8" fill="#fff"/><circle cx="128" cy="292" r="6.5" fill="#fff"/><circle cx="157" cy="277" r="5" fill="#fff"/></svg></a></span><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀︎ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶︎</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀︎◀︎ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶︎▶︎</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><button id="tcard" class="room" title="Painting info card (I)">ℹ︎ Info</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸︎ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
-<div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><div id="sl"></div></div></div>
+<div id="tourbar"><span class="brand"><a class="bn" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><a class="bl" href="https://easylandx.github.io" target="_blank" rel="noopener" title="EasyLandX" aria-label="EasyLandX"><svg viewBox="0 0 400 400" aria-hidden="true"><rect width="400" height="400" rx="80" fill="#0a58c8"/><circle cx="235" cy="170" r="116" fill="#ffd500"/><polygon points="162,236 190,320 197,286" fill="#2fbf4f"/><polygon points="318,88 172,226 190,322" fill="#e8291f"/><polygon points="318,88 75,196 168,230" fill="#fff"/><circle cx="93" cy="313" r="8" fill="#fff"/><circle cx="128" cy="292" r="6.5" fill="#fff"/><circle cx="157" cy="277" r="5" fill="#fff"/></svg></a><button type="button" class="abt" title="About ArtPro" aria-label="About ArtPro">i</button></span><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀︎ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶︎</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀︎◀︎ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶︎▶︎</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><button id="tcard" class="room" title="Painting info card (I)">ℹ︎ Info</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸︎ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
+<div id="about" role="dialog" aria-modal="true" aria-labelledby="abouth"><div class="card">
+  <button id="aboutx" type="button" aria-label="Close">✕</button>
+  <h2 id="abouth" data-i="abtT">About ArtPro</h2>
+  <p data-i="abtP1"></p>
+  <h3 data-i="abtSH">Sources</h3>
+  <p class="src" data-i="abtS"></p>
+  <p class="cr" data-i="abtC"></p>
+</div></div>
+<div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><button id="srnd" class="room" type="button" data-i="rnd">🎲 Random painting</button><div id="sl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
 <div id="pad"><div class="wrap"><button id="fw">▲</button><button id="bk">▼</button></div></div>
@@ -488,11 +514,11 @@
   // ---------- Language (EN / ES) ----------
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
-    en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it.', arin:'🖼 <b>AR on mobile</b> · open a painting and tap “Hang on my wall” to preview it on your wall.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
+    en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it.', rnd:'🎲 Random painting', abtBtn:'About ArtPro', abtT:'About ArtPro', abtP1:'Walk 21 rooms of famous art, take the guided tour, listen to each work, search by artist and, on mobile, hang a painting on your wall.', abtSH:'Sources', abtS:'Images and details come from open collections: Wikimedia Commons, The Metropolitan Museum of Art, the Art Institute of Chicago and the Internet Archive, with texts from Wikipedia and Wikidata.', abtC:'Made by EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>AR on mobile</b> · open a painting and tap “Hang on my wall” to preview it on your wall.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
       tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
-    es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>desliza</b> para mirar · toca un cuadro para ir hasta él.', arin:'🖼 <b>RA en móvil</b> · abre un cuadro y toca “Colgar en mi pared” para verlo en tu pared.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
+    es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>desliza</b> para mirar · toca un cuadro para ir hasta él.', rnd:'🎲 Cuadro aleatorio', abtBtn:'Acerca de ArtPro', abtT:'Acerca de ArtPro', abtP1:'Recorre 21 salas de arte famoso, sigue el recorrido guiado, escucha cada obra, busca por artista y, en el móvil, cuelga un cuadro en tu pared.', abtSH:'Fuentes', abtS:'Las imágenes y los datos proceden de colecciones abiertas: Wikimedia Commons, The Metropolitan Museum of Art, el Art Institute of Chicago y el Internet Archive, con textos de Wikipedia y Wikidata.', abtC:'Creado por EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>RA en móvil</b> · abre un cuadro y toca “Colgar en mi pared” para verlo en tu pared.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
       tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
@@ -945,6 +971,15 @@
     if (ri>=0 && ri!==roomIdx) enterRoom(ri);
     goArt(it);
   }
+  var lastRnd=null;
+  function randomPiece(){
+    var all=[]; artistIndex().forEach(function(a){ a.pieces.forEach(function(it){ all.push(it); }); });
+    if (!all.length) return;
+    var pool=all.length>1 ? all.filter(function(it){ return it!==lastRnd; }) : all;
+    lastRnd=pool[Math.floor(Math.random()*pool.length)];
+    gotoPiece(lastRnd);
+  }
+  document.getElementById('srnd').addEventListener('click', randomPiece);
   var sb=document.createElement('button'); sb.className='room'; sb.textContent=tx('artists'); sb.setAttribute('data-i','artists'); sb.onclick=openSearch; roomsEl.insertBefore(sb, tb);
 
   // ---------- WhatsApp share: a message with a link that opens ArtPro at this exact painting ----------
@@ -1049,6 +1084,14 @@
   document.getElementById('sx').onclick=closeSearch;
 
 
+  // ---------- About popup ----------
+  var aboutEl=document.getElementById('about');
+  function openAbout(){ aboutEl.classList.add('show'); }
+  function closeAbout(){ aboutEl.classList.remove('show'); }
+  [].forEach.call(document.querySelectorAll('.abt'), function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); openAbout(); }); });
+  document.getElementById('aboutx').addEventListener('click', closeAbout);
+  aboutEl.addEventListener('click', function(e){ if (e.target===aboutEl) closeAbout(); });
+
   // ---------- Language switch ----------
   var FLAG={
     en:'<svg viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="2.4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>',
@@ -1057,6 +1100,7 @@
     document.documentElement.lang=LANG;
     [].forEach.call(document.querySelectorAll('[data-i]'), function(el){ el.innerHTML=tx(el.getAttribute('data-i')); });
     [].forEach.call(document.querySelectorAll('.langsw button'), function(b){ b.classList.toggle('on', b.getAttribute('data-l')===LANG); });
+    [].forEach.call(document.querySelectorAll('.abt'), function(b){ b.title=tx('abtBtn'); b.setAttribute('aria-label',tx('abtBtn')); });
     sq.placeholder=tx('place'); rsel.title=tx('choose'); readLabel(); infoLabel(); setTourBtn();
     ['roomsel','troom'].forEach(function(id){ var sel=document.getElementById(id); for (var k=0;k<sel.options.length;k++){ var i=+sel.options[k].value; sel.options[k].textContent=roomNo(i)+' · '+rname(ROOMS[i]); } });
     ROOMS.forEach(function(R){ R.list.forEach(function(it){ if (it.ready) drawLabel(it); }); });
@@ -1085,7 +1129,7 @@
   var intro=document.getElementById('intro');
   document.getElementById('enter').onclick=function(){ unlockSpeech(); intro.style.display='none'; };
   ['touchend','pointerup','click','keydown'].forEach(function(n){ addEventListener(n, function(e){ if (e.target && e.target.id==='listen') return; unlockSpeech(); }, {passive:true, capture:true}); });
-  addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (!tour){ if (e.code==='KeyN') artStep(1); if (e.code==='KeyP') artStep(-1); } if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
+  addEventListener('keydown', function(e){ if (aboutEl.classList.contains('show')){ if (e.code==='Escape') closeAbout(); return; } if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (!tour){ if (e.code==='KeyN') artStep(1); if (e.code==='KeyP') artStep(-1); } if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
     if (tour){ if (e.code==='Space'){ e.preventDefault(); tourPause(); } if (e.code==='KeyN') tourNext(); if (e.code==='KeyP') tourPrev(); if (e.code==='Equal'||e.code==='NumpadAdd') tourSpeed(1); if (e.code==='Minus'||e.code==='NumpadSubtract') tourSpeed(-1); }
     var m=/^(?:Digit|Numpad)([0-9])$/.exec(e.code); if (m){ clearTimeout(numT); numBuf+=m[1]; if (numBuf.length>2) numBuf=m[1];
       var go=function(){ var ri=roomAt(+numBuf); numBuf=''; if (ROOMS[ri]){ stopTour(); enterRoom(ri); } };
