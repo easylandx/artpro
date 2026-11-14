@@ -684,7 +684,7 @@
   // ---------- Read aloud (speech synthesis) ----------
   var SS=window.speechSynthesis, rd={on:true,busy:false,cur:null};
   var treadBtn=document.getElementById('tread');
-  function readLabel(){ treadBtn.textContent=tx('read')+(rd.on?tx('on'):tx('off')); treadBtn.classList.toggle('on',rd.on); }
+  function readLabel(){ treadBtn.textContent=tx('read')+(rd.on?tx('on'):tx('off')); treadBtn.classList.toggle('on',rd.on); var mr0=document.getElementById('mread'); if (mr0){ mr0.textContent=treadBtn.textContent; mr0.classList.toggle('on',rd.on); } }
   function say(text){
     if (!SS||!rd.on) return;
     try{ var u=new SpeechSynthesisUtterance(text); u.lang=tx('speech'); rd.cur=u; rd.busy=true;
@@ -699,7 +699,7 @@
     try{ var u=new SpeechSynthesisUtterance(' '); u.volume=0; u.rate=2; SS.speak(u); if (SS.paused) SS.resume(); }catch(e){}
   }
   function hush(){ rd.busy=false; rd.cur=null; if (SS) try{ SS.cancel(); }catch(e){} }
-  function toggleRead(){ rd.on=!rd.on; readLabel(); if (!rd.on) hush(); }
+  function toggleRead(){ rd.on=!rd.on; readLabel(); if (!rd.on) hush(); readIt=null; }
   // title plus ", by Artist" — the artist is left out when the previous piece read aloud was by the same artist
   var lastArtist='';
   function spoken(it){
@@ -849,14 +849,28 @@
   document.getElementById('twa').onclick=shareWA;
 
   // ---------- Info card: year, museum and a short description (Wikipedia / Wikidata, cached on this device) ----------
-  var ICACHE='artpro-info-v1', icache={}, infoOn=true;
+  var ICACHE='artpro-info-v2', icache={}, infoOn=true;
   try{ icache=JSON.parse(localStorage.getItem(ICACHE)||'{}'); infoOn=localStorage.getItem('artpro-info')!=='0'; }catch(e){}
-  function clean(t){ t=(t||'').replace(/\s*\([^)]*\)/g,'').replace(/\s+/g,' ').trim(); return t.length>330 ? t.slice(0,t.lastIndexOf(' ',327))+'…' : t; }
+  // whole sentences only: abbreviation-aware split (J. M. W. Turner, n.º, a. C., ca. …), nested brackets removed, never cut mid-sentence
+  var ABBR=/^(n|no|nº|ca|c|sr|sra|dr|dra|dña|ud|uds|etc|aprox|núm|pág|págs|vol|st|mr|mrs|jr|fig|vs|a|d|s|ss|p|pp|fl|ed|op|cat|inv)$/i;
+  function sents(t){
+    var out=[], last=0, re=/[.!?]+["»”)]?\s+(?=[A-ZÁÉÍÓÚÑÜ¿¡«"“])/g, m;
+    while ((m=re.exec(t))){ var w=t.slice(0,m.index).split(/\s/).pop().replace(/[^A-Za-zÁÉÍÓÚÑÜáéíóúñüº]/g,''); if (w.length<2 ? /[A-ZÁÉÍÓÚÑ]/.test(w)||ABBR.test(w) : ABBR.test(w)) continue;
+      out.push(t.slice(last,m.index+m[0].replace(/\s+$/,'').length)); last=m.index+m[0].length; }
+    if (last<t.length) out.push(t.slice(last)); return out;
+  }
+  function clean(t){
+    t=(t||'').replace(/\s+/g,' '); while (/\([^()]*\)/.test(t)) t=t.replace(/\s*\([^()]*\)/g,'');
+    t=t.replace(/\s+([,.;:])/g,'$1').replace(/\[\d+\]/g,'').trim(); if (!t) return '';
+    var ss=sents(t), r=ss[0]||''; if (ss[1] && (r+' '+ss[1]).length<=380) r+=' '+ss[1];
+    if (r.length>520){ var k=Math.max(r.lastIndexOf(', ',470), r.lastIndexOf('; ',470)); if (k>150) r=r.slice(0,k)+'.'; }
+    return /[.!?"»”]$/.test(r) ? r : r+'.';
+  }
   function fetchInfo(it){
     if (it.emb || it.inf!==undefined || it.infP) return; var key=it.title+'|'+it.artist;
     if (icache[key]!==undefined){ it.inf=icache[key]; return infoReady(it); }
     it.infP=true;
-    wjf('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=5&gsrsearch='+enc(strip(it.qt)+' '+surname(it.artist)+' painting')+'&prop=extracts|pageprops&exintro=1&explaintext=1&exsentences=2&ppprop=wikibase_item').then(function(d){
+    wjf('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=5&gsrsearch='+enc(strip(it.qt)+' '+surname(it.artist)+' painting')+'&prop=extracts|pageprops&exintro=1&explaintext=1&ppprop=wikibase_item').then(function(d){
       var ps=d&&d.query&&d.query.pages; if (!ps) return null;
       var h=Object.keys(ps).map(function(k){ return ps[k]; }).sort(function(a,b){ return a.index-b.index; }).filter(function(p){ return p.pageprops&&p.pageprops.wikibase_item && titleOK(it,p.title) && (it.anon||artistOK(it,p.extract||'')); })[0];
       if (!h) return null; var q=h.pageprops.wikibase_item, en=clean(h.extract);
@@ -868,7 +882,7 @@
         var est=e.sitelinks&&e.sitelinks.eswiki&&e.sitelinks.eswiki.title;
         return Promise.all([
           mid ? wjf('https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&props=labels&languages=en|es&ids='+mid) : null,
-          est ? wjf('https://es.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&exintro=1&explaintext=1&exsentences=2&titles='+enc(est)) : null
+          est ? wjf('https://es.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&exintro=1&explaintext=1&titles='+enc(est)) : null
         ]).then(function(r){
           var lb=r[0]&&r[0].entities&&r[0].entities[mid]&&r[0].entities[mid].labels||{}, ep=r[1]&&r[1].query&&r[1].query.pages, es='';
           if (ep){ var k=Object.keys(ep)[0]; es=clean(ep[k]&&ep[k].extract); }
@@ -893,6 +907,20 @@
   function toggleInfo(){ infoOn=!infoOn; try{ localStorage.setItem('artpro-info',infoOn?'1':'0'); }catch(e){} infoLabel(); if (cur){ fetchInfo(cur.it); showInfo(cur.it); } if (!infoOn) hush(); }
   var ib=document.createElement('button'); ib.className='room'; ib.id='mcard'; ib.onclick=toggleInfo; roomsEl.insertBefore(ib, tb);
   document.getElementById('tcard').onclick=toggleInfo;
+  var mr=document.createElement('button'); mr.className='room'; mr.id='mread'; mr.onclick=toggleRead; roomsEl.insertBefore(mr, tb); if (!SS) mr.style.display='none'; readLabel();
+
+  // ---------- Previous / next painting (across all rooms) while walking freely ----------
+  function artStep(d){
+    if (tour){ if (d>0) tourNext(); else tourPrev(); return; }
+    hush(); readIt=null;
+    var order=tourOrder(), base=waItem(), idx=order.indexOf(base), target;
+    if (idx>=0 && order[idx+d]) target=order[idx+d];
+    else { var ri=(roomIdx+(idx<0?0:d)+ROOMS.length)%ROOMS.length; if (idx>=0 || ri!==roomIdx) enterRoom(ri); var o2=tourOrder(); target=idx<0 ? o2[0] : (d>0?o2[0]:o2[o2.length-1]); }
+    if (target) goArt(target);
+  }
+  var pb=document.createElement('button'); pb.className='room'; pb.id='mprev'; pb.setAttribute('data-i','prev'); pb.innerHTML=tx('prev'); pb.title='Previous painting (P)'; pb.onclick=function(){ artStep(-1); };
+  var nb=document.createElement('button'); nb.className='room'; nb.id='mnext'; nb.setAttribute('data-i','next'); nb.innerHTML=tx('next'); nb.title='Next painting (N)'; nb.onclick=function(){ artStep(1); };
+  roomsEl.insertBefore(pb, sb); roomsEl.insertBefore(nb, sb);
   sq.addEventListener('input', function(){ openArtist=''; renderSearch(); });
   document.getElementById('sx').onclick=closeSearch;
 
@@ -933,7 +961,7 @@
   var intro=document.getElementById('intro');
   document.getElementById('enter').onclick=function(){ unlockSpeech(); intro.style.display='none'; };
   ['touchend','pointerup','click','keydown'].forEach(function(n){ addEventListener(n, unlockSpeech, {passive:true, capture:true}); });
-  addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
+  addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (!tour){ if (e.code==='KeyN') artStep(1); if (e.code==='KeyP') artStep(-1); } if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
     if (tour){ if (e.code==='Space'){ e.preventDefault(); tourPause(); } if (e.code==='KeyN') tourNext(); if (e.code==='KeyP') tourPrev(); if (e.code==='Equal'||e.code==='NumpadAdd') tourSpeed(1); if (e.code==='Minus'||e.code==='NumpadSubtract') tourSpeed(-1); }
     var m=/^(?:Digit|Numpad)([0-9])$/.exec(e.code); if (m){ clearTimeout(numT); numBuf+=m[1]; if (numBuf.length>2) numBuf=m[1];
       var go=function(){ var ri=roomAt(+numBuf); numBuf=''; if (ROOMS[ri]){ stopTour(); enterRoom(ri); } };
@@ -941,11 +969,11 @@
       if (+numBuf*10>ROOMS.length || numBuf.length===2) go(); else numT=setTimeout(go,650); } });
   addEventListener('keyup', function(e){ keys[e.code]=false; });
   // ---------- Idle: start the walk tour after 8 s without input once inside the gallery ----------
-  var lastAct=Date.now(), linked=false;
+  var lastAct=Date.now(), linked=false, readIt=null, idleT=0, pX=0, pZ=0, pYaw=0;
   ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
   setInterval(function(){
-    if (tour || linked || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
+    if (tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
     if (Date.now()-lastAct>=8000){ lastAct=Date.now(); startTour(); }
   }, 500);
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
@@ -1031,27 +1059,39 @@
     }
     p.x=Math.max(-5,Math.min(5,p.x)); p.z=Math.max(-half+1.2,Math.min(half-1.2,p.z));
     camera.rotation.set(pitch,yaw,0);
-    var best=null, bd=5.5, fx=-Math.sin(yaw), fz=-Math.cos(yaw);
+    var best=null, bd=Math.max(5.5,tourDist()+1.2), fx=-Math.sin(yaw), fz=-Math.cos(yaw);
     stations.forEach(function(st){ var dx=st.pos.x-p.x, dz=st.pos.z-p.z, d=Math.hypot(dx,dz); if (d<bd && (dx*fx+dz*fz)/d>.45){ bd=d; best=st; } });
-    if (best!==cur){ cur=best;
+    if (best!==cur){ cur=best; if (!tour) hush();
       if (cur){ var it=cur.it; cap.style.display='block';
         cap.innerHTML='<b></b><div class="inf"></div><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
         cap.querySelector('b').textContent=it.t; fetchInfo(it); showInfo(it); var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
       else cap.style.display='none'; }
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
+    var mv=Math.hypot(p.x-pX,p.z-pZ)>0.003 || Math.abs(yaw-pYaw)>0.003 || !!nav; pX=p.x; pZ=p.z; pYaw=yaw; idleT=mv?0:idleT+dt;
+    if (!cur) readIt=null;
+    if (!tour && cur && rd.on && SS && intro.style.display==='none' && srch.style.display!=='block' && idleT>0.8 && readIt!==cur.it){
+      var it0=cur.it, wait0=infoOn && !it0.emb && it0.inf===undefined;
+      if (wait0) fetchInfo(it0);
+      if (!wait0 || idleT>4){ readIt=it0; lastArtist=''; say(spoken(it0)+infoSpeech(it0)); }
+    }
     renderer.render(scene,camera); requestAnimationFrame(tick);
   }
-  (function(){
+  function openFromHash(){
     var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
     var ri=-1, item=null;
     if (m.r) ROOMS.forEach(function(R,i){ if (ri<0 && slug(R.name)===m.r) ri=i; });
-    if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && slug(it.qt)===m.a; })[0];
-    enterRoom(ri>=0 ? ri : Math.floor(Math.random()*ROOMS.length));
+    if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && (slug(it.qt)===m.a || slug(it.title)===m.a); })[0];
+    if (ri<0) return false;
+    intro.style.display='none'; lastAct=Date.now();            // shared link: skip the start screen and go straight to the painting
+    enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
-      if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); linked=true; }
+      if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); nav=null; linked=true; if (tour) stopTour(); }
     }
-  })();
+    return true;
+  }
+  if (!openFromHash()) enterRoom(Math.floor(Math.random()*ROOMS.length));
+  addEventListener('hashchange', openFromHash);
   tick();
 })();
 </script>
