@@ -83,6 +83,7 @@
   @media (max-width:600px){#tourbar{gap:6px 6px} #tourbar .room{padding:6px 9px 6px 9px;font-size:12px} #roomsel{max-width:56vw} #menu .wrap{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))} #tourbar{padding-left:calc(14px + env(safe-area-inset-left,0px));padding-right:calc(14px + env(safe-area-inset-right,0px))}}
   .wa{display:inline-flex;align-items:center;gap:6px;background:#25D366 !important;color:#06351a !important;border-color:#25D366 !important;font-weight:700}
   .wa:hover{filter:brightness(1.08)}
+  #listen{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(210px + env(safe-area-inset-bottom,0px));z-index:5;margin:0;padding:12px 18px;max-width:calc(100vw - 28px);box-shadow:0 2px 14px rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
@@ -371,11 +372,11 @@
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
       tourGo:'▶ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀ Prev', next:'Next ▶', slower:'◀◀ Slower', faster:'Faster ▶▶', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸ Pause', resume:'▶ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
-      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
+      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
       tourGo:'▶ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀ Anterior', next:'Siguiente ▶', slower:'◀◀ Más lento', faster:'Más rápido ▶▶', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸ Pausa', resume:'▶ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
-      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
+      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
   function tx(k){ return STR[LANG][k]; }
   var ES_ROOMS={'Renaissance':['Renacimiento','Renacimiento temprano y pleno'],'Baroque & Rococo':['Barroco y Rococó','Siglos XVII–XVIII'],'Modern & 20th Century':['Moderno y siglo XX','1890–1960'],
@@ -969,7 +970,7 @@
       if (+numBuf*10>ROOMS.length || numBuf.length===2) go(); else numT=setTimeout(go,650); } });
   addEventListener('keyup', function(e){ keys[e.code]=false; });
   // ---------- Idle: start the walk tour after 8 s without input once inside the gallery ----------
-  var lastAct=Date.now(), linked=false, readIt=null, idleT=0, pX=0, pZ=0, pYaw=0;
+  var lastAct=Date.now(), linked=false, readIt=null, gest=false, idleT=0, pX=0, pZ=0, pYaw=0;
   ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
   setInterval(function(){
@@ -979,6 +980,7 @@
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
     ['touchend','mouseup','mouseleave'].forEach(function(ev){ b.addEventListener(ev,function(){ keys[k]=false; }); }); }
   ['keydown','pointerdown','wheel','touchstart'].forEach(function(n){ addEventListener(n, function(){ if (intro.style.display==='none') linked=false; }, {passive:true, capture:true}); });
+  ['pointerdown','touchend','click','keydown'].forEach(function(n){ addEventListener(n, function(){ gest=true; }, {passive:true, capture:true}); });   // browsers only allow speech after a tap or key press
   hold('fw','KeyW'); hold('bk','KeyS');
   var ray=new THREE.Raycaster();
   function openLink(){
@@ -1069,20 +1071,23 @@
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     var mv=Math.hypot(p.x-pX,p.z-pZ)>0.003 || Math.abs(yaw-pYaw)>0.003 || !!nav; pX=p.x; pZ=p.z; pYaw=yaw; idleT=mv?0:idleT+dt;
     if (!cur) readIt=null;
-    if (!tour && cur && rd.on && SS && intro.style.display==='none' && srch.style.display!=='block' && idleT>0.8 && readIt!==cur.it){
+    if (gest && lbEl.style.display!=='none') lbEl.style.display='none';
+    if (!tour && cur && rd.on && SS && gest && intro.style.display==='none' && srch.style.display!=='block' && idleT>0.8 && readIt!==cur.it){
       var it0=cur.it, wait0=infoOn && !it0.emb && it0.inf===undefined;
       if (wait0) fetchInfo(it0);
       if (!wait0 || idleT>4){ readIt=it0; lastArtist=''; say(spoken(it0)+infoSpeech(it0)); }
     }
     renderer.render(scene,camera); requestAnimationFrame(tick);
   }
+var lbEl=document.createElement('button'); lbEl.id='listen'; lbEl.setAttribute('data-i','listen'); lbEl.innerHTML=tx('listen'); document.body.appendChild(lbEl);
+  lbEl.onclick=function(){ unlockSpeech(); gest=true; readIt=null; lbEl.style.display='none'; };
   function openFromHash(){
     var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
     var ri=-1, item=null;
     if (m.r) ROOMS.forEach(function(R,i){ if (ri<0 && slug(R.name)===m.r) ri=i; });
     if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && (slug(it.qt)===m.a || slug(it.title)===m.a); })[0];
     if (ri<0) return false;
-    intro.style.display='none'; lastAct=Date.now();            // shared link: skip the start screen and go straight to the painting
+    intro.style.display='none'; lastAct=Date.now(); if (!gest && SS && rd.on) lbEl.style.display='block';            // shared link: skip the start screen and go straight to the painting
     enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
