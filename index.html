@@ -618,7 +618,10 @@
   function pump(){ while(active<6 && queue.length){ (function(it){ active++; it.state='loading';
     resolve(it,function(){ active--; it.state='done'; if (it.failed){ promote(it); relayout(); } setStatus(); pump(); }); })(queue.shift()); } }
   function promote(it){ var R=it.room; if (R && R.reserve && R.reserve.length) R.list.push(R.reserve.shift()); }
-  function relayout(){ clearTimeout(rlTimer); rlTimer=setTimeout(function(){ if (roomIdx<0) return; var p=camera.position, keep=linkItem && lp && Math.hypot(p.x-lp.x,p.z-lp.z)<0.05 && Math.abs(yaw-lp.yaw)<0.05; enterRoom(roomIdx,true); if (keep) placeAt(linkItem); },500); }
+  function relayout(){ clearTimeout(rlTimer); rlTimer=setTimeout(function(){ if (roomIdx<0) return; var p=camera.position, walkIt=nav&&nav.item, arrived=!!(linkItem && lp && Math.hypot(p.x-lp.x,p.z-lp.z)<0.3 && Math.abs(wrapA(yaw-lp.yaw))<0.12);
+      enterRoom(roomIdx,true);
+      // a print that failed to load was removed and the others shifted: stay on (or keep walking to) the painting that was chosen
+      if (walkIt) goArt(walkIt); else if (arrived) placeAt(linkItem); },500); }
   function enqueue(it){ if (it.state||it.emb) return; it.state='queued'; queue.push(it); }
 
   window.copyPins=function(){
@@ -1027,7 +1030,8 @@
   function goArt(it){
     var st=stations.filter(function(q){ return q.it===it; })[0]; if (!st) return false;
     var side=st.pos.x<0?-1:1, vd=tourDist();
-    nav={x:side*(5.9-vd), z:st.pos.z, yaw:side<0?Math.PI/2:-Math.PI/2, pitch:Math.atan(0.65/vd)};
+    nav={x:side*(5.9-vd), z:st.pos.z, yaw:side<0?Math.PI/2:-Math.PI/2, pitch:Math.atan(0.65/vd), item:it};
+    linkItem=it; lp={x:nav.x, z:nav.z, yaw:nav.yaw};          // remembered so the target survives a re-layout of the room
     return true;
   }
   function goDir(h){
