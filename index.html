@@ -175,6 +175,10 @@
   #arpick .pt b{font-weight:400;color:var(--gold);font-size:17px}
   #arpm{margin:0 0 8px 0;width:100%;min-height:48px;background:var(--gold);color:#1b1610}
   #arpr{width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0 0 8px 0;background:#1d1a16;color:var(--fg);border:1px solid #5c4d30}
+  #arpz{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px 0}
+  #arpz button{margin:0;padding:7px 10px;min-height:0;font-size:13px;letter-spacing:0;background:transparent;color:var(--fg);border:1px solid #5c4d30}
+  #arpz button.on{background:var(--gold);color:#1b1610;border-color:var(--gold)}
+  #arpl .rh{grid-column:1/-1;color:var(--gold);font-size:14px;padding:8px 0 0 0;border-bottom:1px solid #3a3226}
   #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;grid-auto-rows:max-content;padding-bottom:8px}
   #arpl button{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%;text-align:left;margin:0;padding:0;border:0;background:transparent;color:var(--fg);letter-spacing:0;font-size:12px;line-height:1.25;min-height:0}
   #arpl button span{display:block;overflow:hidden;max-height:3.9em;word-break:break-word}
@@ -1177,12 +1181,12 @@
       nocam:'Camera not available. Allow camera access and try again.',nomot:'AR needs camera and motion access on a phone or tablet.',
       scan:'Move the phone slowly to scan the wall and floor',wall:'Wall found · tap to hang here',floor:'Floor found · tap at the base of the wall',
       done:'Hung · tap Move to change the spot',base:'Stand 1–3 m from the wall. Aim at the line where the wall meets the floor, then tap.',
-      fbdone:'Stay put and turn the phone · − / + adjusts distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls',add:'＋ Add another',rem:'🗑 Remove',clr:'Clear all',cancel:'✕ Cancel',pick:'Choose a painting',nopick:'No paintings ready yet. Open a room in the gallery first.',max:'Maximum of 5 paintings on the wall',many:'Tap a painting to select it · Move, Remove or add another',baseN:'Aim where the painting’s centre should hang, then tap',mine:'📷 My photo (from library)',photo:'My photo'},
+      fbdone:'Stay put and turn the phone · − / + adjusts distance',est:'estimated size',real:'real size',big:' · larger than most walls',clean:'Clean view',timer:'⏱ 10 s timer',save:'Save / Share',close:'✕ Close',tapshow:'Tap the screen to show the controls',add:'＋ Add another',rem:'🗑 Remove',clr:'Clear all',cancel:'✕ Cancel',pick:'Choose a painting',nopick:'No paintings ready yet. Open a room in the gallery first.',max:'Maximum of 5 paintings on the wall',many:'Tap a painting to select it · Move, Remove or add another',baseN:'Aim where the painting’s centre should hang, then tap',mine:'📷 My photo (from library)',photo:'My photo',sz0:'All sizes',sz1:'Small · <50 cm',sz2:'Medium · 50–100 cm',sz3:'Large · 1–2 m',sz4:'Huge · >2 m',allr:'All rooms',nosz:'No paintings of this size yet (some sizes are estimates)'},
     es:{btn:'🖼 Colgar en mi pared',exit:'✕ Salir',move:'↻ Mover de sitio',set:'📍 Fijar pared aquí',prep:'Iniciando cámara…',na:'Vista AR no disponible para este cuadro',
       nocam:'Cámara no disponible. Permite el acceso a la cámara e inténtalo de nuevo.',nomot:'La RA necesita cámara y sensores de movimiento en un móvil o tableta.',
       scan:'Mueve el móvil despacio para escanear la pared y el suelo',wall:'Pared detectada · toca para colgar aquí',floor:'Suelo detectado · toca en la base de la pared',
       done:'Colgado · toca Mover para cambiar el sitio',base:'Colócate a 1–3 m de la pared. Apunta a la línea donde la pared toca el suelo y toca.',
-      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles',add:'＋ Añadir otro',rem:'🗑 Quitar',clr:'Quitar todos',cancel:'✕ Cancelar',pick:'Elige un cuadro',nopick:'Aún no hay cuadros listos. Abre antes una sala de la galería.',max:'Máximo 5 cuadros en la pared',many:'Toca un cuadro para seleccionarlo · Mover, Quitar o añadir otro',baseN:'Apunta a donde debe colgar el centro del cuadro y toca',mine:'📷 Mi foto (de la galería)',photo:'Mi foto'}};
+      fbdone:'Quédate quieto y gira el móvil · − / + ajusta la distancia',est:'tamaño estimado',real:'tamaño real',big:' · mayor que la mayoría de paredes',clean:'Vista limpia',timer:'⏱ Temporizador 10 s',save:'Guardar / Compartir',close:'✕ Cerrar',tapshow:'Toca la pantalla para ver los controles',add:'＋ Añadir otro',rem:'🗑 Quitar',clr:'Quitar todos',cancel:'✕ Cancelar',pick:'Elige un cuadro',nopick:'Aún no hay cuadros listos. Abre antes una sala de la galería.',max:'Máximo 5 cuadros en la pared',many:'Toca un cuadro para seleccionarlo · Mover, Quitar o añadir otro',baseN:'Apunta a donde debe colgar el centro del cuadro y toca',mine:'📷 Mi foto (de la galería)',photo:'Mi foto',sz0:'Todos los tamaños',sz1:'Pequeño · <50 cm',sz2:'Mediano · 50–100 cm',sz3:'Grande · 1–2 m',sz4:'Enorme · >2 m',allr:'Todas las salas',nosz:'Aún no hay cuadros de este tamaño (algunos tamaños son estimados)'}};
   function at(k){ return ARS[LANG][k]; }
 
   // ---- real sizes (cm) of well-known works: key = normalised title | artist surname. Only the LONG side is used; the other side follows the image ----
@@ -1267,7 +1271,7 @@
         '<button class="arb c" id="armove"></button><button class="arb c" id="arrem"></button><button class="arb c" id="aradd"></button><button class="arb c" id="arclr"></button><button class="arb c" id="arcancel"></button><button class="arb c" id="arclean">👁</button><button class="arb c" id="arset"></button></div>'+
         '<div id="arcam"><button id="artimer"></button><button id="arshutter" aria-label="Photo"></button></div><div id="arcount"></div><div id="arflash"></div>'+
         '<div id="arshot"><img alt=""><div><button class="arb" id="arsave"></button><button class="arb" id="arclose"></button></div></div>'+
-        '<div id="arpick"><div class="pt"><b id="arpt"></b><button class="arb" id="arpx">✕</button></div><button class="arb" id="arpm"></button><input type="file" id="arpf" accept="image/*" style="display:none"><select id="arpr"></select><div id="arpl"></div></div>';
+        '<div id="arpick"><div class="pt"><b id="arpt"></b><button class="arb" id="arpx">✕</button></div><button class="arb" id="arpm"></button><input type="file" id="arpf" accept="image/*" style="display:none"><select id="arpr"></select><div id="arpz"></div><div id="arpl"></div></div>';
       document.body.appendChild(o);
       var q=function(s){ return o.querySelector(s); };
       ['#artop','#arbot','#arhint','#arpick'].forEach(function(s){ q(s).addEventListener('beforexrselect',function(e){ e.preventDefault(); }); });   // taps on buttons must not "place" the painting
@@ -1395,25 +1399,65 @@
   // simple painting selector (paintings whose image is already known: loaded in the gallery or cached)
   function arEligible(it){ return !it.emb && !it.anon && !it.failed && !/Sculpture/.test(it.room.name) && !!((it.tex&&it.tex.image&&it.tex.image.width)||PINNED[it.t]||cache[it.t]); }
   function arPickerOpen(req){
-    var pk=AR.ov.querySelector('#arpick'), sel=pk.querySelector('#arpr'), rooms=ROOMS.filter(function(R){ return R.list.some(arEligible); });
-    AR.pickReq=!!req; pk.querySelector('#arpt').textContent=at('pick'); sel.innerHTML='';
+    var pk=AR.ov.querySelector('#arpick'), sel=pk.querySelector('#arpr'), zb=pk.querySelector('#arpz'), rooms=ROOMS.filter(function(R){ return R.list.some(arEligible); });
+    AR.pickReq=!!req; AR.szf=0; pk.querySelector('#arpt').textContent=at('pick'); sel.innerHTML='';
+    var oa=document.createElement('option'); oa.value='all'; oa.textContent=at('allr'); sel.appendChild(oa);
     rooms.forEach(function(R){ var o=document.createElement('option'); o.value=ROOMS.indexOf(R); o.textContent=rname(R); sel.appendChild(o); });
-    var base=ROOMS.indexOf((AR.sel&&AR.sel.it.room)||ROOMS[roomIdx]); if (rooms.indexOf(ROOMS[base])>=0) sel.value=base;
-    sel.style.display=rooms.length?'block':'none'; sel.onchange=arPickFill; arPickFill(); pk.style.display='flex';
+    var base=ROOMS.indexOf((AR.sel&&AR.sel.it.room)||ROOMS[roomIdx]); sel.value=rooms.indexOf(ROOMS[base])>=0?String(base):'all';
+    sel.style.display=rooms.length?'block':'none'; sel.onchange=arPickFill;
+    zb.innerHTML=''; zb.style.display=rooms.length?'flex':'none';
+    [0,1,2,3,4].forEach(function(k){ var b=document.createElement('button'); b.textContent=at('sz'+k); b.className=k===AR.szf?'on':''; b.onclick=function(e){ e.stopPropagation(); AR.szf=k;
+      [].forEach.call(zb.children,function(c,n){ c.className=n===k?'on':''; }); if (k) sel.value='all';      // a size choice previews every room
+      arPickFill(); if (k) arRefine(); }; zb.appendChild(b); });
+    arPickFill(); pk.style.display='flex';
+  }
+  // ---- size (long side, metres) known synchronously: table of famous works → size in the file name → earlier museum lookup → room default (estimate) ----
+  function arSizeNow(it){
+    if (it._arL) return it._arL;
+    var c=PINNED[it.t]||cache[it.t]||{}, k=norm(it.qt).replace(/^(the|la|le|les|el) /,'')+'|'+norm(surname(it.artist)), t=AR_DIMS[k], nm;
+    if (t) return it._arL={L:Math.max(t[0],t[1])/100,real:true};
+    nm=arCmFrom(decodeURIComponent((it.link||c.link||'')+' '+(c.url||'')));
+    if (nm) return it._arL={L:nm/100,real:true};
+    return {L:(AR_ROOM_LONG[it.room.name]||80)/100,real:false};
+  }
+  function arBucket(L){ return L<.5?1:L<1?2:L<2?3:4; }
+  function arSizeTxt(z){ return (z.real?'':'≈ ')+(z.L>=1?z.L.toFixed(z.L>=10?0:1)+' m':Math.round(z.L*100)+' cm'); }
+  // paintings with no known size: ask the museum APIs (Art Institute / Met) in the background, 3 at a time, then refresh the grid
+  var arSzQ=[], arSzN=0, arSzT=0;
+  function arRefine(){
+    ROOMS.forEach(function(R){ R.list.forEach(function(it){
+      if (!arEligible(it)||it._arL||it._arQd) return; var c=PINNED[it.t]||cache[it.t]||{}, l=it.link||c.link||'';
+      if (/artic\.edu\/artworks\/\d+|metmuseum\.org\/art\/collection\/search\/\d+/.test(l)){ it._arQd=true; arSzQ.push({it:it,l:l}); } }); });
+    while (arSzN<3 && arSzQ.length) arNext();
+  }
+  function arNext(){
+    var j=arSzQ.shift(); if (!j) return; arSzN++; var p=Object.create(j.it); p.link=j.l;
+    arSize(p).then(function(z){ if (z.real) j.it._arL=z; },function(){}).then(function(){ arSzN--; clearTimeout(arSzT);
+      arSzT=setTimeout(function(){ if (AR.ov && AR.ov.querySelector('#arpick').style.display==='flex' && AR.szf) arPickFill(); },500); if (AR.busy) arNext(); });
   }
   // small preview: drawn from the image the gallery already loaded, otherwise the cached (smaller) image URL
   function arThumb(it){
     var el=document.createElement('img'), im=it.tex&&it.tex.image&&it.tex.image.width?it.tex.image:null, done=false; el.alt=''; el.className='th';
+    if (it._arTh){ el.src=it._arTh; return el; }
     if (im){ try{ var c=document.createElement('canvas'), x, k, w, h; c.width=c.height=192; x=c.getContext('2d'); k=Math.min(192/im.width,192/im.height); w=im.width*k; h=im.height*k; x.fillStyle='#2a241c'; x.fillRect(0,0,192,192);   // whole painting, never cropped
-        x.drawImage(im,(192-w)/2,(192-h)/2,w,h); el.src=c.toDataURL('image/jpeg',.72); done=true; }catch(e){} }
+        x.drawImage(im,(192-w)/2,(192-h)/2,w,h); el.src=it._arTh=c.toDataURL('image/jpeg',.72); done=true; }catch(e){} }
     if (!done){ var u=pinCand(PINNED[it.t]||cache[it.t]); el.loading='lazy'; el.src=(u&&(u.alt||u.url))||''; }
     return el;
   }
   function arPickFill(){
-    var pk=AR.ov.querySelector('#arpick'), l=pk.querySelector('#arpl'), R=ROOMS[+pk.querySelector('#arpr').value], items=R?R.list.filter(arEligible):[];
+    var pk=AR.ov.querySelector('#arpick'), l=pk.querySelector('#arpl'), v=pk.querySelector('#arpr').value, all=v==='all', top=l.scrollTop, n=0,
+        Rs=all?ROOMS.filter(function(R){ return R.list.some(arEligible); }):(ROOMS[+v]?[ROOMS[+v]]:[]);
     l.innerHTML='';
-    if (!items.length){ var n=document.createElement('div'); n.className='none'; n.textContent=at('nopick'); l.appendChild(n); return; }
-    items.forEach(function(it){ var b=document.createElement('button'), lab=document.createElement('span'); lab.textContent=it.title.replace(/\s*\(.*\)/,''); var sm=document.createElement('small'); sm.textContent=it.artist; lab.appendChild(sm); b.appendChild(arThumb(it)); b.appendChild(lab); b.onclick=function(e){ e.stopPropagation(); arAdd(it); }; l.appendChild(b); });
+    Rs.forEach(function(R){
+      var items=R.list.filter(function(it){ return arEligible(it) && (!AR.szf || arBucket(arSizeNow(it).L)===AR.szf); });
+      if (!items.length) return;
+      if (all){ var h=document.createElement('div'); h.className='rh'; h.textContent=rname(R); l.appendChild(h); }
+      items.forEach(function(it){ n++; var z=arSizeNow(it), b=document.createElement('button'), lab=document.createElement('span'); lab.textContent=it.title.replace(/\s*\(.*\)/,'');
+        var sm=document.createElement('small'); sm.textContent=it.artist; lab.appendChild(sm); var sz=document.createElement('small'); sz.textContent=arSizeTxt(z); lab.appendChild(sz);
+        b.appendChild(arThumb(it)); b.appendChild(lab); b.onclick=function(e){ e.stopPropagation(); arAdd(it); }; l.appendChild(b); });
+    });
+    if (!n){ var d=document.createElement('div'); d.className='none'; d.textContent=at(AR.szf?'nosz':'nopick'); l.appendChild(d); }
+    l.scrollTop=top;
   }
   // own photo from the phone library (iPhone: Photo Library / Take Photo / Files) hung as a framed piece; real size unknown → 50 cm long side
   function arPrepareFile(file){ return new Promise(function(res,rej){ var u=URL.createObjectURL(file), im=new Image();
