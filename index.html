@@ -46,6 +46,11 @@
   .touring #tourbar{display:flex}
   .touring #cap{display:none !important}
   #rooms{flex-wrap:wrap}
+  .langsw{display:inline-flex;border:1px solid #5c4d30;margin:0;background:rgba(14,13,12,.72);pointer-events:auto}
+  .langsw button{margin:0;padding:5px 9px;display:inline-flex;align-items:center;gap:6px;min-height:34px;background:transparent;color:var(--fg);border:0;font-size:12px;letter-spacing:.05em;font-family:inherit}
+  .langsw button.on{background:var(--gold);color:#1b1610}
+  .langsw svg{width:20px;height:14px;display:block;border:1px solid rgba(0,0,0,.35)}
+  #intro .langhost{margin-top:14px}
   .brand{color:var(--gold);text-decoration:none;font-size:20px;font-weight:700;letter-spacing:.06em;padding:4px 6px 4px 0;margin-right:4px;pointer-events:auto;white-space:nowrap}
   #tourbar .brand{margin-right:auto;text-shadow:0 1px 3px #000}
   #srch{display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;z-index:7;background:rgba(14,13,12,.97);box-sizing:border-box;
@@ -76,17 +81,18 @@
 <body>
 <div id="intro"><div class="card">
   <h1>ArtPro</h1>
-  <p>21 rooms of famous artworks.</p>
-  <p class="how"><b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.</p>
-  <p class="how">🔊 Tap ENTER to switch on the voice.</p>
-  <p class="how kb">Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev</p>
-  <button id="enter">ENTER GALLERY</button>
+  <p data-i="rooms">21 rooms of famous artworks.</p>
+  <p class="how" data-i="how"><b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.</p>
+  <p class="how" data-i="voice">🔊 Tap ENTER to switch on the voice.</p>
+  <p class="how kb" data-i="kb">Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev</p>
+  <div class="langhost"></div>
+  <button id="enter" data-i="enter">ENTER GALLERY</button>
 </div></div>
 <div id="menu"><div class="wrap">
   <div id="rooms"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a></div>
   <div id="status">Loading…</div>
 </div></div>
-<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span id="tinfo"></span><button id="tprev" class="room" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" title="Faster (+)">Faster ▶▶</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" title="Stop (T)">■ Stop</button></div>
+<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><div id="sl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
@@ -352,6 +358,29 @@
   // rooms shown, in this order (any room not listed here is left out)
   (function(){ var ORDER=["Renaissance", "Baroque & Rococo", "Modern & 20th Century", "Impressionism & Post-Impressionism", "Neoclassical, Romantic & Realist", "Early Modernism & Avant-Garde", "Post-Impressionism & Fauvism", "Expressionism", "Spanish Art Wing", "Ukiyo-e", "Chinese Ink Painting (Shan Shui)", "Persian & Mughal Miniatures", "Romanticism (European)", "Neoclassicism & Academic Art", "Rococo", "Pointillism & Neo-Impressionism", "Art Nouveau & Symbolism", "Barbizon School & French Realism", "Pre-Raphaelite Brotherhood", "Russian Realism & Symbolism", "Hudson River School"];
     ROOMS=ORDER.map(function(n){ return ROOMS.filter(function(R){ return R.name===n; })[0]; }).filter(Boolean); })();
+  // ---------- Language (EN / ES) ----------
+  var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
+  var STR={
+    en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
+      tourGo:'▶ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀ Prev', next:'Next ▶', slower:'◀◀ Slower', faster:'Faster ▶▶', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸ Pause', resume:'▶ Resume', stop:'■ Stop',
+      place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
+      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', speech:'en-US'},
+    es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
+      tourGo:'▶ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀ Anterior', next:'Siguiente ▶', slower:'◀◀ Más lento', faster:'Más rápido ▶▶', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸ Pausa', resume:'▶ Reanudar', stop:'■ Detener',
+      place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
+      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', speech:'es-ES'}
+  };
+  function tx(k){ return STR[LANG][k]; }
+  var ES_ROOMS={'Renaissance':['Renacimiento','Renacimiento temprano y pleno'],'Baroque & Rococo':['Barroco y Rococó','Siglos XVII–XVIII'],'Modern & 20th Century':['Moderno y siglo XX','1890–1960'],
+    'Impressionism & Post-Impressionism':['Impresionismo y Posimpresionismo','Finales del siglo XIX'],'Neoclassical, Romantic & Realist':['Neoclásico, Romántico y Realista','Finales del XVIII–XIX'],'Early Modernism & Avant-Garde':['Modernismo temprano y vanguardias','1907–1920'],
+    'Post-Impressionism & Fauvism':['Posimpresionismo y Fauvismo','1880–1900'],'Expressionism':['Expresionismo','Principios del siglo XX, Alemania y Austria'],'Spanish Art Wing':['Ala de Arte Español','Del gótico a Sorolla'],'Ukiyo-e':['Ukiyo-e','Grabados japoneses en madera'],
+    'Chinese Ink Painting (Shan Shui)':['Pintura china a tinta (Shan Shui)','Paisajes de las dinastías Song, Yuan y Ming'],'Persian & Mughal Miniatures':['Miniaturas persas y mogolas','Cortes iluminadas de Irán y la India'],'Romanticism (European)':['Romanticismo europeo','Principios del siglo XIX'],
+    'Neoclassicism & Academic Art':['Neoclasicismo y arte académico','Finales del XVIII–XIX'],'Rococo':['Rococó','Siglo XVIII, Francia e Inglaterra'],'Pointillism & Neo-Impressionism':['Puntillismo y Neoimpresionismo','Seurat, Signac y Cross'],
+    'Art Nouveau & Symbolism':['Art Nouveau y Simbolismo','Fin de siglo'],'Barbizon School & French Realism':['Escuela de Barbizon y realismo francés','Mediados del siglo XIX, Francia'],'Pre-Raphaelite Brotherhood':['Hermandad Prerrafaelita','Inglaterra victoriana'],
+    'Russian Realism & Symbolism':['Realismo y simbolismo rusos','Los Itinerantes y más allá'],'Hudson River School':['Escuela del río Hudson','Paisaje estadounidense']};
+  function rname(R){ return LANG==='es' && ES_ROOMS[R.name] ? ES_ROOMS[R.name][0] : R.name; }
+  function rsub(R){ return LANG==='es' && ES_ROOMS[R.name] ? ES_ROOMS[R.name][1] : R.sub; }
+  var signMesh=null;
   var ANON={'Winged Victory of Samothrace':1,'The Great Sphinx of Tanis':1,'Laocoön and His Sons':1};
   function mk(R,e){ return {t:e[0]+' — '+e[1], title:e[0], artist:e[1], qt:e[2]||e[0].replace(/\s*\(.*\)/,''), alts:e[3]||[], anon:!!ANON[e[0]], emb:false, room:R}; }
   ROOMS.forEach(function(R){
@@ -431,9 +460,9 @@
     x.fillStyle='#f6f0e2'; x.fillRect(0,0,W,H); x.strokeStyle='#c9a45c'; x.lineWidth=4; x.strokeRect(6,6,W-12,H-12);
     x.fillStyle='#1b1610'; x.textAlign='center'; x.font='bold 40px Georgia'; wrapText(x,it.t,W/2,58,W-70,44,2);
     x.fillStyle='#8a5a12'; x.font='26px Georgia';
-    var l = it.link ? it.link.replace('https://','') : 'searching open archives…';
+    var l = it.link ? it.link.replace('https://','') : tx('searching');
     x.fillText((l.length>58 ? l.slice(0,57)+'…' : l)+(it.link?' ↗':''), W/2, H-48);
-    var src=(it.srcName?'Source: '+it.srcName:'')+(it.archTitle?(it.srcName?' · ':'')+it.archTitle:'');
+    var src=(it.srcName?tx('source')+it.srcName:'')+(it.archTitle?(it.srcName?' · ':'')+it.archTitle:'');
     if (src){ x.fillStyle='#6d655a'; x.font='italic 22px Georgia'; x.fillText(src.length>72?src.slice(0,71)+'…':src, W/2, H-18); }
     it.labelTex.needsUpdate=true;
   }
@@ -577,13 +606,13 @@
   function setStatus(){
     if (tour){ tourSay(); return; }
     var R=ROOMS[roomIdx], vis=R.list.filter(function(i){return !i.failed;}), tot=vis.filter(function(i){return !i.emb;}).length, ok=vis.filter(function(i){return !i.emb && i.state==='done';}).length;
-    statusEl.textContent = R.name+' · '+vis.length+' paintings'+(tot&&ok<tot?' · loading from open-access archives ('+ok+'/'+tot+')':'')+' · click or E opens a painting’s link';
+    statusEl.textContent = rname(R)+' · '+vis.length+tx('paintings')+(tot&&ok<tot?tx('loading')+ok+'/'+tot+')':'')+tx('link');
   }
   function signTex(R){
     var c=document.createElement('canvas'); c.width=1024; c.height=256; var x=c.getContext('2d');
     x.fillStyle='rgba(0,0,0,0)'; x.clearRect(0,0,1024,256); x.textAlign='center'; x.fillStyle='#2a2118';
-    x.font='bold 64px Georgia'; wrapText(x,R.name,512,100,960,70,2);
-    x.fillStyle='#7a5c22'; x.font='italic 36px Georgia'; x.fillText(R.sub,512,226);
+    x.font='bold 64px Georgia'; wrapText(x,rname(R),512,100,960,70,2);
+    x.fillStyle='#7a5c22'; x.font='italic 36px Georgia'; x.fillText(rsub(R),512,226);
     return new THREE.CanvasTexture(c);
   }
   function enterRoom(i,keep){
@@ -604,7 +633,7 @@
     [[-half,0],[half,Math.PI]].forEach(function(w){ var m=new THREE.Mesh(new THREE.PlaneGeometry(12,6),wallMat); m.position.set(0,3,w[0]); m.rotation.y=w[1]; roomGroup.add(m); });
     [-5.95,5.95].forEach(function(x){ var s=new THREE.Mesh(new THREE.BoxGeometry(.1,.25,L),skirt); s.position.set(x,.125,0); roomGroup.add(s); });
     for (var bz=-half+8; bz<=half-8; bz+=10){ var b=new THREE.Mesh(new THREE.BoxGeometry(2.4,.45,.8),benchMat); b.position.set(0,.23,bz); roomGroup.add(b); }
-    var sign=new THREE.Mesh(new THREE.PlaneGeometry(8,2), new THREE.MeshBasicMaterial({map:signTex(R),transparent:true})); sign.position.set(0,3.2,-half+.05); roomGroup.add(sign);
+    var sign=new THREE.Mesh(new THREE.PlaneGeometry(8,2), new THREE.MeshBasicMaterial({map:signTex(R),transparent:true})); sign.position.set(0,3.2,-half+.05); roomGroup.add(sign); signMesh=sign;
 
     vis.forEach(function(it,idx){
       prep(it);
@@ -633,25 +662,25 @@
   function roomNo(i){ return i+1; }
   function roomAt(n){ return n-1; }
   var troom=document.getElementById('troom');
-  ROOMS.forEach(function(R,i){ var o=document.createElement('option'); o.value=i; o.textContent=roomNo(i)+' · '+R.name; troom.appendChild(o); });
+  ROOMS.forEach(function(R,i){ var o=document.createElement('option'); o.value=i; o.textContent=roomNo(i)+' · '+rname(R); troom.appendChild(o); });
   troom.onchange=function(){
     if (!tour) return; var i=+troom.value; if (!ROOMS[i]) return;
     hush(); tour.room=i; tour.seen=[]; tour.tp=0; tour.st=null; tour.phase='enter'; tour.t=0; tour.wait=0; tour.said=false;
     enterRoom(i); tourSay(); troom.blur();
   };
   function tourSay(){ var t=tourText(); statusEl.textContent=t; tinfo.textContent=t; if (troom.value!==String(roomIdx)) troom.value=roomIdx; }
-  function tourText(){ var R=ROOMS[roomIdx]; return 'Walk tour · '+R.name+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?' · paused':''); }
-  function setTourBtn(){ var b=document.getElementById('tour'); if (b){ b.textContent=tour?'■ Stop tour (T)':'▶ Walk tour (T)'; b.classList.toggle('on',!!tour); } document.body.classList.toggle('touring',!!tour); tourUI(); }
-  function tourUI(){ if (!tour) return; document.getElementById('tpause').textContent=tour.paused?'▶ Resume':'⏸ Pause'; document.getElementById('tspeed').textContent=SPEEDS[tour.si]+'×'; tourSay(); }
+  function tourText(){ var R=ROOMS[roomIdx]; return tx('tourWord')+' · '+rname(R)+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?tx('paused'):''); }
+  function setTourBtn(){ var b=document.getElementById('tour'); if (b){ b.textContent=tour?tx('tourStop'):tx('tourGo'); b.classList.toggle('on',!!tour); } document.body.classList.toggle('touring',!!tour); tourUI(); }
+  function tourUI(){ if (!tour) return; document.getElementById('tpause').textContent=tour.paused?tx('resume'):tx('pause'); document.getElementById('tspeed').textContent=SPEEDS[tour.si]+'×'; tourSay(); }
   function tourPause(){ if (tour){ tour.paused=!tour.paused; if (SS&&rd.on) try{ tour.paused?SS.pause():SS.resume(); }catch(e){} tourUI(); } }
   function tourSpeed(d){ if (tour){ tour.si=Math.max(0,Math.min(SPEEDS.length-1,tour.si+d)); tourUI(); } }
   // ---------- Read aloud (speech synthesis) ----------
   var SS=window.speechSynthesis, rd={on:true,busy:false,cur:null};
   var treadBtn=document.getElementById('tread');
-  function readLabel(){ treadBtn.textContent='🔊 Read aloud: '+(rd.on?'On':'Off'); treadBtn.classList.toggle('on',rd.on); }
+  function readLabel(){ treadBtn.textContent=tx('read')+(rd.on?tx('on'):tx('off')); treadBtn.classList.toggle('on',rd.on); }
   function say(text){
     if (!SS||!rd.on) return;
-    try{ var u=new SpeechSynthesisUtterance(text); u.lang='en-US'; rd.cur=u; rd.busy=true;
+    try{ var u=new SpeechSynthesisUtterance(text); u.lang=tx('speech'); rd.cur=u; rd.busy=true;
       u.onend=u.onerror=function(){ if (rd.cur===u) rd.busy=false; };
       var go=function(){ if (rd.cur!==u) return; try{ if (SS.paused) SS.resume(); SS.speak(u); }catch(e){ rd.busy=false; } };
       if (SS.speaking||SS.pending){ SS.cancel(); setTimeout(go,120); } else go(); }catch(e){ rd.busy=false; }
@@ -668,7 +697,7 @@
   var lastArtist='';
   function spoken(it){
     var t=(it.title? it.title.replace(/\s*\(.*?\)/g,'') : it.t);
-    if (it.artist && SS && rd.on){ if (it.artist!==lastArtist) t+=', by '+it.artist; lastArtist=it.artist; }
+    if (it.artist && SS && rd.on){ if (it.artist!==lastArtist) t+=', '+tx('by')+' '+it.artist; lastArtist=it.artist; }
     return t;
   }
   if (!SS) treadBtn.style.display='none'; else { readLabel(); treadBtn.onclick=toggleRead; }
@@ -703,12 +732,12 @@
   function tourStep(dt,p){
     var T=tour;
     pitch+=((T.tp||0)-pitch)*Math.min(1,3*dt);
-    if (T.phase==='enter'){ if (!T.said){ T.said=true; say(ROOMS[roomIdx].name); } T.t+=dt; if (T.t>1.6 && !(rd.on&&rd.busy&&T.t<8)) T.phase='pick'; return; }   // pause so the room sign can be read
+    if (T.phase==='enter'){ if (!T.said){ T.said=true; say(rname(ROOMS[roomIdx])); } T.t+=dt; if (T.t>1.6 && !(rd.on&&rd.busy&&T.t<8)) T.phase='pick'; return; }   // pause so the room sign can be read
     if (T.phase==='pick'){
       var order=stations.slice().sort(function(a,b){ return (b.pos.z-a.pos.z) || (a.pos.x-b.pos.x); });
       var nxt=order.filter(function(st){ return T.seen.indexOf(st.it)<0; })[0];
       if (!nxt){
-        if (T.room>=ROOMS.length-1){ tour=null; hush(); setTourBtn(); statusEl.textContent='Tour finished · use the room menu to revisit a room'; return; }
+        if (T.room>=ROOMS.length-1){ tour=null; hush(); setTourBtn(); statusEl.textContent=tx('finished'); return; }
         T.room++; T.seen=[]; T.tp=0; enterRoom(T.room); T.phase='enter'; T.t=0; T.said=false; tourSay(); return;
       }
       T.st=nxt; T.phase='walk'; T.t=0; T.wait=0; T.said=false; tourSay(); return;
@@ -736,9 +765,9 @@
   }
 
   // menu
-  var tb=document.createElement('button'); tb.id='tour'; tb.className='room'; tb.textContent='▶ Walk tour (T)'; tb.onclick=toggleTour; roomsEl.appendChild(tb);
-  var rsel=document.createElement('select'); rsel.id='roomsel'; rsel.title='Choose a room';
-  ROOMS.forEach(function(R,i){ var o=document.createElement('option'); o.value=i; o.textContent=roomNo(i)+' · '+R.name; rsel.appendChild(o); });
+  var tb=document.createElement('button'); tb.id='tour'; tb.className='room'; tb.textContent=tx('tourGo'); tb.onclick=toggleTour; roomsEl.appendChild(tb);
+  var rsel=document.createElement('select'); rsel.id='roomsel'; rsel.title=tx('choose');
+  ROOMS.forEach(function(R,i){ var o=document.createElement('option'); o.value=i; o.textContent=roomNo(i)+' · '+rname(R); rsel.appendChild(o); });
   rsel.onchange=function(){ stopTour(); enterRoom(+rsel.value); rsel.blur(); };
   roomsEl.insertBefore(rsel, tb);
 
@@ -761,16 +790,16 @@
   function renderSearch(){
     var q=norm(sq.value), list=artistIndex().filter(function(a){ return artistMatches(a,q); });
     sl.innerHTML='';
-    if (!list.length){ var n=document.createElement('div'); n.className='none'; n.textContent='No artist found'; sl.appendChild(n); return; }
+    if (!list.length){ var n=document.createElement('div'); n.className='none'; n.textContent=tx('none'); sl.appendChild(n); return; }
     list.forEach(function(a){
       var row=document.createElement('div'); row.className='ar';
-      var nm=document.createElement('div'); nm.textContent=a.name; var ct=document.createElement('span'); ct.textContent=a.pieces.length+(a.pieces.length===1?' work':' works');
+      var nm=document.createElement('div'); nm.textContent=a.name; var ct=document.createElement('span'); ct.textContent=a.pieces.length+(a.pieces.length===1?tx('work'):tx('works'));
       row.appendChild(nm); row.appendChild(ct); sl.appendChild(row);
       var open = openArtist===a.name || list.length===1;
       row.onclick=function(){ openArtist = (openArtist===a.name && list.length>1) ? '' : a.name; renderSearch(); };
       if (open) a.pieces.forEach(function(it){
         var b=document.createElement('button'); b.className='pc'; b.textContent=it.title;
-        var sm=document.createElement('small'); sm.textContent=it.room.name; b.appendChild(sm);
+        var sm=document.createElement('small'); sm.textContent=rname(it.room); b.appendChild(sm);
         b.onclick=function(){ gotoPiece(it); }; sl.appendChild(b);
       });
     });
@@ -782,9 +811,33 @@
     if (ri>=0 && ri!==roomIdx) enterRoom(ri);
     goArt(it);
   }
-  var sb=document.createElement('button'); sb.className='room'; sb.textContent='🔍 Artists'; sb.onclick=openSearch; roomsEl.insertBefore(sb, tb);
+  var sb=document.createElement('button'); sb.className='room'; sb.textContent=tx('artists'); sb.setAttribute('data-i','artists'); sb.onclick=openSearch; roomsEl.insertBefore(sb, tb);
   sq.addEventListener('input', function(){ openArtist=''; renderSearch(); });
   document.getElementById('sx').onclick=closeSearch;
+
+
+  // ---------- Language switch ----------
+  var FLAG={
+    en:'<svg viewBox="0 0 60 30" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="2.4"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg>',
+    es:'<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>'};
+  function applyLang(){
+    document.documentElement.lang=LANG;
+    [].forEach.call(document.querySelectorAll('[data-i]'), function(el){ el.innerHTML=tx(el.getAttribute('data-i')); });
+    [].forEach.call(document.querySelectorAll('.langsw button'), function(b){ b.classList.toggle('on', b.getAttribute('data-l')===LANG); });
+    sq.placeholder=tx('place'); rsel.title=tx('choose'); readLabel(); setTourBtn();
+    ['roomsel','troom'].forEach(function(id){ var sel=document.getElementById(id); for (var k=0;k<sel.options.length;k++){ var i=+sel.options[k].value; sel.options[k].textContent=roomNo(i)+' · '+rname(ROOMS[i]); } });
+    ROOMS.forEach(function(R){ R.list.forEach(function(it){ if (it.ready) drawLabel(it); }); });
+    if (roomIdx>=0){ if (signMesh){ signMesh.material.map=signTex(ROOMS[roomIdx]); signMesh.material.needsUpdate=true; } cur=null; if (tour) tourSay(); else setStatus(); }
+    if (srch.style.display==='block') renderSearch();
+  }
+  function setLang(l){ LANG=l; try{ localStorage.setItem('artpro-lang',l); }catch(e){} applyLang(); }
+  (function(){ var h=document.createElement('span'); h.className='langhost'; roomsEl.appendChild(h); })();
+  [].forEach.call(document.querySelectorAll('.langhost'), function(h){
+    var w=document.createElement('span'); w.className='langsw';
+    ['en','es'].forEach(function(l){ var b=document.createElement('button'); b.type='button'; b.setAttribute('data-l',l); b.setAttribute('aria-label',l==='en'?'English':'Español'); b.innerHTML=FLAG[l]+'<span>'+l.toUpperCase()+'</span>'; b.onclick=function(){ setLang(l); }; w.appendChild(b); });
+    h.appendChild(w);
+  });
+  applyLang();
 
   // ---------- No double-tap zoom (iPhone) ----------
   var lastTap=0;
@@ -900,8 +953,8 @@
     stations.forEach(function(st){ var dx=st.pos.x-p.x, dz=st.pos.z-p.z, d=Math.hypot(dx,dz); if (d<bd && (dx*fx+dz*fz)/d>.45){ bd=d; best=st; } });
     if (best!==cur){ cur=best;
       if (cur){ var it=cur.it; cap.style.display='block';
-        cap.innerHTML='<b></b><a target="_blank" rel="noopener"></a><small>Press E or click the title plate to open</small>';
-        cap.querySelector('b').textContent=it.t; var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||'searching open archives…'; }
+        cap.innerHTML='<b></b><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
+        cap.querySelector('b').textContent=it.t; var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
       else cap.style.display='none'; }
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     renderer.render(scene,camera); requestAnimationFrame(tick);
