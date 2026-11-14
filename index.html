@@ -1346,7 +1346,9 @@
   var AR_MAX=5;
   function arEntry(it,a){ var P=arBuild(a); if (AR.sess) P.matrixAutoUpdate=false; return {it:it,a:a,h:a.h,P:P,anc:null,rel:null,fb:null,old:null,dead:false}; }
   function arExit(){ if (AR.sess) AR.sess.end(); else arCleanup(); }
-  function arSelect(e){ AR.sel=e||null; var m=AR.list.length>1; AR.list.forEach(function(x){ x.P.userData.hl.visible=m&&x===e; }); arTitle(); arDist(); }
+  // the gold outline marks the selected painting only for a moment (2.5 s) after it is added or tapped, so the wall can be seen clean
+  function arSelect(e){ AR.sel=e||null; var m=AR.list.length>1; AR.list.forEach(function(x){ x.P.userData.hl.visible=m&&x===e; }); arTitle(); arDist();
+    clearTimeout(AR.hlT); if (m&&e){ var L=AR.list; AR.hlT=setTimeout(function(){ L.forEach(function(x){ x.P.userData.hl.visible=false; }); },2500); } }
   function arDrop(e){ e.dead=true; try{ AR.scene.remove(e.P); }catch(x){} arFreeScene(e.P); if (e.anc&&e.anc.delete){ try{ e.anc.delete(); }catch(x){} } e.anc=null; }
   function arCommit(E){          // the painting being placed is now hung on the wall
     if (E.old){ if (E.old.anc&&E.old.anc.delete){ try{ E.old.anc.delete(); }catch(x){} } E.old=null; }
