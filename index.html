@@ -175,11 +175,12 @@
   #arpick .pt b{font-weight:400;color:var(--gold);font-size:17px}
   #arpm{margin:0 0 8px 0;width:100%;min-height:48px;background:var(--gold);color:#1b1610}
   #arpr{width:100%;font:inherit;font-size:15px;padding:10px 12px;margin:0 0 8px 0;background:#1d1a16;color:var(--fg);border:1px solid #5c4d30}
-  #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
-  #arpl button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0;padding:8px;border:0;border-bottom:1px solid #3a3226;background:transparent;color:var(--fg);letter-spacing:0;font-size:15px}
-  #arpl button small{display:block;color:#a99f8e;font-size:12px}
-  #arpl .th{flex:0 0 64px;width:64px;height:64px;object-fit:cover;background:#2a241c;border:1px solid #5c4d30}
-  #arpl .none{padding:20px 6px;color:#a99f8e}
+  #arpl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-content:start;padding-bottom:8px}
+  #arpl button{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%;text-align:left;margin:0;padding:0;border:0;background:transparent;color:var(--fg);letter-spacing:0;font-size:12px;line-height:1.25;min-height:0}
+  #arpl button span{display:block;overflow:hidden;max-height:3.9em;word-break:break-word}
+  #arpl button small{display:block;color:#a99f8e;font-size:11px;overflow:hidden;max-height:2.5em}
+  #arpl .th{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:#2a241c;border:1px solid #5c4d30}
+  #arpl .none{grid-column:1/-1;padding:20px 6px;color:#a99f8e}
   #arov.m-fb.s-placed #ardrow{display:flex}
   #arx{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
   #arov.m-fb.s-base #arx{display:block}
@@ -1400,10 +1401,11 @@
   }
   // small preview: drawn from the image the gallery already loaded, otherwise the cached (smaller) image URL
   function arThumb(it){
-    var im=it.tex&&it.tex.image&&it.tex.image.width?it.tex.image:null, el;
-    if (im){ el=document.createElement('canvas'); el.width=el.height=128; try{ var x=el.getContext('2d'), k=Math.max(128/im.width,128/im.height), w=im.width*k, h=im.height*k; x.drawImage(im,(128-w)/2,(128-h)/2,w,h); }catch(e){} }
-    else { var c=pinCand(PINNED[it.t]||cache[it.t]); el=document.createElement('img'); el.alt=''; el.loading='lazy'; el.src=(c&&(c.alt||c.url))||''; }
-    el.className='th'; return el;
+    var el=document.createElement('img'), im=it.tex&&it.tex.image&&it.tex.image.width?it.tex.image:null, done=false; el.alt=''; el.className='th';
+    if (im){ try{ var c=document.createElement('canvas'), x, k, w, h; c.width=c.height=192; x=c.getContext('2d'); k=Math.max(192/im.width,192/im.height); w=im.width*k; h=im.height*k;
+        x.drawImage(im,(192-w)/2,(192-h)/2,w,h); el.src=c.toDataURL('image/jpeg',.72); done=true; }catch(e){} }
+    if (!done){ var u=pinCand(PINNED[it.t]||cache[it.t]); el.loading='lazy'; el.src=(u&&(u.alt||u.url))||''; }
+    return el;
   }
   function arPickFill(){
     var pk=AR.ov.querySelector('#arpick'), l=pk.querySelector('#arpl'), R=ROOMS[+pk.querySelector('#arpr').value], items=R?R.list.filter(arEligible):[];
