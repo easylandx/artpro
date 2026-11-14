@@ -393,11 +393,11 @@
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it · tap its plate to open the link.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY',
       tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
-      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
+      finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>arrastra</b> para mirar · toca un cuadro para ir hasta él · toca su placa para abrir el enlace.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA',
       tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
-      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
+      finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
   function tx(k){ return STR[LANG][k]; }
   var ES_ROOMS={'Renaissance':['Renacimiento','Renacimiento temprano y pleno'],'Baroque & Rococo':['Barroco y Rococó','Siglos XVII–XVIII'],'Modern & 20th Century':['Moderno y siglo XX','1890–1960'],
@@ -1114,16 +1114,26 @@
     rsel.addEventListener('change',function(){ roomsEl.classList.remove('open'); });
   })();
   var lbEl=document.createElement('button'); lbEl.id='listen'; lbEl.setAttribute('data-i','listen'); lbEl.innerHTML=tx('listen'); document.body.appendChild(lbEl);
-  // Speech must start inside the tap itself (iPhone and Chrome block it otherwise): title + artist now, the info card text queued right after
-  function utter(text){ var u=new SpeechSynthesisUtterance(text); u.lang=tx('speech'); rd.cur=u; rd.busy=true; u.onend=u.onerror=function(){ if (rd.cur===u) rd.busy=false; }; SS.speak(u); }
+  // Speech must start inside the tap itself (iPhone blocks it otherwise). Everything is spoken as ONE utterance when the card text is
+  // already loaded (it is fetched as soon as the page opens); otherwise the card text follows when the title has finished.
+  var KEEP=[];
+  function utter(text,done){
+    var u=new SpeechSynthesisUtterance(text), ok=false; u.lang=tx('speech'); u.volume=1; u.rate=1;
+    KEEP.push(u); if (KEEP.length>6) KEEP.shift();                      // keep a reference so Safari does not drop it mid-speech
+    rd.cur=u; rd.busy=true; u.onstart=function(){ ok=true; };
+    u.onend=u.onerror=function(){ if (rd.cur!==u) return; rd.busy=false; if (done) done(); };
+    SS.speak(u); return function(){ return ok; };
+  }
   lbEl.onclick=function(){
-    gest=true; lbEl.style.display='none'; var it=waItem(); if (!it || !SS || !rd.on) return;
+    gest=true; lbEl.style.display='none'; lbEl.innerHTML=tx('listen'); var it=waItem(); if (!it || !SS || !rd.on) return;
     unlocked=true; readIt=it; lastArtist='';
-    try{ if (SS.speaking||SS.pending||SS.paused) SS.cancel(); SS.resume(); utter(spoken(it)); }catch(e){ return; }
-    var n=0; (function wait(){
-      if (infoOn && !it.emb && it.inf===undefined && n++<40){ fetchInfo(it); return setTimeout(wait,150); }
-      var t=infoSpeech(it).replace(/^\.\s*/,''); if (t && rd.on && readIt===it) try{ utter(t); }catch(e){}
-    })();
+    try{ if (SS.speaking||SS.pending) SS.cancel(); if (SS.paused) SS.resume(); }catch(e){}
+    var ready=!infoOn || it.emb || it.inf!==undefined, started;
+    function later(){ var n=0; (function w(){
+      if (infoOn && !it.emb && it.inf===undefined && n++<40){ fetchInfo(it); return setTimeout(w,150); }
+      var t=infoSpeech(it).replace(/^\.\s*/,''); if (t && rd.on && readIt===it) try{ utter(t); }catch(e){} })(); }
+    try{ started=utter(spoken(it)+(ready?infoSpeech(it):''), ready?null:later); }catch(e){ return; }
+    setTimeout(function(){ if (!started() && readIt===it && !(SS.speaking)){ readIt=null; lbEl.textContent=tx('listenFail'); lbEl.style.display='block'; } },3500);   // never started: silent switch / volume
   };
   function openFromHash(){
     var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
@@ -1135,7 +1145,7 @@
     enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
-      if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); nav=null; linked=true; if (tour) stopTour(); }
+      fetchInfo(item); if (st){ var side=st.pos.x<0?-1:1, vd=tourDist(); camera.position.set(side*(5.9-vd),1.7,st.pos.z); yaw=side<0?Math.PI/2:-Math.PI/2; pitch=Math.atan(0.65/vd); nav=null; linked=true; if (tour) stopTour(); }
     }
     return true;
   }
