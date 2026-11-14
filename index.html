@@ -1141,13 +1141,17 @@
     try{ started=utter(spoken(it)+(ready?infoSpeech(it):''), ready?null:later); }catch(e){ return; }
     setTimeout(function(){ if (!started() && readIt===it && !(SS.speaking)){ readIt=null; lbEl.textContent=tx('listenFail'); lbEl.style.display='block'; } },3500);   // never started: silent switch / volume
   };
+var IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  document.getElementById('enter').addEventListener('click', function(){ idleT=0; readIt=null; });   // after ENTER, read the painting we are standing at
   function openFromHash(){
     var m={}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var a=kv.split('='); if (a[0]) try{ m[a[0]]=decodeURIComponent(a[1]||''); }catch(e){} });
     var ri=-1, item=null;
     if (m.r) ROOMS.forEach(function(R,i){ if (ri<0 && slug(R.name)===m.r) ri=i; });
     if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && (slug(it.qt)===m.a || slug(it.title)===m.a); })[0];
     if (ri<0) return false;
-    intro.style.display='none'; lastAct=Date.now(); if (!gest && SS && rd.on) lbEl.style.display='block';            // shared link: skip the start screen and go straight to the painting
+    lastAct=Date.now();
+    if (IOS && !gest) intro.style.display='flex';        // iPhone: keep the start screen, its ENTER tap unlocks the voice, then the painting is read automatically
+    else { intro.style.display='none'; if (!gest && SS && rd.on) lbEl.style.display='block'; }            // shared link: skip the start screen and go straight to the painting
     enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
