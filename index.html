@@ -44,7 +44,12 @@
   #tourbar select option{background:#161412;color:#d8cfbf}
   .touring #menu{display:none}
   .touring #tourbar{display:flex}
-  .touring #cap{display:none !important}
+  .touring:not(.info-on) #cap,.touring #cap.noinf{display:none !important}
+  .touring #cap a,.touring #cap small{display:none}
+  #hud{padding:0 calc(14px + env(safe-area-inset-left,0px)) 0 calc(14px + env(safe-area-inset-right,0px))}
+  .inf{margin:6px 0 8px 0;font-size:14px;line-height:1.4;color:#d8cfbf}
+  .inf .y{display:block;color:var(--gold);font-size:13px;letter-spacing:.04em;margin-bottom:2px}
+  .inf:empty{display:none}
   #rooms{flex-wrap:wrap}
   .langsw{display:inline-flex;border:1px solid #5c4d30;margin:0;background:rgba(14,13,12,.72);pointer-events:auto}
   .langsw button{margin:0;padding:5px 9px;display:inline-flex;align-items:center;gap:6px;min-height:34px;background:transparent;color:var(--fg);border:0;font-size:12px;letter-spacing:.05em;font-family:inherit}
@@ -94,7 +99,7 @@
   <div id="rooms"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a></div>
   <div id="status">Loading…</div>
 </div></div>
-<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
+<div id="tourbar"><a class="brand" href="https://easylandx.github.io/artpro" title="ArtPro – restart">ArtPro</a><span class="langhost"></span><span id="tinfo"></span><button id="tprev" class="room" data-i="prev" title="Previous painting (P)">◀ Prev</button><button id="tnext" class="room" data-i="next" title="Next painting (N)">Next ▶</button><button id="tslow" class="room" data-i="slower" title="Slower (−)">◀◀ Slower</button><span id="tspeed">1×</span><button id="tfast" class="room" data-i="faster" title="Faster (+)">Faster ▶▶</button><button id="twa" class="room wa" title="Send this painting on WhatsApp"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>WhatsApp</span></button><button id="tcard" class="room" title="Painting info card (I)">ℹ Info</button><select id="troom" title="Jump to a room and continue the tour there"></select><button id="tread" class="room" title="Read titles aloud (R)">🔊 Read aloud: On</button><button id="tpause" class="room" title="Pause / resume (Space)">⏸ Pause</button><button id="tstop" class="room" data-i="stop" title="Stop (T)">■ Stop</button></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><div id="sl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
@@ -742,7 +747,7 @@
         if (T.room>=ROOMS.length-1){ tour=null; hush(); setTourBtn(); statusEl.textContent=tx('finished'); return; }
         T.room++; T.seen=[]; T.tp=0; enterRoom(T.room); T.phase='enter'; T.t=0; T.said=false; tourSay(); return;
       }
-      T.st=nxt; T.phase='walk'; T.t=0; T.wait=0; T.said=false; tourSay(); return;
+      fetchInfo(nxt.it); T.st=nxt; T.phase='walk'; T.t=0; T.wait=0; T.said=false; tourSay(); return;
     }
     // the room may have been re-laid out (a print was removed): re-find this painting
     var cur2=stations.filter(function(st){ return st.it===T.st.it; })[0];
@@ -761,8 +766,11 @@
     if (T.phase==='dwell'){
       var it=T.st.it, ready=it.emb||it.state==='done';
       if (!ready && T.wait<10){ T.wait+=dt; return; }          // give a slow image up to 10 s to arrive
-      if (!T.said){ T.said=true; say(spoken(it)); }
-      T.t+=dt; if (T.t>3.6 && !(rd.on&&rd.busy&&T.t<20)){ T.seen.push(it); T.phase='pick'; }
+      if (infoOn && !it.emb && it.inf===undefined && T.wait<8){ fetchInfo(it); T.wait+=dt; return; }          // wait a moment for the info card text
+      if (!T.said){ T.said=true; say(spoken(it)+infoSpeech(it)); }
+      var card=infoOn&&it.inf, lim=card?120:20, minT=3.6;      // with an info card, wait until the voice has finished it (120 s is only a safety net)
+      if (card && !(SS&&rd.on)){ var ib2=infoBits(it); minT=3.6+((ib2&&(ib2.head+ib2.text).length)||0)*0.06; }   // voice off: leave time to read the card
+      T.t+=dt; if (T.t>minT && !(rd.on&&rd.busy&&T.t<lim)){ T.seen.push(it); T.phase='pick'; }
     }
   }
 
@@ -839,6 +847,52 @@
   }
   var wb=document.createElement('button'); wb.className='room wa'; wb.id='mwa'; wb.title='WhatsApp'; wb.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'+'<span>WhatsApp</span>'; wb.onclick=shareWA; roomsEl.insertBefore(wb, tb);
   document.getElementById('twa').onclick=shareWA;
+
+  // ---------- Info card: year, museum and a short description (Wikipedia / Wikidata, cached on this device) ----------
+  var ICACHE='artpro-info-v1', icache={}, infoOn=true;
+  try{ icache=JSON.parse(localStorage.getItem(ICACHE)||'{}'); infoOn=localStorage.getItem('artpro-info')!=='0'; }catch(e){}
+  function clean(t){ t=(t||'').replace(/\s*\([^)]*\)/g,'').replace(/\s+/g,' ').trim(); return t.length>330 ? t.slice(0,t.lastIndexOf(' ',327))+'…' : t; }
+  function fetchInfo(it){
+    if (it.emb || it.inf!==undefined || it.infP) return; var key=it.title+'|'+it.artist;
+    if (icache[key]!==undefined){ it.inf=icache[key]; return infoReady(it); }
+    it.infP=true;
+    wjf('https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=5&gsrsearch='+enc(strip(it.qt)+' '+surname(it.artist)+' painting')+'&prop=extracts|pageprops&exintro=1&explaintext=1&exsentences=2&ppprop=wikibase_item').then(function(d){
+      var ps=d&&d.query&&d.query.pages; if (!ps) return null;
+      var h=Object.keys(ps).map(function(k){ return ps[k]; }).sort(function(a,b){ return a.index-b.index; }).filter(function(p){ return p.pageprops&&p.pageprops.wikibase_item && titleOK(it,p.title) && (it.anon||artistOK(it,p.extract||'')); })[0];
+      if (!h) return null; var q=h.pageprops.wikibase_item, en=clean(h.extract);
+      return wjf('https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&props=claims|sitelinks&sitefilter=eswiki&ids='+q).then(function(w){
+        var e=w&&w.entities&&w.entities[q]; if (!e) return {y:'',m:{},t:{en:en}};
+        var c=e.claims||{}, tv=c.P571&&c.P571[0]&&c.P571[0].mainsnak&&c.P571[0].mainsnak.datavalue, y='';
+        if (tv&&tv.value&&tv.value.precision>=9){ var mt=/^([+-])0*(\d+)-/.exec(tv.value.time); if (mt) y=mt[1]==='-'?mt[2]+' BC':mt[2]; }
+        var mid=[c.P195,c.P276].map(function(a){ var sn=a&&a[0]&&a[0].mainsnak&&a[0].mainsnak.datavalue; return sn&&sn.value&&sn.value.id; }).filter(Boolean)[0];
+        var est=e.sitelinks&&e.sitelinks.eswiki&&e.sitelinks.eswiki.title;
+        return Promise.all([
+          mid ? wjf('https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&origin=*&props=labels&languages=en|es&ids='+mid) : null,
+          est ? wjf('https://es.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts&exintro=1&explaintext=1&exsentences=2&titles='+enc(est)) : null
+        ]).then(function(r){
+          var lb=r[0]&&r[0].entities&&r[0].entities[mid]&&r[0].entities[mid].labels||{}, ep=r[1]&&r[1].query&&r[1].query.pages, es='';
+          if (ep){ var k=Object.keys(ep)[0]; es=clean(ep[k]&&ep[k].extract); }
+          return {y:y, m:{en:lb.en&&lb.en.value, es:(lb.es&&lb.es.value)||(lb.en&&lb.en.value)}, t:{en:en, es:es}};
+        });
+      });
+    }).catch(function(){ return null; }).then(function(inf){
+      it.infP=false; it.inf=inf||null; icache[key]=it.inf; try{ localStorage.setItem(ICACHE,JSON.stringify(icache)); }catch(e){}
+      infoReady(it);
+    });
+  }
+  function infoReady(it){ if (cur && cur.it===it) showInfo(it); }
+  function infoBits(it){ var f=it.inf; if (!infoOn||!f) return null; var m=f.m&&(f.m[LANG]||f.m.en), t=f.t&&f.t[LANG]; return {head:[f.y,m].filter(Boolean).join(' · '), text:t||''}; }
+  function showInfo(it){
+    var el=cap.querySelector('.inf'); if (!el) return; var b=infoBits(it);
+    el.innerHTML=''; cap.classList.toggle('noinf',!(b&&(b.head||b.text))); if (!b) return;
+    if (b.head){ var y=document.createElement('span'); y.className='y'; y.textContent=b.head; el.appendChild(y); }
+    if (b.text) el.appendChild(document.createTextNode(b.text));
+  }
+  function infoSpeech(it){ var b=infoBits(it); return b ? '. '+[b.head,b.text].filter(Boolean).join('. ') : ''; }
+  function infoLabel(){ var l='ℹ Info: '+(infoOn?tx('on'):tx('off')); ['tcard','mcard'].forEach(function(id){ var e=document.getElementById(id); if (e){ e.textContent=l; e.classList.toggle('on',infoOn); } }); document.body.classList.toggle('info-on',infoOn); }
+  function toggleInfo(){ infoOn=!infoOn; try{ localStorage.setItem('artpro-info',infoOn?'1':'0'); }catch(e){} infoLabel(); if (cur){ fetchInfo(cur.it); showInfo(cur.it); } if (!infoOn) hush(); }
+  var ib=document.createElement('button'); ib.className='room'; ib.id='mcard'; ib.onclick=toggleInfo; roomsEl.insertBefore(ib, tb);
+  document.getElementById('tcard').onclick=toggleInfo;
   sq.addEventListener('input', function(){ openArtist=''; renderSearch(); });
   document.getElementById('sx').onclick=closeSearch;
 
@@ -851,7 +905,7 @@
     document.documentElement.lang=LANG;
     [].forEach.call(document.querySelectorAll('[data-i]'), function(el){ el.innerHTML=tx(el.getAttribute('data-i')); });
     [].forEach.call(document.querySelectorAll('.langsw button'), function(b){ b.classList.toggle('on', b.getAttribute('data-l')===LANG); });
-    sq.placeholder=tx('place'); rsel.title=tx('choose'); readLabel(); setTourBtn();
+    sq.placeholder=tx('place'); rsel.title=tx('choose'); readLabel(); infoLabel(); setTourBtn();
     ['roomsel','troom'].forEach(function(id){ var sel=document.getElementById(id); for (var k=0;k<sel.options.length;k++){ var i=+sel.options[k].value; sel.options[k].textContent=roomNo(i)+' · '+rname(ROOMS[i]); } });
     ROOMS.forEach(function(R){ R.list.forEach(function(it){ if (it.ready) drawLabel(it); }); });
     if (roomIdx>=0){ if (signMesh){ signMesh.material.map=signTex(ROOMS[roomIdx]); signMesh.material.needsUpdate=true; } cur=null; if (tour) tourSay(); else setStatus(); }
@@ -879,7 +933,7 @@
   var intro=document.getElementById('intro');
   document.getElementById('enter').onclick=function(){ unlockSpeech(); intro.style.display='none'; };
   ['touchend','pointerup','click','keydown'].forEach(function(n){ addEventListener(n, unlockSpeech, {passive:true, capture:true}); });
-  addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
+  addEventListener('keydown', function(e){ if (e.target && e.target.tagName==='INPUT'){ if (e.code==='Escape') closeSearch(); return; } keys[e.code]=true; if (e.code==='KeyE') openLink(); if (e.code==='KeyI') toggleInfo(); if (e.code==='KeyT') toggleTour(); if (e.code==='KeyR') toggleRead();
     if (tour){ if (e.code==='Space'){ e.preventDefault(); tourPause(); } if (e.code==='KeyN') tourNext(); if (e.code==='KeyP') tourPrev(); if (e.code==='Equal'||e.code==='NumpadAdd') tourSpeed(1); if (e.code==='Minus'||e.code==='NumpadSubtract') tourSpeed(-1); }
     var m=/^(?:Digit|Numpad)([0-9])$/.exec(e.code); if (m){ clearTimeout(numT); numBuf+=m[1]; if (numBuf.length>2) numBuf=m[1];
       var go=function(){ var ri=roomAt(+numBuf); numBuf=''; if (ROOMS[ri]){ stopTour(); enterRoom(ri); } };
@@ -981,8 +1035,8 @@
     stations.forEach(function(st){ var dx=st.pos.x-p.x, dz=st.pos.z-p.z, d=Math.hypot(dx,dz); if (d<bd && (dx*fx+dz*fz)/d>.45){ bd=d; best=st; } });
     if (best!==cur){ cur=best;
       if (cur){ var it=cur.it; cap.style.display='block';
-        cap.innerHTML='<b></b><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
-        cap.querySelector('b').textContent=it.t; var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
+        cap.innerHTML='<b></b><div class="inf"></div><a target="_blank" rel="noopener"></a><small></small>'; cap.querySelector('small').textContent=tx('press');
+        cap.querySelector('b').textContent=it.t; fetchInfo(it); showInfo(it); var a=cap.querySelector('a'); a.href=it.link||'#'; a.textContent=it.link||tx('searching'); }
       else cap.style.display='none'; }
     else if (cur){ var a2=cap.querySelector('a'); if (a2 && cur.it.link && a2.getAttribute('href')!==cur.it.link){ a2.href=cur.it.link; a2.textContent=cur.it.link; } }
     renderer.render(scene,camera); requestAnimationFrame(tick);
