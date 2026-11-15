@@ -1253,11 +1253,15 @@
   addEventListener('keyup', function(e){ keys[e.code]=false; });
   // ---------- Idle: start the walk tour after 8 s without input once inside the gallery ----------
   var lastAct=Date.now(), linkItem=null, lp=null, linked=false, readIt=null, gest=false, idleT=0, pX=0, pZ=0, pYaw=0;
-  ['keydown','mousedown','mousemove','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); }, {passive:true, capture:true}); });
-  document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); });
+  // Welcome tour: starts by itself ONLY once, after ENTER, if the visitor does nothing for WELCOME_MS. Any real input (key, tap, drag, wheel) turns it off for the rest of the visit.
+  var welcome=false, WELCOME_MS=20000;
+  addEventListener('mousemove', function(){ lastAct=Date.now(); }, {passive:true, capture:true});
+  ['keydown','mousedown','wheel','touchstart','pointerdown'].forEach(function(n){ addEventListener(n, function(){ lastAct=Date.now(); welcome=false; }, {passive:true, capture:true}); });
+  document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); welcome=true; });   // runs after the capture listeners above, so it re-arms the welcome
   setInterval(function(){
-    if (AR.busy || tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block'){ lastAct=Date.now(); return; }
-    if (Date.now()-lastAct>=8000){ lastAct=Date.now(); startTour(); }
+    if (!welcome) return;
+    if (AR.busy || tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block' || icn.style.display==='block' || aboutEl.classList.contains('show')){ lastAct=Date.now(); return; }
+    if (Date.now()-lastAct>=WELCOME_MS){ welcome=false; startTour(); }
   }, 500);
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
     ['touchend','mouseup','mouseleave'].forEach(function(ev){ b.addEventListener(ev,function(){ keys[k]=false; }); }); }
@@ -1878,8 +1882,8 @@ var IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform==='
     if (ri>=0 && m.a) item=ROOMS[ri].list.filter(function(it){ return !it.emb && (slug(it.qt)===m.a || slug(it.title)===m.a); })[0];
     if (ri<0) return false;
     lastAct=Date.now();
-    if (IOS && !gest) intro.style.display='flex';        // iPhone: keep the start screen, its ENTER tap unlocks the voice, then the painting is read automatically
-    else { intro.style.display='none'; if (!gest && SS && rd.on) lbEl.style.display='block'; }            // shared link: skip the start screen and go straight to the painting
+    if (!gest) intro.style.display='flex';        // shared link: always keep the start screen, its ENTER tap unlocks the voice (needed on iPhone), then the painting is read automatically
+    else intro.style.display='none';                // already interacted (link changed while inside the gallery): go straight to the painting
     enterRoom(ri);
     if (item){
       var st=stations.filter(function(q){ return q.it===item; })[0];
