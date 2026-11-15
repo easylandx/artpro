@@ -647,8 +647,161 @@
       ['The Thinker','Auguste Rodin','Thinker',['Le Penseur']],
       ['The Great Sphinx of Tanis','Ancient Egyptian','Great Sphinx of Tanis',['Sphinx of Tanis']]]}
   ];
+  // ---------- Extra masterpieces from 11 top museums (Louvre, Met, Vatican, British Museum, Prado, Hermitage, Uffizi, National Gallery, Rijksmuseum, Orsay, MoMA) ----------
+  // Works already in the gallery were skipped. Format: [title, artist, search title, [alternative search titles]]
+  (function(){
+    var ADD={
+      'Renaissance':[
+        ['Portinari Triptych','Hugo van der Goes','Portinari Triptych',['Portinari Altarpiece','Trittico Portinari']],
+        ['The Wilton Diptych','English or French School','Wilton Diptych',['Wilton Diptych National Gallery']],
+        ['The Three Maries at the Tomb','Hubert van Eyck','Three Maries at the Tomb',['Three Marys at the Tomb','Holy Women at the Tomb','Three Marys at the Sepulchre']]],
+      'Baroque & Rococo':[
+        ['The Death of the Virgin','Caravaggio','Death of the Virgin',['La Morte della Vergine','Mort de la Vierge','Death of the Virgin Caravaggio']],
+        ['The Fortune Teller','Caravaggio','Fortune Teller',['The Fortune Teller Caravaggio','La Diseuse de bonne aventure','Buona ventura']],
+        ['The Cheat with the Ace of Diamonds','Georges de La Tour','Cheat with the Ace of Diamonds',['Le Tricheur a l as de carreau','The Cheat','Cheat with the Ace']],
+        ['Magdalene with the Smoking Flame','Georges de La Tour','Magdalene with the Smoking Flame',['Madeleine a la veilleuse','Magdalen with the Smoking Flame','Penitent Magdalene']],
+        ['The Lute Player','Caravaggio','Lute Player',['The Lute Player Caravaggio','Der Lautenspieler']],
+        ['The Entombment of Christ','Caravaggio','Entombment of Christ',['The Entombment','Deposition Caravaggio','La Deposizione']],
+        ['Medusa','Caravaggio','Medusa',['Medusa Caravaggio','Head of Medusa']],
+        ['Bacchus','Caravaggio','Bacchus',['Bacchus Caravaggio','Young Sick Bacchus','Bacco']],
+        ['Supper at Emmaus','Caravaggio','Supper at Emmaus',['Supper at Emmaus Caravaggio','Cena in Emmaus']],
+        ['The Union of Earth and Water','Peter Paul Rubens','Union of Earth and Water',['Union of Earth and Water Rubens','Union of Earth and Water Hermitage']]],
+      'Neoclassicism & Academic Art':[
+        ['The Coronation of Napoleon','Jacques-Louis David','Coronation of Napoleon',['Le Sacre de Napoleon','Consecration of the Emperor Napoleon']],
+        ['The Intervention of the Sabine Women','Jacques-Louis David','Intervention of the Sabine Women',['Les Sabines','The Sabine Women','Intervention des Sabines']]],
+      'Romanticism (European)':[
+        ['The Battle of Waterloo','Jan Willem Pieneman','Battle of Waterloo',['De Slag bij Waterloo','Slag bij Waterloo','Battle of Waterloo Pieneman']]],
+      'Barbizon School & French Realism':[
+        ["The Origin of the World (L'Origine du monde)",'Gustave Courbet','Origine du monde',['L Origine du monde','The Origin of the World','Origin of the World']]],
+      'Impressionism & Post-Impressionism':[
+        ['Poppies (Coquelicots)','Claude Monet','Poppies',['Coquelicots','Poppy Field','Poppy Field near Argenteuil']],
+        ['Woman Holding a Fan','Pierre-Auguste Renoir','Woman Holding a Fan',['Woman with a Fan','La femme a l eventail','Woman with Fan']],
+        ['Lady in the Garden','Claude Monet','Lady in the Garden',['A Lady in the Garden','Lady in the Garden Sainte-Adresse','Dame au jardin','Lady in the Garden Sainte Adresse']],
+        ['London, Houses of Parliament','Claude Monet','Houses of Parliament',['London Houses of Parliament','Parliament London Monet','Londres Le Parlement']],
+        ['The Water-Lily Pond','Claude Monet','Water-Lily Pond',['The Water-Lily Pond','Water Lily Pond','Water Lily Pond National Gallery']],
+        ['Water Lilies (Agapanthus Triptych)','Claude Monet','Agapanthus',['Water Lilies Agapanthus Triptych','Agapanthus Triptych','Agapanthus Monet']],
+        ['The Umbrellas','Pierre-Auguste Renoir','Umbrellas',['Les Parapluies','The Umbrellas Renoir','Umbrellas Renoir']],
+        ['Girl in a White Kimono','George Hendrik Breitner','Girl in a White Kimono',['Meisje in witte kimono','Girl in White Kimono','Meisje in witte kimono Breitner']]],
+      'Post-Impressionism & Fauvism':[
+        ['Self-Portrait with a Straw Hat','Vincent van Gogh','Self-Portrait with a Straw Hat',['Self-Portrait with Straw Hat','Self Portrait with a Straw Hat']],
+        ['Starry Night Over the Rhône','Vincent van Gogh','Starry Night Over the Rhone',['La Nuit etoilee Arles','Starry Night over the Rhone','Starry Night Rhone']],
+        ['Lilac Bush','Vincent van Gogh','Lilac Bush',['Lilacs','Lilas','Lilac Bush Hermitage']],
+        ['White House at Night','Vincent van Gogh','White House at Night',['The White House at Night','La maison blanche la nuit','White House Night']],
+        ['The Church at Auvers','Vincent van Gogh','Church at Auvers',['L Eglise d Auvers','The Church in Auvers','Eglise d Auvers']],
+        ['The Olive Trees','Vincent van Gogh','Olive Trees',['The Olive Trees Van Gogh','Olive Trees MoMA','Les Oliviers','Olive Trees 1889']],
+        ['Bedroom in Arles (3rd Version)','Vincent van Gogh','Chambre de Van Gogh a Arles',['Bedroom in Arles Orsay','La Chambre de Van Gogh a Arles','Van Gogh Bedroom Orsay']],
+        ['Woman Holding a Fruit','Paul Gauguin','Woman Holding a Fruit',['Femme tenant un fruit','Woman with a Fruit','Vahine no te vi','Where Are You Going']],
+        ['Tahitian Women on the Beach','Paul Gauguin','Tahitian Women on the Beach',['Femmes de Tahiti','Women of Tahiti','Femmes de Tahiti sur la plage']],
+        ['The Seed of the Areoi','Paul Gauguin','Seed of the Areoi',['Te aa no areoi','Seed of Areoi']],
+        ['The Bather','Paul Cézanne','Bather',['Le Baigneur','The Bather Cezanne','Bather Cezanne']],
+        ['La Goulue Arriving at the Moulin Rouge','Henri de Toulouse-Lautrec','La Goulue Arriving at the Moulin Rouge',['La Goulue Arriving','La Goulue arrive au Moulin Rouge','Goulue Moulin Rouge']]],
+      'Art Nouveau & Symbolism':[
+        ['Hope, II','Gustav Klimt','Hope II',['Hope 2','Die Hoffnung II','Hoffnung II','Hope, II']],
+        ['Mäda Primavesi','Gustav Klimt','Mada Primavesi',['Portrait of Mada Primavesi','Madame Primavesi','Mäda Primavesi']]],
+      'Early Modernism & Avant-Garde':[
+        ['Dynamism of a Soccer Player','Umberto Boccioni','Dynamism of a Soccer Player',['Dinamismo di un footballer','Dynamism of a Footballer','Dinamismo di un giocatore di calcio']],
+        ['The City Rises','Umberto Boccioni','City Rises',['La citta che sale','The City Rises Boccioni','La Citta Che Sale']],
+        ['Suprematist Composition: White on White','Kazimir Malevich','White on White',['Suprematist Composition White on White','Suprematist Composition White on White Malevich']],
+        ['Melancholy and Mystery of a Street','Giorgio de Chirico','Melancholy and Mystery of a Street',['Mystery and Melancholy of a Street','Melancolia e mistero di una strada','Mystery and Melancholy']]],
+      'Expressionism':[
+        ['Street, Dresden','Ernst Ludwig Kirchner','Street Dresden',['Strasse Dresden','Straße Dresden','Street Dresden 1908']],
+        ['Composition VI','Wassily Kandinsky','Composition VI',['Komposition VI','Composition 6']]],
+      'Pointillism & Neo-Impressionism':[
+        ['Evening, Honfleur','Georges Seurat','Evening Honfleur',['Un soir Honfleur','Evening Honfleur Seurat','Honfleur Evening']],
+        ['Port-en-Bessin, Entrance to the Harbor','Georges Seurat','Port-en-Bessin Entrance to the Harbor',['Port-en-Bessin','Port en Bessin','Port en Bessin Seurat','Port-en-Bessin Avant-port']]],
+      'Rococo':[
+        ['Portrait of a Lady in Blue','Thomas Gainsborough','Portrait of a Lady in Blue',['Lady in Blue','Portrait of a Lady in Blue Gainsborough','Lady in Blue Gainsborough']],
+        ['Whistlejacket','George Stubbs','Whistlejacket'],
+        ['An Experiment on a Bird in the Air Pump','Joseph Wright of Derby','Experiment on a Bird in the Air Pump',['Experiment on a Bird in an Air Pump','An Experiment on a Bird in the Air Pump','Bird in the Air Pump','Experiment on a Bird']]],
+      'Classical Sculpture & Antiquities':[
+        ['Venus de Milo','Alexandros of Antioch','Venus de Milo',['Aphrodite of Milos','Venus of Milo','Venus de Milo Louvre']],
+        ['Apollo Belvedere','Roman copy after Leochares','Apollo Belvedere',['Apollo of the Belvedere','Apollo del Belvedere']],
+        ['Belvedere Torso','Apollonios','Belvedere Torso',['Torso Belvedere','Belvedere Torso Vatican']],
+        ['The Rosetta Stone','Ptolemaic Egypt','Rosetta Stone',['Rosetta Stone British Museum','Pierre de Rosette']],
+        ['Lewis Chessmen','Norse','Lewis Chessmen',['Lewis Chessmen British Museum','Lewis Chess pieces','Isle of Lewis chessmen']],
+        ['Sutton Hoo Helmet','Anglo-Saxon','Sutton Hoo Helmet',['Sutton Hoo helmet','Sutton Hoo Helmet British Museum']],
+        ['Portland Vase','Roman Cameo Glass','Portland Vase',['The Portland Vase','Portland Vase British Museum']],
+        ['Standard of Ur','Sumerian','Standard of Ur',['The Standard of Ur','Standard of Ur British Museum']],
+        ['Lion Hunt of Ashurbanipal','Neo-Assyrian','Lion Hunt of Ashurbanipal',['Ashurbanipal Lion Hunt','Lion Hunt Ashurbanipal','Ashurbanipal hunting lions']],
+        ["Hoa Hakananai'a (Moai)",'Rapa Nui',"Hoa Hakananai'a",['Hoa Hakananai a','Hoa Hakananai a British Museum']],
+        ['Book of the Dead of Hunefer','Ancient Egyptian','Book of the Dead of Hunefer',['Hunefer Book of the Dead','Hunefer Papyrus','Papyrus of Hunefer']],
+        ['Book of the Dead of Ani','Ancient Egyptian','Book of the Dead of Ani',['Papyrus of Ani','Ani Book of the Dead','Ani Papyrus']],
+        ['Nebamun Hunting in the Marshes','Ancient Egyptian','Nebamun Hunting in the Marshes',['Nebamun Hunting Fowl in the Marshes','Nebamun Hunting','Nebamun Hunting in the Marshes fresco']]]
+    };
+    Object.keys(ADD).forEach(function(n){ var R=ROOMS.filter(function(r){ return r.name===n; })[0]; if (R) R.items=R.items.concat(ADD[n]); });
+    ROOMS.push(
+      {name:'Italian Renaissance Masters', sub:'Florence, Rome & Venice', wall:0xe2c58f, items:[
+        ['The Virgin of the Rocks (Louvre version)','Leonardo da Vinci','Virgin of the Rocks',['Vierge aux rochers','Madonna of the Rocks','Virgin of the Rocks Louvre']],
+        ['The Virgin of the Rocks (London version)','Leonardo da Vinci','Virgin of the Rocks London',['Virgin of the Rocks National Gallery London','Madonna of the Rocks London','Virgin of the Rocks (London)','Virgin of the Rocks London version']],
+        ['Annunciation','Leonardo da Vinci','Annunciation',['Annunciation Uffizi','Annunciazione']],
+        ['Adoration of the Magi','Leonardo da Vinci','Adoration of the Magi Leonardo',['Adoration of the Magi','Adorazione dei Magi']],
+        ['Saint Jerome in the Wilderness','Leonardo da Vinci','Saint Jerome in the Wilderness',['San Gerolamo','St Jerome in the Wilderness','Saint Jerome Leonardo']],
+        ['Madonna Litta','Leonardo da Vinci','Madonna Litta',['Litta Madonna']],
+        ['Benois Madonna','Leonardo da Vinci','Benois Madonna',['Madonna Benois','Madonna with Flower']],
+        ['The Baptism of Christ','Andrea del Verrocchio','Baptism of Christ',['Battesimo di Cristo']],
+        ['The Last Judgment','Michelangelo','Last Judgment',['Giudizio Universale','Last Judgement']],
+        ['Doni Tondo (The Holy Family)','Michelangelo','Doni Tondo',['Tondo Doni','Holy Family Doni']],
+        ['The Delphic Sibyl','Michelangelo','Delphic Sibyl',['Sibilla Delfica']],
+        ['The Libyan Sibyl','Michelangelo','Libyan Sibyl',['Sibilla Libica']],
+        ['Madonna and Child Enthroned with Saints','Raphael','Colonna Altarpiece',['Madonna and Child Enthroned with Saints','Pala Colonna','Madonna and Child Enthroned']],
+        ['The Transfiguration','Raphael','Transfiguration',['Trasfigurazione']],
+        ['Disputation of the Holy Sacrament','Raphael','Disputation of the Holy Sacrament',['La Disputa','Disputa','Disputation']],
+        ['The Deliverance of Saint Peter','Raphael','Deliverance of Saint Peter',['Liberation of Saint Peter','Deliverance of St Peter','Liberation of St Peter','Liberazione di San Pietro']],
+        ['The Parnassus','Raphael','Parnassus',['Parnaso']],
+        ['The Expulsion of Heliodorus from the Temple','Raphael','Expulsion of Heliodorus from the Temple',['Expulsion of Heliodorus','Cacciata di Eliodoro']],
+        ['The Fire in the Borgo','Raphael','Fire in the Borgo',['Incendio di Borgo','Fire in Borgo']],
+        ['Foligno Madonna','Raphael','Foligno Madonna',['Madonna di Foligno']],
+        ['Oddi Altarpiece','Raphael','Oddi Altarpiece',['Coronation of the Virgin','Pala Oddi','Oddi']],
+        ['Conestabile Madonna','Raphael','Conestabile Madonna',['Madonna Conestabile']],
+        ['Madonna of the Goldfinch','Raphael','Madonna of the Goldfinch',['Madonna del Cardellino']],
+        ['Portrait of Pope Leo X with Two Cardinals','Raphael','Pope Leo X with Two Cardinals',['Portrait of Leo X','Leo X with Cardinals','Pope Leo X']],
+        ['Stefaneschi Triptych','Giotto di Bondone','Stefaneschi Triptych',['Stefaneschi Altarpiece','Trittico Stefaneschi','Stefaneschi']],
+        ['Ognissanti Madonna','Giotto di Bondone','Ognissanti Madonna',['Madonna di Ognissanti','Ognissanti Maesta','Maesta Ognissanti']],
+        ['Saint Matthew and the Angel (Cappella Niccolina)','Fra Angelico','Cappella Niccolina',['Saint Matthew Cappella Niccolina','Niccoline Chapel','Cappella Niccolina Fra Angelico']],
+        ['Saint Sebastian','Titian','Saint Sebastian',['San Sebastiano','St Sebastian']],
+        ['Flora','Titian','Flora'],
+        ['Judith','Giorgione','Judith'],
+        ['Calumny of Apelles (La Calunnia)','Sandro Botticelli','Calumny of Apelles',['La Calunnia','Calunnia di Apelle']],
+        ['Adoration of the Magi','Sandro Botticelli','Adoration of the Magi Botticelli',['Adoration of the Magi','Adorazione dei Magi Botticelli']],
+        ['Venus and Mars','Sandro Botticelli','Venus and Mars'],
+        ['The Battle of San Romano','Paolo Uccello','Battle of San Romano',['Battaglia di San Romano','San Romano Battle']],
+        ['Diptych of Federico da Montefeltro and Battista Sforza','Piero della Francesca','Diptych of Federico da Montefeltro and Battista Sforza',['Montefeltro Diptych','Diptych of the Duke and Duchess of Urbino','Federico da Montefeltro Battista Sforza','Dittico dei Duchi di Urbino']],
+        ['The Baptism of Christ','Piero della Francesca','Baptism of Christ',['Battesimo di Cristo Piero']],
+        ['Madonna with the Long Neck','Parmigianino','Madonna with the Long Neck',['Madonna dal collo lungo','Madonna of the Long Neck']]]},
+      {name:'Dutch Golden Age', sub:'Rembrandt, Vermeer & Hals', wall:0x7b8c99, items:[
+        ['The Return of the Prodigal Son','Rembrandt van Rijn','Return of the Prodigal Son',['Prodigal Son','De terugkeer van de verloren zoon','The Return of the Prodigal Son Rembrandt']],
+        ['Danaë','Rembrandt van Rijn','Danae',['Danaë','Danae Hermitage']],
+        ['Flora','Rembrandt van Rijn','Flora',['Flora Hermitage','Flora Rembrandt']],
+        ['Bathsheba at Her Bath','Rembrandt van Rijn','Bathsheba at Her Bath',['Bathsheba','Bathsheba with King David Letter']],
+        ['Self-Portrait as the Apostle Paul','Rembrandt van Rijn','Self-Portrait as the Apostle Paul',['Self-Portrait as Paul','Selfportrait as the Apostle Paul']],
+        ['Self-Portrait at the Age of 34','Rembrandt van Rijn','Self-Portrait at the Age of 34',['Self-Portrait 1640','Self Portrait at the Age of 34']],
+        ["The Syndics of the Drapers' Guild",'Rembrandt van Rijn','Syndics of the Drapers Guild',['De Staalmeesters','Syndics of the Clothmakers Guild','Staalmeesters','Syndics of the Amsterdam Drapers Guild']],
+        ['The Lacemaker','Johannes Vermeer','Lacemaker',['The Lace Maker','De kantwerkster','Lacemaker Vermeer']],
+        ['The Astronomer','Johannes Vermeer','Astronomer',['The Astronomer Vermeer','De astronoom']],
+        ['The Little Street','Johannes Vermeer','Little Street',['Het straatje','View of Houses in Delft','Street in Delft']],
+        ['Woman Reading a Letter','Johannes Vermeer','Woman Reading a Letter',['Vrouw in het blauw lezend','Woman in Blue Reading a Letter']],
+        ['The Love Letter','Johannes Vermeer','Love Letter',['De liefdesbrief','The Love Letter Vermeer']],
+        ['A Young Woman Standing at a Virginal','Johannes Vermeer','Young Woman Standing at a Virginal',['Lady Standing at a Virginal','A Young Woman Standing at a Virginal','Young Lady Standing at a Virginal']],
+        ['The Threatened Swan','Jan Asselijn','Threatened Swan',['De bedreigde zwaan','The Threatened Swan']],
+        ['Winter Landscape with Ice Skaters','Hendrick Avercamp','Winter Landscape with Ice Skaters',['Winter Landscape with Skaters','Winterlandschap met schaatsers','Winter Landscape']],
+        ['The Merry Drinker','Frans Hals','Merry Drinker',['De vrolijke drinker','The Merry Drinker Hals','Merry Drinker Hals']],
+        ['Portrait of a Couple (Isaac Abrahamsz Massa and Beatrix van der Laen)','Frans Hals','Isaac Abrahamsz Massa and Beatrix van der Laen',['Portrait of a Couple','Massa and Beatrix van der Laen','Portret van een stel']],
+        ['The Feast of Saint Nicholas','Jan Steen','Feast of Saint Nicholas',['Het Sint-Nicolaasfeest','Saint Nicholas Feast','The Feast of St Nicholas']],
+        ['Still Life with Flowers in a Glass Vase','Jan Davidsz. de Heem','Still Life with Flowers in a Glass Vase',['Flowers in a Glass Vase','Flower Still Life','Bloemstilleven']]]},
+      {name:'Prints, Drawings & Scrolls', sub:'Works on paper and silk', wall:0xe9e0cc, items:[
+        ['Rhinoceros (Woodcut)','Albrecht Dürer','Rhinoceros',['Durer Rhinoceros','Rhinocerus','Rhinoceros 1515']],
+        ['Melencolia I (Engraving)','Albrecht Dürer','Melencolia I',['Melencolia','Melancholia I','Melencolia I engraving']],
+        ['The Three Crosses (Drypoint)','Rembrandt van Rijn','Three Crosses',['The Three Crosses','Three Crosses drypoint','Les trois croix']],
+        ['Faust (Etching)','Rembrandt van Rijn','Faust',['Doctor Faustus','Faust in His Study','Dr Faustus']],
+        ['Head of a Young Woman (Drawing)','Leonardo da Vinci','Head of a Young Woman',['Head of a Woman','La Scapigliata','Testa di fanciulla']],
+        ['Studies for the Libyan Sibyl (Drawing)','Michelangelo','Studies for the Libyan Sibyl',['Study for the Libyan Sibyl','Libyan Sibyl study','Studies for the Libyan Sibyl Met']],
+        ['The Dream of Human Life (Drawing)','Michelangelo','Dream of Human Life',['The Dream','Il Sogno','Il Sogno Michelangelo']],
+        ['Admonitions of the Instructress to the Court Ladies','Gu Kaizhi','Admonitions of the Instructress to the Court Ladies',['Admonitions Scroll','Admonitions of the Instructress','Nushizhen tu']],
+        ['Divan Japonais (Lithograph)','Henri de Toulouse-Lautrec','Divan Japonais',['Divan Japonais lithograph','Divan Japonais Lautrec']]]}
+    );
+  })();
   // rooms shown, in this order (any room not listed here is left out)
-  (function(){ var ORDER=["Renaissance", "Baroque & Rococo", "Modern & 20th Century", "Impressionism & Post-Impressionism", "Neoclassical, Romantic & Realist", "Early Modernism & Avant-Garde", "Post-Impressionism & Fauvism", "Expressionism", "Spanish Art Wing", "Ukiyo-e", "Chinese Ink Painting (Shan Shui)", "Persian & Mughal Miniatures", "Romanticism (European)", "Neoclassicism & Academic Art", "Rococo", "Pointillism & Neo-Impressionism", "Art Nouveau & Symbolism", "Barbizon School & French Realism", "Pre-Raphaelite Brotherhood", "Russian Realism & Symbolism", "Hudson River School"];
+  (function(){ var ORDER=["Renaissance", "Italian Renaissance Masters", "Baroque & Rococo", "Dutch Golden Age", "Modern & 20th Century", "Impressionism & Post-Impressionism", "Neoclassical, Romantic & Realist", "Early Modernism & Avant-Garde", "Post-Impressionism & Fauvism", "Expressionism", "Spanish Art Wing", "Ukiyo-e", "Chinese Ink Painting (Shan Shui)", "Persian & Mughal Miniatures", "Romanticism (European)", "Neoclassicism & Academic Art", "Rococo", "Pointillism & Neo-Impressionism", "Art Nouveau & Symbolism", "Barbizon School & French Realism", "Pre-Raphaelite Brotherhood", "Russian Realism & Symbolism", "Hudson River School", "Prints, Drawings & Scrolls", "Classical Sculpture & Antiquities"];
     ROOMS=ORDER.map(function(n){ return ROOMS.filter(function(R){ return R.name===n; })[0]; }).filter(Boolean); })();
   // ---------- Language (EN / ES) ----------
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
@@ -662,6 +815,7 @@
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
+  ['en','es'].forEach(function(l){ ['rooms','abtP1','kb'].forEach(function(k){ STR[l][k]=STR[l][k].replace(/21/g,ROOMS.length); }); });   // room count follows the real number of rooms
   function tx(k){ return STR[LANG][k]; }
   var ES_ROOMS={'Renaissance':['Renacimiento','Renacimiento temprano y pleno'],'Baroque & Rococo':['Barroco y Rococó','Siglos XVII–XVIII'],'Modern & 20th Century':['Moderno y siglo XX','1890–1960'],
     'Impressionism & Post-Impressionism':['Impresionismo y Posimpresionismo','Finales del siglo XIX'],'Neoclassical, Romantic & Realist':['Neoclásico, Romántico y Realista','Finales del XVIII–XIX'],'Early Modernism & Avant-Garde':['Modernismo temprano y vanguardias','1907–1920'],
@@ -670,10 +824,11 @@
     'Neoclassicism & Academic Art':['Neoclasicismo y arte académico','Finales del XVIII–XIX'],'Rococo':['Rococó','Siglo XVIII, Francia e Inglaterra'],'Pointillism & Neo-Impressionism':['Puntillismo y Neoimpresionismo','Seurat, Signac y Cross'],
     'Art Nouveau & Symbolism':['Art Nouveau y Simbolismo','Fin de siglo'],'Barbizon School & French Realism':['Escuela de Barbizon y realismo francés','Mediados del siglo XIX, Francia'],'Pre-Raphaelite Brotherhood':['Hermandad Prerrafaelita','Inglaterra victoriana'],
     'Russian Realism & Symbolism':['Realismo y simbolismo rusos','Los Itinerantes y más allá'],'Hudson River School':['Escuela del río Hudson','Paisaje estadounidense']};
+  Object.assign(ES_ROOMS,{'Italian Renaissance Masters':['Maestros del Renacimiento italiano','Florencia, Roma y Venecia'],'Dutch Golden Age':['Siglo de Oro neerlandés','Rembrandt, Vermeer y Hals'],'Prints, Drawings & Scrolls':['Grabados, dibujos y rollos','Obras sobre papel y seda'],'Classical Sculpture & Antiquities':['Escultura clásica y antigüedades','Mármol, bronce y piedra']});
   function rname(R){ return LANG==='es' && ES_ROOMS[R.name] ? ES_ROOMS[R.name][0] : R.name; }
   function rsub(R){ return LANG==='es' && ES_ROOMS[R.name] ? ES_ROOMS[R.name][1] : R.sub; }
   var signMesh=null;
-  var ANON={'Mona Lisa (Prado version)':1,'Winged Victory of Samothrace':1,'The Great Sphinx of Tanis':1,'Laocoön and His Sons':1};
+  var ANON={'Mona Lisa (Prado version)':1,'Winged Victory of Samothrace':1,'The Great Sphinx of Tanis':1,'Laocoön and His Sons':1,'Venus de Milo':1,'Apollo Belvedere':1,'Belvedere Torso':1,'The Rosetta Stone':1,'Lewis Chessmen':1,'Sutton Hoo Helmet':1,'Portland Vase':1,'Standard of Ur':1,'Lion Hunt of Ashurbanipal':1,"Hoa Hakananai'a (Moai)":1,'Book of the Dead of Hunefer':1,'Book of the Dead of Ani':1,'Nebamun Hunting in the Marshes':1,'The Wilton Diptych':1,'Admonitions of the Instructress to the Court Ladies':1};
   function mk(R,e){ return {t:e[0]+' — '+e[1], title:e[0], artist:e[1], qt:e[2]||e[0].replace(/\s*\(.*\)/,''), alts:e[3]||[], anon:!!ANON[e[0]], emb:false, room:R}; }
   ROOMS.forEach(function(R){
     R.list = (R.emb||[]).map(function(e,i){ return {t:e[0], kind:e[1], link:e[2], emb:true, seed:i+3}; })
@@ -1172,6 +1327,25 @@
   // ---------- Museums: top museums / collections, their masterpieces in the gallery, and a walk tour per museum ----------
   var MUSEUMS=[{"id": "louvre", "n": "Louvre Museum", "c": "Paris", "ce": "París"}, {"id": "prado", "n": "Museo del Prado", "c": "Madrid", "ce": "Madrid"}, {"id": "met", "n": "The Metropolitan Museum of Art", "c": "New York", "ce": "Nueva York"}, {"id": "rijks", "n": "Rijksmuseum", "c": "Amsterdam", "ce": "Ámsterdam"}, {"id": "ng", "n": "National Gallery", "c": "London", "ce": "Londres"}, {"id": "orsay", "n": "Musée d'Orsay", "c": "Paris", "ce": "París"}, {"id": "uffizi", "n": "Uffizi Gallery", "c": "Florence", "ce": "Florencia"}, {"id": "vatican", "n": "Vatican Museums", "c": "Vatican City", "ce": "Ciudad del Vaticano"}, {"id": "aic", "n": "Art Institute of Chicago", "c": "Chicago", "ce": "Chicago"}, {"id": "vgm", "n": "Van Gogh Museum", "c": "Amsterdam", "ce": "Ámsterdam"}, {"id": "moma", "n": "Museum of Modern Art (MoMA)", "c": "New York", "ce": "Nueva York"}, {"id": "hermitage", "n": "State Hermitage Museum", "c": "Saint Petersburg", "ce": "San Petersburgo"}, {"id": "khm", "n": "Kunsthistorisches Museum", "c": "Vienna", "ce": "Viena"}, {"id": "belvedere", "n": "Belvedere", "c": "Vienna", "ce": "Viena"}, {"id": "nga", "n": "National Gallery of Art", "c": "Washington, D.C.", "ce": "Washington, D. C."}, {"id": "mauritshuis", "n": "Mauritshuis", "c": "The Hague", "ce": "La Haya"}, {"id": "tate", "n": "Tate", "c": "London", "ce": "Londres"}];
   var MUS_T={"louvre": ["Mona Lisa", "Oath of the Horatii", "La Grande Odalisque", "The Turkish Bath", "The Raft of the Medusa", "The Raft of the Méduse", "Liberty Leading the People", "The Wedding at Cana", "The Death of Sardanapalus", "Women of Algiers in their Apartment", "Pilgrimage to Cythera", "Pierrot", "Diana Leaving her Bath", "The Moneylender and His Wife", "Winged Victory of Samothrace"], "prado": ["Las Meninas", "The Surrender of Breda", "The Garden of Earthly Delights", "The Haywain Triptych", "The Adoration of the Magi", "The Table of the Seven Deadly Sins", "The Third of May 1808", "The Second of May 1808", "Saturn Devouring His Son", "The Clothed Maja (La maja vestida)", "The Nude Maja (La maja desnuda)", "Witches' Sabbath (El aquelarre)", "The Family of Charles IV", "The Dog (El perro)", "Duel with Cudgels (Duelo a garrotazos)", "Self-Portrait (ca. 1796)", "The Nobleman with his Hand on his Chest", "The Adoration of the Shepherds", "The Trinity", "The Spinners (Las Hilanderas)", "The Triumph of Bacchus (Los Borrachos)", "The Forge of Vulcan", "Mercury and Argus", "Christ Crucified", "The Immaculate Conception of Los Venerables", "The Holy Family with the Little Bird", "Agnus Dei", "The Martyrdom of Saint Philip", "Saint Andrew", "Jacob's Dream", "The Descent from the Cross", "The Three Graces", "David with the Head of Goliath", "Artemisia", "The Garden of Love", "The Judgment of Paris|Peter Paul Rubens", "The Triumph of Death", "Equestrian Portrait of Charles V", "The Annunciation", "Self-Portrait (1498)", "Christ Washing the Disciples' Feet", "The Cardinal", "Mona Lisa (Prado version)", "Danaë and the Shower of Gold", "Venus and Adonis", "The Worship of Venus", "Adam and Eve", "The Wine of Saint Martin's Day", "Death of the Virgin", "Portrait of a Man", "Children on the Beach (Chicos en la playa)", "Children on the Seashore (Niños en la playa)"], "met": ["The Great Wave off Kanagawa (Kanagawa-oki Nami Ura)", "The Great Wave off Kanagawa", "Fine Wind, Clear Morning (Gaifū Kaisei)", "Thunderstorm Beneath the Summit (Sanka Hakuu)", "Kajikazawa in Kai Province (Kōshū Kajikazawa)", "Chōshi in Shimōsa (Sōshū Chōshi, from Oceans of Wisdom)", "View of Toledo", "Cardinal Fernando Niño de Guevara", "The Vision of Saint John", "Portrait of Juan de Pareja", "Don Andrés de Andrade y la Cal", "The Holy Family with Saints Anne and Catherine of Alexandria", "Majas on a Balcony", "Manuel Osorio Manrique de Zuñiga (\"The Red Boy\")", "Condesa de Altamira and Her Daughter, María Agustina", "Bullfight, Suerte de Varas", "Autumn Rhythm (Number 30)", "Bridge over a Pond of Water Lilies", "Wheat Field with Cypresses", "Cypresses", "Madame Georges Charpentier and Her Children", "The Gulf of Marseilles Seen from L'Estaque", "Rideau, Cruchon et Compotier", "Two Tahitian Women", "Circus Sideshow (Parade de cirque)", "Max Schmitt in a Single Scull", "The Gulf Stream", "Portrait of Madame X", "The Death of Socrates", "The Abduction of Rebecca", "Woman with a Parrot", "Boy with a Sword", "The Horse Fair", "Ville-d'Avray", "Young Woman with a Water Pitcher", "A Maid Asleep", "Allegory of the Catholic Faith", "Aristotle with a Bust of Homer", "The Musicians", "The Fortune Teller", "Mezzetin", "The Toilet of Venus", "The Love Letter", "Mrs. Grace Dalrymple Elliott", "The Harvesters", "Venus and the Lute Player", "The Crucifixion; The Last Judgment", "Portrait of a Carthusian", "The Oxbow", "Heart of the Andes", "Washington Crossing the Delaware", "The Rocky Mountains, Lander's Peak", "A Gorge in the Mountains (Kauterskill Clove)"], "rijks": ["The Night Watch", "The Milkmaid", "The Jewish Bride", "The Windmill at Wijk bij Duurstede", "The Merry Family", "Portrait of Marten Soolmans", "Portrait of Oopjen Coppit"], "ng": ["The Rokeby Venus", "The Arnolfini Portrait", "Bacchus and Ariadne", "The Ambassadors", "The Hay Wain", "The Fighting Temeraire", "Rain, Steam and Speed", "Rain, Steam and Speed – The Great Western Railway", "The Avenue at Middelharnis", "Saint Francis in Meditation", "Portrait of a Man (Self Portrait?)", "Bathers at Asnières", "Summer's Day", "Sunflowers"], "orsay": ["Le Déjeuner sur l'herbe", "Olympia", "Bal du moulin de la Galette", "L'Absinthe", "The Floor Scrapers", "The Cradle", "Flood at Port-Marly", "The Gleaners", "The Angelus", "A Burial at Ornans", "Arrangement in Grey and Black No. 1 (Whistler's Mother)", "Plowing in the Nivernais", "The Circus", "The Card Players", "Le Pont du chemin de fer à Argenteuil", "Self-Portrait without Beard", "The Birth of Venus|Alexandre Cabanel"], "uffizi": ["Primavera", "The Birth of Venus|Sandro Botticelli", "Venus of Urbino", "Judith Slaying Holofernes"], "vatican": ["The Creation of Adam", "The School of Athens", "Laocoön and His Sons"], "aic": ["American Gothic", "Nighthawks", "A Sunday Afternoon on the Island of La Grande Jatte", "A Sunday on La Grande Jatte", "Two Sisters (On the Terrace)", "Woman at the Piano", "Acrobats at the Cirque Fernando", "The Millinery Shop", "Woman at Her Toilette", "Stacks of Wheat (End of Summer)", "Arrival of the Normandy Train, Gare Saint-Lazare", "Day of the God (Mahana no atua)", "Moulin de la Galette", "At the Moulin Rouge", "The Child's Bath", "Paris Street; Rainy Day", "The Basket of Apples", "Old Man with a Gold Chain", "The Herring Net", "The Crucifixion", "Saint George and the Dragon", "The Assumption of the Virgin"], "vgm": ["The Bedroom", "Romans parisiens (Les Livres jaunes)"], "moma": ["The Starry Night", "Les Demoiselles d'Avignon", "The Persistence of Memory", "The Sleeping Gypsy", "The Dream", "Christina's World", "I and the Village", "Unique Forms of Continuity in Space"], "hermitage": ["The Dance", "The Boulevard Montmartre on a Winter Morning"], "khm": ["The Hunters in the Snow", "The Tower of Babel", "The Peasant Wedding", "The Art of Painting"], "belvedere": ["The Kiss", "Birch Forest", "Blumenwiese (Blooming Meadow)", "Bauerngarten (Flower Garden)"], "nga": ["Woman with a Parasol - Madame Monet and Her Son", "Breezing Up (A Fair Wind)", "Two Women at a Window", "Niagara"], "mauritshuis": ["Girl with a Pearl Earring", "View of Delft", "The Anatomy Lesson of Dr. Nicolaes Tulp", "The Goldfinch"], "tate": ["Ophelia", "The Lady of Shalott", "Proserpine", "Carnation, Lily, Lily, Rose", "Marilyn Diptych"]};
+  (function(){ var MADD={
+    louvre:['The Coronation of Napoleon','The Virgin of the Rocks (Louvre version)','The Lacemaker','The Astronomer','The Death of the Virgin','The Fortune Teller|Caravaggio','The Cheat with the Ace of Diamonds','Magdalene with the Smoking Flame','Bathsheba at Her Bath','The Intervention of the Sabine Women','Venus de Milo'],
+    met:['Self-Portrait with a Straw Hat','Madonna and Child Enthroned with Saints','Mäda Primavesi'],
+    vatican:['The Last Judgment','The Transfiguration','The Entombment of Christ','Disputation of the Holy Sacrament','The Deliverance of Saint Peter','The Parnassus','Saint Jerome in the Wilderness','The Expulsion of Heliodorus from the Temple','The Fire in the Borgo','Foligno Madonna','Oddi Altarpiece','Stefaneschi Triptych','Saint Matthew and the Angel (Cappella Niccolina)','The Delphic Sibyl','The Libyan Sibyl','Apollo Belvedere','Belvedere Torso'],
+    bm:['Admonitions of the Instructress to the Court Ladies','Rhinoceros (Woodcut)','Melencolia I (Engraving)','The Three Crosses (Drypoint)','Faust (Etching)','Head of a Young Woman (Drawing)','Studies for the Libyan Sibyl (Drawing)','The Dream of Human Life (Drawing)','Book of the Dead of Hunefer','Book of the Dead of Ani','Nebamun Hunting in the Marshes','The Rosetta Stone','Lewis Chessmen','Sutton Hoo Helmet','Portland Vase','Standard of Ur','Lion Hunt of Ashurbanipal',"Hoa Hakananai'a (Moai)"],
+    hermitage:['The Return of the Prodigal Son','Madonna Litta','Benois Madonna','Danaë','The Lute Player','Judith','Conestabile Madonna','Saint Sebastian','Flora|Rembrandt van Rijn','The Union of Earth and Water','Portrait of a Lady in Blue','Woman Holding a Fan','Lady in the Garden','Lilac Bush','White House at Night','Woman Holding a Fruit','Composition VI','The Three Maries at the Tomb'],
+    uffizi:['Annunciation','Medusa','Doni Tondo (The Holy Family)','Bacchus','Madonna of the Goldfinch','Diptych of Federico da Montefeltro and Battista Sforza','Adoration of the Magi|Leonardo da Vinci','Ognissanti Madonna','The Battle of San Romano','Portinari Triptych','Madonna with the Long Neck','Calumny of Apelles (La Calunnia)','Adoration of the Magi|Sandro Botticelli','Portrait of Pope Leo X with Two Cardinals','The Baptism of Christ|Andrea del Verrocchio','Flora|Titian'],
+    ng:['The Virgin of the Rocks (London version)','Supper at Emmaus','Venus and Mars','The Baptism of Christ|Piero della Francesca','The Wilton Diptych','A Young Woman Standing at a Virginal','Self-Portrait at the Age of 34','The Umbrellas','The Water-Lily Pond','Whistlejacket','An Experiment on a Bird in the Air Pump'],
+    rijks:['The Little Street','Woman Reading a Letter','The Love Letter|Johannes Vermeer','Self-Portrait as the Apostle Paul',"The Syndics of the Drapers' Guild",'The Threatened Swan','Winter Landscape with Ice Skaters','The Merry Drinker','Portrait of a Couple (Isaac Abrahamsz Massa and Beatrix van der Laen)','The Feast of Saint Nicholas','The Battle of Waterloo','Still Life with Flowers in a Glass Vase|Jan Davidsz. de Heem','Girl in a White Kimono'],
+    orsay:['Starry Night Over the Rhône',"The Origin of the World (L'Origine du monde)",'Poppies (Coquelicots)','Bedroom in Arles (3rd Version)','The Church at Auvers','Tahitian Women on the Beach','London, Houses of Parliament'],
+    moma:['Water Lilies (Agapanthus Triptych)','The Bather','Hope, II','The Olive Trees','Dynamism of a Soccer Player','The City Rises','Street, Dresden','Suprematist Composition: White on White','Evening, Honfleur','Port-en-Bessin, Entrance to the Harbor','The Seed of the Areoi','La Goulue Arriving at the Moulin Rouge','Divan Japonais (Lithograph)','Melancholy and Mystery of a Street']
+  };
+  // the British Museum joins the top-museums list (right after the National Gallery)
+  if (!MUSEUMS.some(function(m){ return m.id==='bm'; })) MUSEUMS.splice(5,0,{"id":"bm","n":"The British Museum","c":"London","ce":"Londres"});
+  // two earlier entries share a title with new works by other artists: key them by artist too
+  var FIX={'The Fortune Teller':'The Fortune Teller|Georges de La Tour','The Love Letter':'The Love Letter|Jean-Honoré Fragonard'};
+  MUS_T.met=MUS_T.met.map(function(k){ return FIX[k]||k; });
+  Object.keys(MADD).forEach(function(k){ MUS_T[k]=(MUS_T[k]||[]).concat(MADD[k]); });
+  })();
   var MUS_IDX=null, mus=document.getElementById('mus'), musl=document.getElementById('musl'), curMus=null;
   function musIndex(){ if (MUS_IDX) return MUS_IDX; MUS_IDX={}; MUSEUMS.forEach(function(m){ (MUS_T[m.id]||[]).forEach(function(e){ MUS_IDX[e]=m.id; }); }); return MUS_IDX; }
   function musOf(it){ var x=musIndex(); return x[it.title+'|'+it.artist]||x[it.title]||null; }
