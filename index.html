@@ -100,6 +100,18 @@
   #sx{margin:0;min-height:44px}
   #srnd{display:block;width:100%;margin:0 0 10px 0;min-height:44px;font-size:15px;letter-spacing:.04em;background:transparent;color:var(--gold);border:1px solid var(--gold)}
   #srnd:hover{background:var(--gold);color:#1b1610}
+  #icn{display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;z-index:7;background:rgba(14,13,12,.97);box-sizing:border-box;
+    padding:calc(12px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) calc(24px + env(safe-area-inset-left,0px))}
+  #icn .box{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+  #icn .top{display:flex;gap:8px;align-items:center;padding-bottom:6px}
+  #icnh{flex:1;min-width:0;font-size:20px;letter-spacing:.08em;color:var(--gold)}
+  #icx{margin:0;min-height:44px}
+  #icn .note{font-size:12px;color:#a99f8e;padding:0 0 10px 0}
+  #icl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #icl .pc{display:block;width:100%;text-align:left;padding:11px 8px 11px 12px;border:0;border-bottom:1px solid #2a241c;background:#1a1713;color:#d8cfbf;font:inherit;font-size:14px;margin:0;letter-spacing:0;cursor:pointer}
+  #icl .pc:hover{background:#241f19}
+  #icl .pc small{display:block;color:#a99f8e;font-size:12px}
+  #icl .none{padding:20px 6px;color:#a99f8e}
   #sl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #sl .ar{display:flex;justify-content:space-between;gap:10px;padding:13px 6px;border-bottom:1px solid #3a3226;cursor:pointer;color:var(--fg);font-size:16px}
   #sl .ar span{color:#a99f8e;font-size:13px;white-space:nowrap}
@@ -247,6 +259,7 @@
   <p class="cr" data-i="abtC"></p>
 </div></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><button id="srnd" class="room" type="button" data-i="rnd">🎲 Random painting</button><div id="sl"></div></div></div>
+<div id="icn" role="dialog" aria-modal="true" aria-labelledby="icnh"><div class="box"><div class="top"><div id="icnh" data-i="icnT">Icons</div><button id="icx" class="room" type="button" aria-label="Close">✕</button></div><div class="note" data-i="icnN"></div><div id="icl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
 <div id="pad"><div class="wrap"><button id="fw">▲</button><button id="bk">▼</button></div></div>
@@ -580,11 +593,11 @@
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it.', rnd:'🎲 Random painting', abtBtn:'About ArtPro', abtT:'About ArtPro', abtP1:'Walk 21 rooms of famous art, take the guided tour, listen to each work, search by artist and, on mobile, hang a painting on your wall.', abtSH:'Sources', abtS:'Images and details come from open collections: Wikimedia Commons, The Metropolitan Museum of Art, the Art Institute of Chicago and the Internet Archive, with texts from Wikipedia and Wikidata.', abtC:'Made by EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>AR on mobile</b> · open a painting and tap “Hang on my wall” to preview it on your wall.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
-      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
+      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', icons:'★ Icons', icnT:'Icons', icnN:'Record-breaking masterpieces · tap one to stand in front of it', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>desliza</b> para mirar · toca un cuadro para ir hasta él.', rnd:'🎲 Cuadro aleatorio', abtBtn:'Acerca de ArtPro', abtT:'Acerca de ArtPro', abtP1:'Recorre 21 salas de arte famoso, sigue el recorrido guiado, escucha cada obra, busca por artista y, en el móvil, cuelga un cuadro en tu pared.', abtSH:'Fuentes', abtS:'Las imágenes y los datos proceden de colecciones abiertas: Wikimedia Commons, The Metropolitan Museum of Art, el Art Institute of Chicago y el Internet Archive, con textos de Wikipedia y Wikidata.', abtC:'Creado por EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>RA en móvil</b> · abre un cuadro y toca “Colgar en mi pared” para verlo en tu pared.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
-      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
+      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', icons:'★ Íconos', icnT:'Íconos', icnN:'Obras maestras de récord · toca una para ir hasta ella', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
@@ -1056,6 +1069,26 @@
   }
   document.getElementById('srnd').addEventListener('click', randomPiece);
   var sb=document.createElement('button'); sb.className='room'; sb.textContent=tx('artists'); sb.setAttribute('data-i','artists'); sb.onclick=openSearch; roomsEl.insertBefore(sb, tb);
+
+  // ---------- Icons: the record-breaking masterpieces, tap one to walk straight up to it ----------
+  var ICON_TS=['Salvator Mundi — Leonardo da Vinci','The Card Players (Qatar version) — Paul Cézanne','Portrait of Elisabeth Lederer — Gustav Klimt','Nafea Faa Ipoipo (When Will You Marry?) — Paul Gauguin','The Standard Bearer — Rembrandt van Rijn','Water Serpents II — Gustav Klimt','Portrait of Marten Soolmans — Rembrandt van Rijn','Portrait of Oopjen Coppit — Rembrandt van Rijn','Nu Couché (Reclining Nude) — Amedeo Modigliani','Nu Couché (sur le côté gauche) — Amedeo Modigliani','Les Poseuses (Ensemble, small version) — Georges Seurat','Orchard with Cypresses (Verger avec cyprès) — Vincent van Gogh','Maternité II — Paul Gauguin','Birch Forest — Gustav Klimt','Portrait of Adele Bloch-Bauer II — Gustav Klimt','Portrait of Dr. Gachet — Vincent van Gogh','Ploughman in a Field (Laboureur dans un champ) — Vincent van Gogh','Le Bassin aux Nymphéas (Water Lily Pond) — Claude Monet','Meules (Haystacks) — Claude Monet','Self-Portrait without Beard — Vincent van Gogh','Rideau, Cruchon et Compotier — Paul Cézanne','Irises — Vincent van Gogh','Peasant Woman Against a Background of Wheat — Vincent van Gogh','Vase with Fifteen Sunflowers — Vincent van Gogh','Portrait of Joseph Roulin — Vincent van Gogh','Portrait of a Halberdier — Pontormo','Massacre of the Innocents — Peter Paul Rubens','Nature morte à la nappe à carreaux — Juan Gris','Violon et guitare — Juan Gris','Santa Rufina — Diego Velázquez','Saint Dominic in Prayer — El Greco','La hora del baño, Valencia — Joaquín Sorolla'];
+  var icn=document.getElementById('icn'), icl=document.getElementById('icl');
+  function iconItem(k){ var f=null; ROOMS.forEach(function(R){ R.list.forEach(function(x){ if (x.t===k) f=x; }); }); return f; }
+  function renderIcons(){
+    icl.innerHTML=''; var n=0;
+    ICON_TS.forEach(function(k){
+      var it=iconItem(k); if (!it || it.failed || it.emb) return; n++;
+      var b=document.createElement('button'); b.className='pc'; b.type='button'; b.textContent=it.title;
+      var sm=document.createElement('small'); sm.textContent=it.artist+' · '+rname(it.room); b.appendChild(sm);
+      b.onclick=function(){ closeIcons(); gotoPiece(it); }; icl.appendChild(b);
+    });
+    if (!n){ var d=document.createElement('div'); d.className='none'; d.textContent=tx('none'); icl.appendChild(d); }
+  }
+  function openIcons(){ stopTour(); icn.style.display='block'; renderIcons(); icl.scrollTop=0; }
+  function closeIcons(){ icn.style.display='none'; lastAct=Date.now(); }
+  document.getElementById('icx').addEventListener('click', closeIcons);
+  addEventListener('keydown', function(e){ if (icn.style.display==='block'){ if (e.code==='Escape') closeIcons(); e.stopPropagation(); } }, true);
+  var ib=document.createElement('button'); ib.id='iconsbtn'; ib.className='room'; ib.type='button'; ib.textContent=tx('icons'); ib.setAttribute('data-i','icons'); ib.onclick=openIcons; roomsEl.insertBefore(ib, tb);
 
   // ---------- WhatsApp share: a message with a link that opens ArtPro at this exact painting ----------
   var SHARE_BASE='https://easylandx.github.io/artpro/';
