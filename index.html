@@ -107,6 +107,8 @@
   #icnh{flex:1;min-width:0;font-size:20px;letter-spacing:.08em;color:var(--gold)}
   #icx{margin:0;min-height:44px}
   #icn .note{font-size:12px;color:#a99f8e;padding:0 0 10px 0}
+  #icgo{display:block;width:100%;margin:0 0 10px 0;min-height:44px;font-size:15px;letter-spacing:.04em;background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  #icgo:hover{background:var(--gold);color:#1b1610}
   #icl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #icl .pc{display:block;width:100%;text-align:left;padding:11px 8px 11px 12px;border:0;border-bottom:1px solid #2a241c;background:#1a1713;color:#d8cfbf;font:inherit;font-size:14px;margin:0;letter-spacing:0;cursor:pointer}
   #icl .pc:hover{background:#241f19}
@@ -259,7 +261,7 @@
   <p class="cr" data-i="abtC"></p>
 </div></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><button id="srnd" class="room" type="button" data-i="rnd">🎲 Random painting</button><div id="sl"></div></div></div>
-<div id="icn" role="dialog" aria-modal="true" aria-labelledby="icnh"><div class="box"><div class="top"><div id="icnh" data-i="icnT">Icons</div><button id="icx" class="room" type="button" aria-label="Close">✕</button></div><div class="note" data-i="icnN"></div><div id="icl"></div></div></div>
+<div id="icn" role="dialog" aria-modal="true" aria-labelledby="icnh"><div class="box"><div class="top"><div id="icnh" data-i="icnT">Icons</div><button id="icx" class="room" type="button" aria-label="Close">✕</button></div><div class="note" data-i="icnN"></div><button id="icgo" class="room" type="button" data-i="icnGo">▶︎ Walk tour</button><div id="icl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
 <div id="pad"><div class="wrap"><button id="fw">▲</button><button id="bk">▼</button></div></div>
@@ -600,11 +602,11 @@
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it.', rnd:'🎲 Random painting', abtBtn:'About ArtPro', abtT:'About ArtPro', abtP1:'Walk 21 rooms of famous art, take the guided tour, listen to each work, search by artist and, on mobile, hang a painting on your wall.', abtSH:'Sources', abtS:'Images and details come from open collections: Wikimedia Commons, The Metropolitan Museum of Art, the Art Institute of Chicago and the Internet Archive, with texts from Wikipedia and Wikidata.', abtC:'Made by EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>AR on mobile</b> · open a painting and tap “Hang on my wall” to preview it on your wall.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
-      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', icons:'★ Icons', icnT:'Icons', icnTip:'Top Auction Records', icnN:'Top Auction Records · record-breaking masterpieces · tap one to stand in front of it', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
+      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', icons:'★ Icons', icnT:'Icons', icnGo:'▶︎ Walk tour of the icons', icnWord:'Icons tour', icnTip:'Top Auction Records', icnN:'Top Auction Records · record-breaking masterpieces · tap one to stand in front of it', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>desliza</b> para mirar · toca un cuadro para ir hasta él.', rnd:'🎲 Cuadro aleatorio', abtBtn:'Acerca de ArtPro', abtT:'Acerca de ArtPro', abtP1:'Recorre 21 salas de arte famoso, sigue el recorrido guiado, escucha cada obra, busca por artista y, en el móvil, cuelga un cuadro en tu pared.', abtSH:'Fuentes', abtS:'Las imágenes y los datos proceden de colecciones abiertas: Wikimedia Commons, The Metropolitan Museum of Art, el Art Institute of Chicago y el Internet Archive, con textos de Wikipedia y Wikidata.', abtC:'Creado por EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>RA en móvil</b> · abre un cuadro y toca “Colgar en mi pared” para verlo en tu pared.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
-      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', icons:'★ Íconos', icnT:'Íconos', icnTip:'Récords de subasta', icnN:'Récords de subasta · obras maestras de récord · toca una para ir hasta ella', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
+      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', icons:'★ Íconos', icnT:'Íconos', icnGo:'▶︎ Recorrido por los íconos', icnWord:'Recorrido de íconos', icnTip:'Récords de subasta', icnN:'Récords de subasta · obras maestras de récord · toca una para ir hasta ella', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
@@ -916,12 +918,12 @@
   var troom=document.getElementById('troom');
   ROOMS.forEach(function(R,i){ var o=document.createElement('option'); o.value=i; o.textContent=roomNo(i)+' · '+rname(R); troom.appendChild(o); });
   troom.onchange=function(){
-    if (!tour) return; var i=+troom.value; if (!ROOMS[i]) return;
+    if (!tour) return; var i=+troom.value; if (!ROOMS[i]) return; delete tour.icons;
     hush(); tour.room=i; tour.seen=[]; tour.tp=0; tour.st=null; tour.phase='enter'; tour.t=0; tour.wait=0; tour.said=false;
     enterRoom(i); tourSay(); troom.blur();
   };
   function tourSay(){ var t=tourText(); statusEl.textContent=t; tinfo.textContent=t; if (troom.value!==String(roomIdx)) troom.value=roomIdx; }
-  function tourText(){ var R=ROOMS[roomIdx]; return tx('tourWord')+' · '+rname(R)+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?tx('paused'):''); }
+  function tourText(){ if (tour.icons) return tx('icnWord')+' · '+Math.min(tour.seen.length+1,tour.icons.length)+'/'+tour.icons.length+(tour.paused?tx('paused'):''); var R=ROOMS[roomIdx]; return tx('tourWord')+' · '+rname(R)+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?tx('paused'):''); }
   function setTourBtn(){ var b=document.getElementById('tour'); if (b){ b.textContent=tour?tx('tourStop'):tx('tourGo'); b.classList.toggle('on',!!tour); } document.body.classList.toggle('touring',!!tour); tourUI(); }
   function tourUI(){ if (!tour) return; document.getElementById('tpause').textContent=tour.paused?tx('resume'):tx('pause'); document.getElementById('tspeed').textContent=SPEEDS[tour.si]+'×'; tourSay(); }
   function tourPause(){ if (tour){ tour.paused=!tour.paused; if (SS&&rd.on) try{ tour.paused?SS.pause():SS.resume(); }catch(e){} tourUI(); } }
@@ -963,6 +965,7 @@
   }
   function tourPrev(){
     var T=tourManual(); if (!T) return;
+    if (T.icons){ var li=(T.st&&(T.phase==='walk'||T.phase==='dwell'))?T.icons.indexOf(T.st.it):T.seen.length; if (li<0) li=T.seen.length; T.seen=T.icons.slice(0,Math.max(0,li-1)); T.phase='pick'; T.st=null; T.said=false; tourUI(); return; }
     var order=tourOrder(), idx=(T.st&&(T.phase==='walk'||T.phase==='dwell'))?order.indexOf(T.st.it):T.seen.length;
     if (idx<0) idx=T.seen.length;
     if (idx>0){ T.seen=order.slice(0,idx-1); T.phase='pick'; T.st=null; T.said=false; }
@@ -986,6 +989,14 @@
     pitch+=((T.tp||0)-pitch)*Math.min(1,3*dt);
     if (T.phase==='enter'){ if (!T.said){ T.said=true; say(rname(ROOMS[roomIdx])); } T.t+=dt; if (T.t>1.6 && !(rd.on&&rd.busy&&T.t<8)) T.phase='pick'; return; }   // pause so the room sign can be read
     if (T.phase==='pick'){
+      if (T.icons){          // Icons tour: fixed list of masterpieces, moving between rooms as needed
+        var nit=null; for (var q=0;q<T.icons.length;q++){ if (T.seen.indexOf(T.icons[q])<0){ nit=T.icons[q]; break; } }
+        if (!nit){ tour=null; hush(); setTourBtn(); statusEl.textContent=tx('finished'); return; }
+        var ri=ROOMS.indexOf(nit.room); if (ri!==roomIdx){ T.room=ri; T.tp=0; enterRoom(ri); }
+        var nst=stations.filter(function(st){ return st.it===nit; })[0];
+        if (!nst){ T.seen.push(nit); return; }          // this print could not be loaded: skip it
+        fetchInfo(nit); T.st=nst; T.phase='walk'; T.t=0; T.wait=0; T.said=false; tourSay(); return;
+      }
       var order=stations.slice().sort(function(a,b){ return (b.pos.z-a.pos.z) || (a.pos.x-b.pos.x); });
       var nxt=order.filter(function(st){ return T.seen.indexOf(st.it)<0; })[0];
       if (!nxt){
@@ -1094,6 +1105,14 @@
   function openIcons(){ stopTour(); icn.style.display='block'; renderIcons(); icl.scrollTop=0; }
   function closeIcons(){ icn.style.display='none'; lastAct=Date.now(); }
   document.getElementById('icx').addEventListener('click', closeIcons);
+  function startIconsTour(){
+    var list=[]; ICON_TS.forEach(function(k){ var it=iconItem(k); if (it && !it.failed && !it.emb) list.push(it); });
+    if (!list.length) return;
+    closeIcons(); welcome=false; hush(); nav=null; try{ if (document.pointerLockElement) document.exitPointerLock(); }catch(e){}
+    tour={room:roomIdx,seen:[],phase:'pick',t:0,wait:0,st:null,paused:false,si:2,said:false,tp:0,icons:list};
+    setTourBtn(); tourSay();
+  }
+  document.getElementById('icgo').addEventListener('click', startIconsTour);
   addEventListener('keydown', function(e){ if (icn.style.display==='block'){ if (e.code==='Escape') closeIcons(); e.stopPropagation(); } }, true);
   var ib=document.createElement('button'); ib.id='iconsbtn'; ib.className='room'; ib.type='button'; ib.textContent=tx('icons'); ib.setAttribute('data-i','icons'); ib.title=tx('icnTip'); ib.setAttribute('aria-label',tx('icnTip')); ib.onclick=openIcons; roomsEl.insertBefore(ib, tb);
 
