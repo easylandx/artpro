@@ -114,6 +114,22 @@
   #icl .pc:hover{background:#241f19}
   #icl .pc small{display:block;color:#a99f8e;font-size:12px}
   #icl .none{padding:20px 6px;color:#a99f8e}
+  #mus{display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;z-index:7;background:rgba(14,13,12,.97);box-sizing:border-box;
+    padding:calc(12px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) calc(24px + env(safe-area-inset-left,0px))}
+  #mus .box{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+  #mus .top{display:flex;gap:8px;align-items:center;padding-bottom:6px}
+  #mush{flex:1;min-width:0;font-size:20px;letter-spacing:.08em;color:var(--gold)}
+  #musx{margin:0;min-height:44px}
+  #mus .note{font-size:12px;color:#a99f8e;padding:0 0 10px 0}
+  #musgo{display:block;width:100%;margin:0 0 10px 0;min-height:44px;font-size:15px;letter-spacing:.04em;background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  #musgo:hover{background:var(--gold);color:#1b1610}
+  #musl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #musl .pc{display:block;width:100%;text-align:left;padding:11px 8px 11px 12px;border:0;border-bottom:1px solid #2a241c;background:#1a1713;color:#d8cfbf;font:inherit;font-size:14px;margin:0;letter-spacing:0;cursor:pointer}
+  #musl .pc:hover{background:#241f19}
+  #musl .pc small{display:block;color:#a99f8e;font-size:12px}
+  #musl .none{padding:20px 6px;color:#a99f8e}
+  #musb{margin:0;min-height:44px;display:none}
+  #mus .cnt{color:#a99f8e;font-size:12px}
   #sl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #sl .ar{display:flex;justify-content:space-between;gap:10px;padding:13px 6px;border-bottom:1px solid #3a3226;cursor:pointer;color:var(--fg);font-size:16px}
   #sl .ar span{color:#a99f8e;font-size:13px;white-space:nowrap}
@@ -262,6 +278,7 @@
 </div></div>
 <div id="srch"><div class="box"><div class="top"><input id="sq" type="search" placeholder="Search artist… (type the first letters)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button id="sx" class="room" aria-label="Close">✕</button></div><button id="srnd" class="room" type="button" data-i="rnd">🎲 Random painting</button><div id="sl"></div></div></div>
 <div id="icn" role="dialog" aria-modal="true" aria-labelledby="icnh"><div class="box"><div class="top"><div id="icnh" data-i="icnT">Icons</div><button id="icx" class="room" type="button" aria-label="Close">✕</button></div><div class="note" data-i="icnN"></div><button id="icgo" class="room" type="button" data-i="icnGo">▶︎ Walk tour</button><div id="icl"></div></div></div>
+<div id="mus" role="dialog" aria-modal="true" aria-labelledby="mush"><div class="box"><div class="top"><button id="musb" class="room" type="button" aria-label="Back">◀︎</button><div id="mush" data-i="musT">Museums</div><button id="musx" class="room" type="button" aria-label="Close">✕</button></div><div class="note" id="musn"></div><button id="musgo" class="room" type="button" style="display:none"></button><div id="musl"></div></div></div>
 <div id="cross"></div>
 <div id="hud"><div id="cap"></div></div>
 <div id="pad"><div class="wrap"><button id="fw">▲</button><button id="bk">▼</button></div></div>
@@ -637,11 +654,11 @@
   var LANG='en'; try{ LANG=localStorage.getItem('artpro-lang')==='es'?'es':'en'; }catch(e){}
   var STR={
     en:{rooms:'21 rooms of famous artworks.', how:'<b>Tap</b> to walk · <b>drag</b> to look · tap a painting to go to it.', rnd:'🎲 Random painting', abtBtn:'About ArtPro', abtT:'About ArtPro', abtP1:'Walk 21 rooms of famous art, take the guided tour, listen to each work, search by artist and, on mobile, hang a painting on your wall.', abtSH:'Sources', abtS:'Images and details come from open collections: Wikimedia Commons, The Metropolitan Museum of Art, the Art Institute of Chicago and the Internet Archive, with texts from Wikipedia and Wikidata.', abtC:'Made by EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>AR on mobile</b> · open a painting and tap “Hang on my wall” to preview it on your wall.', voice:'🔊 Tap ENTER to switch on the voice.', kb:'Keyboard: W A S D · 1–21 rooms · T tour · R read aloud · Space pause · N / P next / prev', enter:'ENTER GALLERY', install:'⤓ Install app', ios:'On iPhone and iPad: tap <b>Share</b> → <b>Add to Home Screen</b> to install ArtPro.',
-      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', icons:'★ Icons', icnT:'Icons', icnGo:'▶︎ Walk tour of the icons', icnWord:'Icons tour', icnTip:'Top Auction Records', icnN:'Top Auction Records · record-breaking masterpieces · tap one to stand in front of it', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
+      tourGo:'▶︎ Walk tour (T)', tourStop:'■ Stop tour (T)', artists:'🔍 Artists', icons:'★ Icons', museums:'🏛 Museums', musT:'Museums', musN:'Top museums & collections · tap one to see its masterpieces', musGo:'▶︎ Walk tour of this museum', icnT:'Icons', icnGo:'▶︎ Walk tour of the icons', icnWord:'Icons tour', icnTip:'Top Auction Records', icnN:'Top Auction Records · record-breaking masterpieces · tap one to stand in front of it', prev:'◀︎ Prev', next:'Next ▶︎', slower:'◀︎◀︎ Slower', faster:'Faster ▶︎▶︎', read:'🔊 Read aloud: ', on:'On', off:'Off', pause:'⏸︎ Pause', resume:'▶︎ Resume', stop:'■ Stop',
       place:'Search artist… (type the first letters)', none:'No artist found', work:' work', works:' works', paintings:' paintings', loading:' · loading from open-access archives (', link:' · click or E opens a painting’s link', tourWord:'Walk tour', paused:' · paused',
       finished:'Tour finished · use the room menu to revisit a room', press:'Press E or click the title plate to open', searching:'searching open archives…', source:'Source: ', by:'by', choose:'Choose a room', listen:'🔊 Tap to hear this painting', listenFail:'🔇 No sound? Turn off silent mode, raise the volume, tap to retry', waMsg:'Look at this artwork in ArtPro:', speech:'en-US'},
     es:{rooms:'21 salas de obras famosas.', how:'<b>Toca</b> para caminar · <b>desliza</b> para mirar · toca un cuadro para ir hasta él.', rnd:'🎲 Cuadro aleatorio', abtBtn:'Acerca de ArtPro', abtT:'Acerca de ArtPro', abtP1:'Recorre 21 salas de arte famoso, sigue el recorrido guiado, escucha cada obra, busca por artista y, en el móvil, cuelga un cuadro en tu pared.', abtSH:'Fuentes', abtS:'Las imágenes y los datos proceden de colecciones abiertas: Wikimedia Commons, The Metropolitan Museum of Art, el Art Institute of Chicago y el Internet Archive, con textos de Wikipedia y Wikidata.', abtC:'Creado por EasyLandX · <a href="https://easylandx.github.io" target="_blank" rel="noopener">easylandx.github.io</a>', arin:'🖼 <b>RA en móvil</b> · abre un cuadro y toca “Colgar en mi pared” para verlo en tu pared.', voice:'🔊 Toca ENTRAR para activar la voz.', kb:'Teclado: W A S D · 1–21 salas · T recorrido · R voz alta · Espacio pausa · N / P siguiente / anterior', enter:'ENTRAR A LA GALERÍA', install:'⤓ Instalar app', ios:'En iPhone y iPad: pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b> para instalar ArtPro.',
-      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', icons:'★ Íconos', icnT:'Íconos', icnGo:'▶︎ Recorrido por los íconos', icnWord:'Recorrido de íconos', icnTip:'Récords de subasta', icnN:'Récords de subasta · obras maestras de récord · toca una para ir hasta ella', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
+      tourGo:'▶︎ Recorrido (T)', tourStop:'■ Detener recorrido (T)', artists:'🔍 Artistas', icons:'★ Íconos', museums:'🏛 Museos', musT:'Museos', musN:'Principales museos y colecciones · toca uno para ver sus obras maestras', musGo:'▶︎ Recorrido por este museo', icnT:'Íconos', icnGo:'▶︎ Recorrido por los íconos', icnWord:'Recorrido de íconos', icnTip:'Récords de subasta', icnN:'Récords de subasta · obras maestras de récord · toca una para ir hasta ella', prev:'◀︎ Anterior', next:'Siguiente ▶︎', slower:'◀︎◀︎ Más lento', faster:'Más rápido ▶︎▶︎', read:'🔊 Voz alta: ', on:'Sí', off:'No', pause:'⏸︎ Pausa', resume:'▶︎ Reanudar', stop:'■ Detener',
       place:'Buscar artista… (escribe las primeras letras)', none:'No se encontró ningún artista', work:' obra', works:' obras', paintings:' cuadros', loading:' · cargando desde archivos abiertos (', link:' · clic o E abre el enlace del cuadro', tourWord:'Recorrido', paused:' · en pausa',
       finished:'Recorrido terminado · usa el menú de salas para volver a una sala', press:'Pulsa E o toca la placa para abrir', searching:'buscando en archivos abiertos…', source:'Fuente: ', by:'de', choose:'Elegir sala', listen:'🔊 Toca para escuchar esta obra', listenFail:'🔇 ¿Sin sonido? Quita el modo silencio, sube el volumen y toca para reintentar', waMsg:'Mira esta obra en ArtPro:', speech:'es-ES'}
   };
@@ -958,7 +975,7 @@
     enterRoom(i); tourSay(); troom.blur();
   };
   function tourSay(){ var t=tourText(); statusEl.textContent=t; tinfo.textContent=t; if (troom.value!==String(roomIdx)) troom.value=roomIdx; }
-  function tourText(){ if (tour.icons) return tx('icnWord')+' · '+Math.min(tour.seen.length+1,tour.icons.length)+'/'+tour.icons.length+(tour.paused?tx('paused'):''); var R=ROOMS[roomIdx]; return tx('tourWord')+' · '+rname(R)+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?tx('paused'):''); }
+  function tourText(){ if (tour.icons) return (tour.mus?tx('tourWord')+' · '+tour.mus.n:tx('icnWord'))+' · '+Math.min(tour.seen.length+1,tour.icons.length)+'/'+tour.icons.length+(tour.paused?tx('paused'):''); var R=ROOMS[roomIdx]; return tx('tourWord')+' · '+rname(R)+' · '+Math.min(tour.seen.length+1,stations.length)+'/'+stations.length+(tour.paused?tx('paused'):''); }
   function setTourBtn(){ var b=document.getElementById('tour'); if (b){ b.textContent=tour?tx('tourStop'):tx('tourGo'); b.classList.toggle('on',!!tour); } document.body.classList.toggle('touring',!!tour); tourUI(); }
   function tourUI(){ if (!tour) return; document.getElementById('tpause').textContent=tour.paused?tx('resume'):tx('pause'); document.getElementById('tspeed').textContent=SPEEDS[tour.si]+'×'; tourSay(); }
   function tourPause(){ if (tour){ tour.paused=!tour.paused; if (SS&&rd.on) try{ tour.paused?SS.pause():SS.resume(); }catch(e){} tourUI(); } }
@@ -1140,15 +1157,52 @@
   function openIcons(){ stopTour(); icn.style.display='block'; renderIcons(); icl.scrollTop=0; }
   function closeIcons(){ icn.style.display='none'; lastAct=Date.now(); }
   document.getElementById('icx').addEventListener('click', closeIcons);
+  function startListTour(list,mus){
+    if (!list.length) return;
+    closeIcons(); if (typeof closeMus==='function') closeMus(); welcome=false; hush(); nav=null; try{ if (document.pointerLockElement) document.exitPointerLock(); }catch(e){}
+    tour={room:roomIdx,seen:[],phase:'pick',t:0,wait:0,st:null,paused:false,si:2,said:false,tp:0,icons:list,mus:mus||null};
+    setTourBtn(); tourSay();
+  }
   function startIconsTour(){
     var list=[]; ICON_TS.forEach(function(k){ var it=iconItem(k); if (it && !it.failed && !it.emb) list.push(it); });
-    if (!list.length) return;
-    closeIcons(); welcome=false; hush(); nav=null; try{ if (document.pointerLockElement) document.exitPointerLock(); }catch(e){}
-    tour={room:roomIdx,seen:[],phase:'pick',t:0,wait:0,st:null,paused:false,si:2,said:false,tp:0,icons:list};
-    setTourBtn(); tourSay();
+    startListTour(list,null);
   }
   document.getElementById('icgo').addEventListener('click', startIconsTour);
   addEventListener('keydown', function(e){ if (icn.style.display==='block'){ if (e.code==='Escape') closeIcons(); e.stopPropagation(); } }, true);
+  // ---------- Museums: top museums / collections, their masterpieces in the gallery, and a walk tour per museum ----------
+  var MUSEUMS=[{"id": "louvre", "n": "Louvre Museum", "c": "Paris", "ce": "París"}, {"id": "prado", "n": "Museo del Prado", "c": "Madrid", "ce": "Madrid"}, {"id": "met", "n": "The Metropolitan Museum of Art", "c": "New York", "ce": "Nueva York"}, {"id": "rijks", "n": "Rijksmuseum", "c": "Amsterdam", "ce": "Ámsterdam"}, {"id": "ng", "n": "National Gallery", "c": "London", "ce": "Londres"}, {"id": "orsay", "n": "Musée d'Orsay", "c": "Paris", "ce": "París"}, {"id": "uffizi", "n": "Uffizi Gallery", "c": "Florence", "ce": "Florencia"}, {"id": "vatican", "n": "Vatican Museums", "c": "Vatican City", "ce": "Ciudad del Vaticano"}, {"id": "aic", "n": "Art Institute of Chicago", "c": "Chicago", "ce": "Chicago"}, {"id": "vgm", "n": "Van Gogh Museum", "c": "Amsterdam", "ce": "Ámsterdam"}, {"id": "moma", "n": "Museum of Modern Art (MoMA)", "c": "New York", "ce": "Nueva York"}, {"id": "hermitage", "n": "State Hermitage Museum", "c": "Saint Petersburg", "ce": "San Petersburgo"}, {"id": "khm", "n": "Kunsthistorisches Museum", "c": "Vienna", "ce": "Viena"}, {"id": "belvedere", "n": "Belvedere", "c": "Vienna", "ce": "Viena"}, {"id": "nga", "n": "National Gallery of Art", "c": "Washington, D.C.", "ce": "Washington, D. C."}, {"id": "mauritshuis", "n": "Mauritshuis", "c": "The Hague", "ce": "La Haya"}, {"id": "tate", "n": "Tate", "c": "London", "ce": "Londres"}];
+  var MUS_T={"louvre": ["Mona Lisa", "Oath of the Horatii", "La Grande Odalisque", "The Turkish Bath", "The Raft of the Medusa", "The Raft of the Méduse", "Liberty Leading the People", "The Wedding at Cana", "The Death of Sardanapalus", "Women of Algiers in their Apartment", "Pilgrimage to Cythera", "Pierrot", "Diana Leaving her Bath", "The Moneylender and His Wife", "Winged Victory of Samothrace"], "prado": ["Las Meninas", "The Surrender of Breda", "The Garden of Earthly Delights", "The Haywain Triptych", "The Adoration of the Magi", "The Table of the Seven Deadly Sins", "The Third of May 1808", "The Second of May 1808", "Saturn Devouring His Son", "The Clothed Maja (La maja vestida)", "The Nude Maja (La maja desnuda)", "Witches' Sabbath (El aquelarre)", "The Family of Charles IV", "The Dog (El perro)", "Duel with Cudgels (Duelo a garrotazos)", "Self-Portrait (ca. 1796)", "The Nobleman with his Hand on his Chest", "The Adoration of the Shepherds", "The Trinity", "The Spinners (Las Hilanderas)", "The Triumph of Bacchus (Los Borrachos)", "The Forge of Vulcan", "Mercury and Argus", "Christ Crucified", "The Immaculate Conception of Los Venerables", "The Holy Family with the Little Bird", "Agnus Dei", "The Martyrdom of Saint Philip", "Saint Andrew", "Jacob's Dream", "The Descent from the Cross", "The Three Graces", "David with the Head of Goliath", "Artemisia", "The Garden of Love", "The Judgment of Paris|Peter Paul Rubens", "The Triumph of Death", "Equestrian Portrait of Charles V", "The Annunciation", "Self-Portrait (1498)", "Christ Washing the Disciples' Feet", "The Cardinal", "Mona Lisa (Prado version)", "Danaë and the Shower of Gold", "Venus and Adonis", "The Worship of Venus", "Adam and Eve", "The Wine of Saint Martin's Day", "Death of the Virgin", "Portrait of a Man", "Children on the Beach (Chicos en la playa)", "Children on the Seashore (Niños en la playa)"], "met": ["The Great Wave off Kanagawa (Kanagawa-oki Nami Ura)", "The Great Wave off Kanagawa", "Fine Wind, Clear Morning (Gaifū Kaisei)", "Thunderstorm Beneath the Summit (Sanka Hakuu)", "Kajikazawa in Kai Province (Kōshū Kajikazawa)", "Chōshi in Shimōsa (Sōshū Chōshi, from Oceans of Wisdom)", "View of Toledo", "Cardinal Fernando Niño de Guevara", "The Vision of Saint John", "Portrait of Juan de Pareja", "Don Andrés de Andrade y la Cal", "The Holy Family with Saints Anne and Catherine of Alexandria", "Majas on a Balcony", "Manuel Osorio Manrique de Zuñiga (\"The Red Boy\")", "Condesa de Altamira and Her Daughter, María Agustina", "Bullfight, Suerte de Varas", "Autumn Rhythm (Number 30)", "Bridge over a Pond of Water Lilies", "Wheat Field with Cypresses", "Cypresses", "Madame Georges Charpentier and Her Children", "The Gulf of Marseilles Seen from L'Estaque", "Rideau, Cruchon et Compotier", "Two Tahitian Women", "Circus Sideshow (Parade de cirque)", "Max Schmitt in a Single Scull", "The Gulf Stream", "Portrait of Madame X", "The Death of Socrates", "The Abduction of Rebecca", "Woman with a Parrot", "Boy with a Sword", "The Horse Fair", "Ville-d'Avray", "Young Woman with a Water Pitcher", "A Maid Asleep", "Allegory of the Catholic Faith", "Aristotle with a Bust of Homer", "The Musicians", "The Fortune Teller", "Mezzetin", "The Toilet of Venus", "The Love Letter", "Mrs. Grace Dalrymple Elliott", "The Harvesters", "Venus and the Lute Player", "The Crucifixion; The Last Judgment", "Portrait of a Carthusian", "The Oxbow", "Heart of the Andes", "Washington Crossing the Delaware", "The Rocky Mountains, Lander's Peak", "A Gorge in the Mountains (Kauterskill Clove)"], "rijks": ["The Night Watch", "The Milkmaid", "The Jewish Bride", "The Windmill at Wijk bij Duurstede", "The Merry Family", "Portrait of Marten Soolmans", "Portrait of Oopjen Coppit"], "ng": ["The Rokeby Venus", "The Arnolfini Portrait", "Bacchus and Ariadne", "The Ambassadors", "The Hay Wain", "The Fighting Temeraire", "Rain, Steam and Speed", "Rain, Steam and Speed – The Great Western Railway", "The Avenue at Middelharnis", "Saint Francis in Meditation", "Portrait of a Man (Self Portrait?)", "Bathers at Asnières", "Summer's Day", "Sunflowers"], "orsay": ["Le Déjeuner sur l'herbe", "Olympia", "Bal du moulin de la Galette", "L'Absinthe", "The Floor Scrapers", "The Cradle", "Flood at Port-Marly", "The Gleaners", "The Angelus", "A Burial at Ornans", "Arrangement in Grey and Black No. 1 (Whistler's Mother)", "Plowing in the Nivernais", "The Circus", "The Card Players", "Le Pont du chemin de fer à Argenteuil", "Self-Portrait without Beard", "The Birth of Venus|Alexandre Cabanel"], "uffizi": ["Primavera", "The Birth of Venus|Sandro Botticelli", "Venus of Urbino", "Judith Slaying Holofernes"], "vatican": ["The Creation of Adam", "The School of Athens", "Laocoön and His Sons"], "aic": ["American Gothic", "Nighthawks", "A Sunday Afternoon on the Island of La Grande Jatte", "A Sunday on La Grande Jatte", "Two Sisters (On the Terrace)", "Woman at the Piano", "Acrobats at the Cirque Fernando", "The Millinery Shop", "Woman at Her Toilette", "Stacks of Wheat (End of Summer)", "Arrival of the Normandy Train, Gare Saint-Lazare", "Day of the God (Mahana no atua)", "Moulin de la Galette", "At the Moulin Rouge", "The Child's Bath", "Paris Street; Rainy Day", "The Basket of Apples", "Old Man with a Gold Chain", "The Herring Net", "The Crucifixion", "Saint George and the Dragon", "The Assumption of the Virgin"], "vgm": ["The Bedroom", "Romans parisiens (Les Livres jaunes)"], "moma": ["The Starry Night", "Les Demoiselles d'Avignon", "The Persistence of Memory", "The Sleeping Gypsy", "The Dream", "Christina's World", "I and the Village", "Unique Forms of Continuity in Space"], "hermitage": ["The Dance", "The Boulevard Montmartre on a Winter Morning"], "khm": ["The Hunters in the Snow", "The Tower of Babel", "The Peasant Wedding", "The Art of Painting"], "belvedere": ["The Kiss", "Birch Forest", "Blumenwiese (Blooming Meadow)", "Bauerngarten (Flower Garden)"], "nga": ["Woman with a Parasol - Madame Monet and Her Son", "Breezing Up (A Fair Wind)", "Two Women at a Window", "Niagara"], "mauritshuis": ["Girl with a Pearl Earring", "View of Delft", "The Anatomy Lesson of Dr. Nicolaes Tulp", "The Goldfinch"], "tate": ["Ophelia", "The Lady of Shalott", "Proserpine", "Carnation, Lily, Lily, Rose", "Marilyn Diptych"]};
+  var MUS_IDX=null, mus=document.getElementById('mus'), musl=document.getElementById('musl'), curMus=null;
+  function musIndex(){ if (MUS_IDX) return MUS_IDX; MUS_IDX={}; MUSEUMS.forEach(function(m){ (MUS_T[m.id]||[]).forEach(function(e){ MUS_IDX[e]=m.id; }); }); return MUS_IDX; }
+  function musOf(it){ var x=musIndex(); return x[it.title+'|'+it.artist]||x[it.title]||null; }
+  function musItems(m){ var out=[], seen={}; ROOMS.forEach(function(R){ R.list.forEach(function(it){ if (it.emb||it.failed||seen[it.t]||musOf(it)!==m.id) return; seen[it.t]=1; out.push(it); }); }); return out; }
+  function musCity(m){ return LANG==='es'?m.ce:m.c; }
+  function renderMus(){
+    var back=document.getElementById('musb'), go=document.getElementById('musgo'), head=document.getElementById('mush'), note=document.getElementById('musn');
+    musl.innerHTML='';
+    if (!curMus){
+      back.style.display='none'; go.style.display='none'; head.textContent=tx('musT'); note.textContent=tx('musN');
+      MUSEUMS.forEach(function(m){ var n=musItems(m).length; if (!n) return;
+        var b=document.createElement('button'); b.className='pc'; b.type='button'; b.textContent=m.n;
+        var sm=document.createElement('small'); sm.textContent=musCity(m)+' · '+n+(n===1?tx('work'):tx('works')); b.appendChild(sm);
+        b.onclick=function(){ curMus=m; renderMus(); musl.scrollTop=0; }; musl.appendChild(b); });
+      return;
+    }
+    var list=musItems(curMus);
+    back.style.display='inline-block'; head.textContent=curMus.n; note.textContent=musCity(curMus)+' · '+list.length+(list.length===1?tx('work'):tx('works'));
+    go.style.display='block'; go.textContent=tx('musGo');
+    list.forEach(function(it){ var b=document.createElement('button'); b.className='pc'; b.type='button'; b.textContent=it.title;
+      var sm=document.createElement('small'); sm.textContent=it.artist+' · '+rname(it.room); b.appendChild(sm);
+      b.onclick=function(){ closeMus(); gotoPiece(it); }; musl.appendChild(b); });
+    if (!list.length){ var d=document.createElement('div'); d.className='none'; d.textContent=tx('none'); musl.appendChild(d); }
+  }
+  function openMus(){ stopTour(); curMus=null; mus.style.display='block'; renderMus(); musl.scrollTop=0; }
+  function closeMus(){ mus.style.display='none'; lastAct=Date.now(); }
+  document.getElementById('musx').addEventListener('click', closeMus);
+  document.getElementById('musb').addEventListener('click', function(){ curMus=null; renderMus(); musl.scrollTop=0; });
+  document.getElementById('musgo').addEventListener('click', function(){ if (curMus) startListTour(musItems(curMus),curMus); });
+  addEventListener('keydown', function(e){ if (mus.style.display==='block'){ if (e.code==='Escape'){ if (curMus){ curMus=null; renderMus(); } else closeMus(); } e.stopPropagation(); } }, true);
+  var mub=document.createElement('button'); mub.id='musbtn'; mub.className='room'; mub.type='button'; mub.textContent=tx('museums'); mub.setAttribute('data-i','museums'); mub.onclick=openMus; roomsEl.insertBefore(mub, tb);
   var ib=document.createElement('button'); ib.id='iconsbtn'; ib.className='room'; ib.type='button'; ib.textContent=tx('icons'); ib.setAttribute('data-i','icons'); ib.title=tx('icnTip'); ib.setAttribute('aria-label',tx('icnTip')); ib.onclick=openIcons; roomsEl.insertBefore(ib, tb);
 
   // ---------- WhatsApp share: a message with a link that opens ArtPro at this exact painting ----------
@@ -1275,6 +1329,7 @@
     ROOMS.forEach(function(R){ R.list.forEach(function(it){ if (it.ready) drawLabel(it); }); });
     if (roomIdx>=0){ if (signMesh){ signMesh.material.map=signTex(ROOMS[roomIdx]); signMesh.material.needsUpdate=true; } cur=null; if (tour) tourSay(); else setStatus(); }
     if (srch.style.display==='block') renderSearch();
+    if (mus && mus.style.display==='block') renderMus();
   }
   function setLang(l){ LANG=l; try{ localStorage.setItem('artpro-lang',l); }catch(e){} applyLang(); }
   (function(){ var h=document.createElement('span'); h.className='langhost'; roomsEl.appendChild(h); })();
@@ -1314,7 +1369,7 @@
   document.getElementById('enter').addEventListener('click', function(){ lastAct=Date.now(); welcome=true; });   // runs after the capture listeners above, so it re-arms the welcome
   setInterval(function(){
     if (!welcome) return;
-    if (AR.busy || tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block' || icn.style.display==='block' || aboutEl.classList.contains('show')){ lastAct=Date.now(); return; }
+    if (AR.busy || tour || linked || rd.busy || intro.style.display!=='none' || srch.style.display==='block' || icn.style.display==='block' || mus.style.display==='block' || aboutEl.classList.contains('show')){ lastAct=Date.now(); return; }
     if (Date.now()-lastAct>=WELCOME_MS){ welcome=false; startTour(); }
   }, 500);
   function hold(id,k){ var b=document.getElementById(id); ['touchstart','mousedown'].forEach(function(ev){ b.addEventListener(ev,function(e){ e.preventDefault(); keys[k]=true; }); });
